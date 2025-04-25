@@ -93,14 +93,14 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="{{ route('livraisons.indexpartielle') }}" class="nav-link {{ (request()->url() == route('livraisons.indexpartielle')) ? 'active' : '' }}">
                         <i class="nav-icon far fa-solid fa-truck-arrow-right"></i>
                         <p>
                             Livraison Partielle
                         </p>
                     </a>
-                </li>
+                </li> -->
                 @endif
 
                 @if (Auth::user()->roles()->where('libelle', 'SUIVI')->exists() || Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists())
