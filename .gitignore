@@ -1,0 +1,24 @@
+/vendor/
+node_modules/
+npm-debug.log
+yarn-error.log
+
+bootstrap/compiled.php
+app/storage/
+/storage/
+
+/public/storage/
+public/hot
+
+/public/files/
+public/hot
+
+storage/public/documents_
+storage/*.key
+.env
+.env_prod
+Homestead.yaml
+Homestead.json
+# composer.json
+/.vagrant
+.phpunit.result.cache
