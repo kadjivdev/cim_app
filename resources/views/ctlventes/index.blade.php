@@ -144,15 +144,15 @@
                                             @endif
                                         </td>
 
-                                        @if(Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists())
                                         <td class="text-center">
-                                            @if(!$reglement->observation_validation)
-                                            <a class="btn btn-success btn-block btn-sm" href="{{route('ctlventes.create',$reglement->id)}}">Contrôler</a>
-                                            @else
+                                            @if(Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists())
+                                                @if(!$reglement->observation_validation)
+                                                <a class="btn btn-success btn-block btn-sm" href="{{route('ctlventes.create',$reglement->id)}}">Contrôler</a>
+                                                @else
+                                                <span class="bg-light px-1">{{$reglement->observation_validation}}</span>
+                                                @endif
                                             @endif
-                                            <span class="bg-light px-1">{{$reglement->observation_validation}}</span>
                                         </td>
-                                        @endif
                                     </tr>
                                     @endforeach
                                 </tbody>
