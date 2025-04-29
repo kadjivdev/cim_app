@@ -13,11 +13,8 @@ use App\Models\Parametre;
 use App\Models\TypeCommande;
 use Illuminate\Http\Request;
 use App\Models\CommandeClient;
-use Illuminate\Mail\Transport\Transport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use PhpParser\Node\Stmt\TryCatch;
 
 class _VenteController extends Controller
 {

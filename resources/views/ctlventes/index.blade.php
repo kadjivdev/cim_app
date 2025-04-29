@@ -95,9 +95,9 @@
                                         <th>Utilisateur</th>
                                         <th>Dette</th>
                                         <th>Reversement</th>
-                                        @if(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists())
+                                        <!-- if(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists()) -->
                                         <th>Action</th>
-                                        @endif
+                                        <!-- endif -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -168,9 +168,9 @@
                                         <th>Utilisateur</th>
                                         <th>Dette</th>
                                         <th>Reversement</th>
-                                        @if(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists())
+                                        <!-- if(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists()) -->
                                         <th>Action</th>
-                                        @endif
+                                        <!-- endif -->
                                     </tr>
                                 </tfoot>
                             </table>

@@ -118,9 +118,7 @@ class LivraisonController extends Controller
         }
 
         $req = $request->all();
-
-        // dd($programmations);
-
+        
         // ON AFFICHE TOUTES LES LIVRAISONS POUR LES COMPTES *AIME & CHRISTIAN*
         if (!IS_AIME_ACCOUNT($user) && !IS_CHRISTIAN_ACCOUNT($user)) {
             if (Auth::user()->roles()->where('libelle', 'SUPERVISEUR')->exists() || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists()) {
@@ -216,7 +214,6 @@ class LivraisonController extends Controller
                 }
             }
         } else {
-
             if ($request->debut && $request->fin) {
                 $programmationsVal = $programmations
                     ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
