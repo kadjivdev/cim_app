@@ -144,7 +144,7 @@
                                             @endif
                                         </td>
 
-                                        @if(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists())
+                                        @if(Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists())
                                         <td class="text-center">
                                             @if(!$reglement->observation_validation)
                                             <a class="btn btn-success btn-block btn-sm" href="{{route('ctlventes.create',$reglement->id)}}">Contrôler</a>
