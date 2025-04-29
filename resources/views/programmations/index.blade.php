@@ -85,7 +85,7 @@
                                         <th>Qté Reste</th>
                                         <th>Statut</th>
                                         <th>Pourcentage</th>
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DES PROGRAMMATIONS'])->exists())
+                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DES PROGRAMMATIONS'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists())
                                         <th>Action</th>
                                         @endif
                                     </tr>
@@ -106,7 +106,7 @@
                                         <td class="text-right qteReste">{{ number_format(($detailboncommande->qteCommander - collect($detailboncommande->programmations->whereIn('statut', ['Valider', 'Livrer']))->sum('qteprogrammer')),2,","," ") }}</td>
 
                                         <td class="text-center">
-                                            @if ( (collect($detailboncommande->programmations->whereIn('statut', ['Valider', 'Livrer']))->sum('qteprogrammer')) == 0)
+                                            @if((collect($detailboncommande->programmations->whereIn('statut', ['Valider', 'Livrer']))->sum('qteprogrammer')) == 0)
                                             <span class="badge badge-danger">Non programmé</span>
                                             @elseif (($detailboncommande->boncommande->statut =='Livrer') && floatval($detailboncommande->qteCommander) == floatval((collect($detailboncommande->programmations->whereIn('statut', ['Valider', 'Livrer']))->sum('qteprogrammer'))))
                                             <span class="badge badge-secondary">Livrer</span>
@@ -119,7 +119,7 @@
 
                                         <td class="text-right text-lg"><b>{{ number_format((intval(collect($detailboncommande->programmations()->whereIn('statut', ['Valider', 'Livrer'])->get())->sum('qteprogrammer'))*100)/intval($detailboncommande->qteCommander),2,',',' ') }}%</b></td>
 
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DES PROGRAMMATIONS'])->exists())
+                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DES PROGRAMMATIONS'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists())
                                         <td class="text-center">
                                             <div class="row">
                                                 <div class="col-sm-12 ">
@@ -237,7 +237,7 @@
             "order": [
                 [0, 'desc']
             ],
-            
+
             language: {
                 "emptyTable": "Aucune donnée disponible dans le tableau",
                 "lengthMenu": "Afficher _MENU_ éléments",

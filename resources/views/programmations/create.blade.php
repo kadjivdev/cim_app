@@ -168,10 +168,12 @@
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
                                         @else
+                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CREANT'])->exists())
                                         <button type="submit" class="btn btn-sm btn-success btn-block" @if ($detailboncommande->qteCommander - intval($total) == 0) disabled @endif>
                                             {{ __('Enregistrer') }}
                                             <i class="fa-solid fa-floppy-disk"></i>
                                         </button>
+                                        @endif
                                         @endif
                                     </div>
                                 </div>
