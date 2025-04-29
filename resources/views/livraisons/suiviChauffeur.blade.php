@@ -46,6 +46,7 @@
                                         </div>
                                     </div>
                                 @endif
+
                                 <form id="statutsForm" action="{{route('livraisons.postSuivichauffeur')}}" method="post">
                                     @csrf
                                     <div class="row">
@@ -164,31 +165,30 @@
                                                     @php($dateFin = new DateTime(date('Y-m-d')))
                                                     @php($difference = $dateDebut->diff($dateFin))
                                                         <tr class="">
-                                                        <td>{{ $compteur++ }}</td>
-                                                        <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
-                                                        <td>{{ $programmation->code }}</td>
-                                                        <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->dateprogrammer), 'd/m/Y'):'' }}</td>
-                                                        <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->detailboncommande->boncommande->dateBon), 'd/m/Y'):'' }}</td>
-                                                        <td>{{ $programmation->detailboncommande->boncommande->fournisseur->sigle }}</td>
-                                                        <td>{{ $programmation->detailboncommande->produit->libelle }}</td>
-                                                        <td>{{ $programmation->bl_gest?$programmation->bl_gest:$programmation->bl }}</td>
-                                                        <td>{{ $programmation->camion->immatriculationTracteur }}
-                                                            ({{ $programmation->camion->marque->libelle }})
-                                                        </td>
-                                                        <td>{{ $programmation->chauffeur->nom }} {{ $programmation->chauffeur->prenom }}
-                                                            ({{ $programmation->chauffeur->telephone }})
-                                                        </td>
-                                                        <td>{{ $programmation->zone->libelle }}
-                                                            ({{ $programmation->zone->departement->libelle }})
-                                                        </td>
-                                                        <td class="text-right">{{ number_format($programmation->qteprogrammer,2,","," ") }}</td>                                                      
-                                                        <td>
-                                                            @foreach ($programmation->vendus  as $vendu )
-                                                                {{ $vendu->vente->commandeclient->client->raisonSociale }} - <b>({{$vendu->vente->destination}})</b> - <span style="color: green"><b>{{ $vendu->vente->qteTotal }}</b></span> <br>
-                                                            @endforeach
-                                                        </td>
-
-                                                    </tr>
+                                                            <td>{{ $compteur++ }}</td>
+                                                            <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
+                                                            <td>{{ $programmation->code }}</td>
+                                                            <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->dateprogrammer), 'd/m/Y'):'' }}</td>
+                                                            <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->detailboncommande->boncommande->dateBon), 'd/m/Y'):'' }}</td>
+                                                            <td>{{ $programmation->detailboncommande->boncommande->fournisseur->sigle }}</td>
+                                                            <td>{{ $programmation->detailboncommande->produit->libelle }}</td>
+                                                            <td>{{ $programmation->bl_gest?$programmation->bl_gest:$programmation->bl }}</td>
+                                                            <td>{{ $programmation->camion->immatriculationTracteur }}
+                                                                ({{ $programmation->camion->marque->libelle }})
+                                                            </td>
+                                                            <td>{{ $programmation->chauffeur->nom }} {{ $programmation->chauffeur->prenom }}
+                                                                ({{ $programmation->chauffeur->telephone }})
+                                                            </td>
+                                                            <td>{{ $programmation->zone->libelle }}
+                                                                ({{ $programmation->zone->departement->libelle }})
+                                                            </td>
+                                                            <td class="text-right">{{ number_format($programmation->qteprogrammer,2,","," ") }}</td>                                                      
+                                                            <td>
+                                                                @foreach ($programmation->vendus  as $vendu )
+                                                                    {{ $vendu->vente->commandeclient->client->raisonSociale }} - <b>({{$vendu->vente->destination}})</b> - <span style="color: green"><b> {{$vendu->vente->code}} ({{ $vendu->vente->valide?$vendu->vente->qteTotal:"pas encore validé" }})</b></span> <br>
+                                                                @endforeach
+                                                            </td>
+                                                        </tr>
                                                 @endforeach
                                             @else
 

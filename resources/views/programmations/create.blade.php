@@ -203,7 +203,6 @@
                                                     <th>Qte Livrée</th>
                                                     <th>Qte Vendu</th>
                                                     <th>Zone</th>
-                                                    <!-- <th>Date Sortie</th> -->
                                                     <th>BL</th>
                                                     <th>Statut</th>
                                                     <th>Observation</th>
@@ -213,7 +212,6 @@
                                             <tbody>
                                                 @if ($programmations->count() > 0)
                                                 <?php $compteur = 1; ?>
-
                                                 @foreach ($programmations as $programmation)
                                                 <tr>
                                                     <td>{{ $compteur++ }}</td>
@@ -247,7 +245,6 @@
                                                     </td>
                                                     <td>{{ $programmation->zone->libelle }}
                                                         ({{ $programmation->zone->departement->libelle }})</td>
-                                                    <!-- <td>{{ $programmation->dateSortie ? date_format(date_create($programmation->dateSortie),'d/m/Y'):'' }}</td> -->
                                                     <td>{{ $programmation->bl_gest ? $programmation->bl_gest:$programmation->bl}}</td>
 
                                                     <td class="text-center">
@@ -265,26 +262,25 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <textarea name="" rows="1" class="form-control" id="" disabled>{{ $programmation->observation?$programmation->observation:"---" }}</textarea>
-
                                                     </td>
                                                     @if ($programmation->detailboncommande->boncommande->status !='livrer')
                                                     <td class="text-center">
                                                         @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CREANT'])->exists())
-                                                            @if($programmation->statut == 'Valider')
-                                                            <span id="annuler-{{ $programmation->id }}"> <a class="btn btn-primary btn-sm" title="Annuler une programmation" href="{{ route('programmations.show', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id, 'total' => $total]) }}"><i class="fa-regular fa-rectangle-xmark"></i></a>
-                                                            </span>
-                                                            @endif
+                                                        @if($programmation->statut == 'Valider')
+                                                        <span id="annuler-{{ $programmation->id }}"> <a class="btn btn-primary btn-sm" title="Annuler une programmation" href="{{ route('programmations.show', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id, 'total' => $total]) }}"><i class="fa-regular fa-rectangle-xmark"></i></a>
+                                                        </span>
+                                                        @endif
 
-                                                            @if(($programmation->statut != 'Livrer') && ($programmation->statut != 'Annuler') && ($programmation->imprimer) && ($programmation->bl_gest == Null))
-                                                            <span id="bl-{{ $programmation->id }}"> <a class="btn btn-dark btn-sm" onclick="getId({{ $programmation->id }})" id="bl_prog" title="BL Gestionnaire" href="{{-- {{ route('programmations.dateSortie', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }} --}}#" data-toggle="modal" data-target="#modal-sm"><b>BL</b></a></span>
-                                                            @endif
+                                                        @if(($programmation->statut != 'Livrer') && ($programmation->statut != 'Annuler') && ($programmation->imprimer) && ($programmation->bl_gest == Null))
+                                                        <span id="bl-{{ $programmation->id }}"> <a class="btn btn-dark btn-sm" onclick="getId({{ $programmation->id }})" id="bl_prog" title="BL Gestionnaire" href="{{-- {{ route('programmations.dateSortie', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }} --}}#" data-toggle="modal" data-target="#modal-sm"><b>BL</b></a></span>
+                                                        @endif
 
-                                                            @if(count($programmation->vendus)==0)
-                                                            <a class="btn btn-warning btn-sm" href="{{ route('programmations.create', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }}">
-                                                                <i class="fa-solid fa-pen-to-square"></i></a>
-                                                            <a class="btn btn-danger btn-sm" href="{{ route('programmations.destroy', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }}">
-                                                                <i class="fa-solid fa-trash-can"></i></a>
-                                                            @endif
+                                                        @if(count($programmation->vendus)==0)
+                                                        <a class="btn btn-warning btn-sm" href="{{ route('programmations.create', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }}">
+                                                            <i class="fa-solid fa-pen-to-square"></i></a>
+                                                        <a class="btn btn-danger btn-sm" href="{{ route('programmations.destroy', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }}">
+                                                            <i class="fa-solid fa-trash-can"></i></a>
+                                                        @endif
                                                         @endif
                                                     </td>
                                                     @endif
