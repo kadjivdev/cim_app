@@ -108,8 +108,6 @@
                                         <td class="text-center">
                                             @if((collect($detailboncommande->programmations->whereIn('statut', ['Valider', 'Livrer']))->sum('qteprogrammer')) == 0)
                                             <span class="badge badge-danger">Non programmé</span>
-                                            @elseif (($detailboncommande->boncommande->statut =='Livrer') && floatval($detailboncommande->qteCommander) == floatval((collect($detailboncommande->programmations->whereIn('statut', ['Valider', 'Livrer']))->sum('qteprogrammer'))))
-                                            <span class="badge badge-secondary">Livrer</span>
                                             @elseif (floatval($detailboncommande->qteCommander) == floatval((collect($detailboncommande->programmations->whereIn('statut', ['Valider', 'Livrer']))->sum('qteprogrammer'))))
                                             <span class="badge badge-success">Programmé</span>
                                             @else
@@ -144,7 +142,7 @@
                                         <th>Qté Reste</th>
                                         <th>Statut</th>
                                         <th>Pourcentage</th>
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DES PROGRAMMATIONS'])->exists())
+                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DES PROGRAMMATIONS'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists())
                                         <th>Action</th>
                                         @endif
                                     </tr>
