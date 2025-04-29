@@ -269,20 +269,22 @@
                                                     </td>
                                                     @if ($programmation->detailboncommande->boncommande->status !='livrer')
                                                     <td class="text-center">
-                                                        @if($programmation->statut == 'Valider')
-                                                        <span id="annuler-{{ $programmation->id }}"> <a class="btn btn-primary btn-sm" title="Annuler une programmation" href="{{ route('programmations.show', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id, 'total' => $total]) }}"><i class="fa-regular fa-rectangle-xmark"></i></a>
-                                                        </span>
-                                                        @endif
+                                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CREANT'])->exists())
+                                                            @if($programmation->statut == 'Valider')
+                                                            <span id="annuler-{{ $programmation->id }}"> <a class="btn btn-primary btn-sm" title="Annuler une programmation" href="{{ route('programmations.show', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id, 'total' => $total]) }}"><i class="fa-regular fa-rectangle-xmark"></i></a>
+                                                            </span>
+                                                            @endif
 
-                                                        @if(($programmation->statut != 'Livrer') && ($programmation->statut != 'Annuler') && ($programmation->imprimer) && ($programmation->bl_gest == Null))
-                                                        <span id="bl-{{ $programmation->id }}"> <a class="btn btn-dark btn-sm" onclick="getId({{ $programmation->id }})" id="bl_prog" title="BL Gestionnaire" href="{{-- {{ route('programmations.dateSortie', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }} --}}#" data-toggle="modal" data-target="#modal-sm"><b>BL</b></a></span>
-                                                        @endif
+                                                            @if(($programmation->statut != 'Livrer') && ($programmation->statut != 'Annuler') && ($programmation->imprimer) && ($programmation->bl_gest == Null))
+                                                            <span id="bl-{{ $programmation->id }}"> <a class="btn btn-dark btn-sm" onclick="getId({{ $programmation->id }})" id="bl_prog" title="BL Gestionnaire" href="{{-- {{ route('programmations.dateSortie', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }} --}}#" data-toggle="modal" data-target="#modal-sm"><b>BL</b></a></span>
+                                                            @endif
 
-                                                        @if(count($programmation->vendus)==0)
-                                                        <a class="btn btn-warning btn-sm" href="{{ route('programmations.create', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }}">
-                                                            <i class="fa-solid fa-pen-to-square"></i></a>
-                                                        <a class="btn btn-danger btn-sm" href="{{ route('programmations.destroy', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }}">
-                                                            <i class="fa-solid fa-trash-can"></i></a>
+                                                            @if(count($programmation->vendus)==0)
+                                                            <a class="btn btn-warning btn-sm" href="{{ route('programmations.create', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }}">
+                                                                <i class="fa-solid fa-pen-to-square"></i></a>
+                                                            <a class="btn btn-danger btn-sm" href="{{ route('programmations.destroy', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }}">
+                                                                <i class="fa-solid fa-trash-can"></i></a>
+                                                            @endif
                                                         @endif
                                                     </td>
                                                     @endif
