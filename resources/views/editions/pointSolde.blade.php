@@ -51,7 +51,15 @@
                                             <select id="client" class="form-control form-control-sm select2" name="client" required }}>
                                                 <option class="" value="tous">Tous les clients</option>
                                                 @foreach ($clients as $client)
-                                                <option value="{{ $client->id }}" {{ old('client') == $client->id ? 'selected' : '' }}>
+                                                <option 
+                                                value="{{ $client->id }}" 
+                                                    {{ old('client') == $client->id ? 'selected' : '' }}
+                                                    @if(!(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['RECOUVREUR'])->exists()) && Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists())
+                                                        @if($client->zone_id==Auth::user()->zone_id)
+                                                        disabled
+                                                        @endif
+                                                    @endif
+                                                >
                                                     {{ $client->raisonSociale }} ({{$client->id}})
                                                 </option>
                                                 @endforeach

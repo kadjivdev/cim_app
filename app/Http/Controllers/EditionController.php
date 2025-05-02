@@ -16,6 +16,7 @@ use App\Models\Reglement;
 use App\Models\Representant;
 use App\Models\Zone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class EditionController extends Controller
@@ -194,6 +195,10 @@ class EditionController extends Controller
         Client::with("_Zone")->chunk(100, function ($chunk) use (&$clients) {
             $clients = $clients->merge($chunk); //merge the chunk
         });
+
+        // if (!(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['RECOUVREUR'])->exists()) && Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists()) {
+        //     $clients = $clients->where("zone_id", Auth::user()->zone_id);
+        // }
 
         $zones = Zone::all();
 
