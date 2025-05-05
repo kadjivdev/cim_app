@@ -94,7 +94,7 @@ class Client extends Model
     // 
     public function  Is_Bef()
     {
-        return $this->commandeclients()->count() == 0 && $this->debit_old && !in_array($this->id,[959,1624,1971,1721,2079,2028,2141,2334,2115,1940,483,1949,1949,1767,1684,1458,1417,576,572,1435,1669,728]);
+        return $this->commandeclients()->count() == 0 && $this->debit_old && !in_array($this->id,[959,1624,1971,1721,2079,2028,2141,2334,2115,1940,483,1949,1949,1767,1684,1458,1417,576,572,1435,1669,728,2295]);
     }
 
     public function  Is_Inactif()
