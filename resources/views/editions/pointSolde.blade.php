@@ -178,7 +178,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="text-center">
-                                        <span class="text-center bg-dark p-2"> <em> Solde de l'ancien compte du client</em> </span>
+                                        <span class="text-center bg-dark p-2"> <em> Ancien compte du client</em> </span>
                                     </div>
                                     <br>
                                     <div class="row text-center">
