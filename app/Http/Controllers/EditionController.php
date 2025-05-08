@@ -483,10 +483,6 @@ class EditionController extends Controller
 
         if ($request->user == 'tout') {
             Vente::with(["vendus", "commandeclient.client"])->where('statut', 'Vendue')
-                // ->join('vendus', 'ventes.id', '=', 'vendus.vente_id')
-                // ->join('commande_clients', 'ventes.commande_client_id', '=', 'commande_clients.id')
-                // ->join('clients', 'commande_clients.client_id', '=', 'clients.id')
-                // ->select('ventes.*','vendus*', 'clients.raisonSociale', 'clients.telephone', "vendus")
                 ->whereBetween('date', [$request->debut, $request->fin])
                 ->orderByDesc('ventes.code')
                 ->chunk(100, function ($chunk) use (&$ventes) {
@@ -495,10 +491,6 @@ class EditionController extends Controller
             $user = null;
         } else {
             Vente::with(["vendus", "commandeclient.client"])->where('statut', 'Vendue')
-                // ->join('vendus', 'ventes.id', '=', 'vendus.vente_id')
-                ->join('commande_clients', 'ventes.commande_client_id', '=', 'commande_clients.id')
-                ->join('clients', 'commande_clients.client_id', '=', 'clients.id')
-                // ->select('ventes.*','vendus*', 'clients.raisonSociale', 'clients.telephone')
                 ->whereBetween('date', [$request->debut, $request->fin])
                 ->where('ventes.users', $request->user)
                 ->orderByDesc('ventes.code')
