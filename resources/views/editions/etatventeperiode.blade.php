@@ -115,7 +115,7 @@
                                                 <td>{{$item->code}}</td>
                                                 <td>{{date_format(date_create($item->date),'d/m/Y')}}</td>
                                                 <td>
-                                                    {{$item->raisonSociale}} ({{$item->telephone}})
+                                                    {{$item->commandeclient->client->raisonSociale}} ({{$item->commandeclient->client->telephone}})
                                                     @if(substr($item->code,0,2) == 'VI')
                                                     {{$item->commandeclient->code}}
                                                     @endif
@@ -161,6 +161,7 @@
                                                 <th class="text-center">Code</th>
                                                 <th class="text-center">date</th>
                                                 <th class="text-center"> Client</th>
+                                                <th>Chauf../Destin../Acteur</th>
                                                 <th class="text-center">Type</th>
                                                 <th class="text-center">Pu ciment</th>
                                                 <th class="text-center">Qte</th>
@@ -178,6 +179,7 @@
                                 <table class="table table-bordered table-striped table-sm mt-2" style="font-size: 12px">
                                     <thead class="text-white text-center bg-gradient-gray-dark">
                                         <tr>
+                                            <th></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
