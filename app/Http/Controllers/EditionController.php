@@ -480,25 +480,28 @@ class EditionController extends Controller
         ]);
 
         if ($request->user == 'tout') {
-            $ventes = Vente::where('ventes.statut', 'Vendue')
+            $ventes = Vente::with("vendus")->where('ventes.statut', 'Vendue')
+                // ->join('vendus', 'ventes.id', '=', 'vendus.vente_id')
                 ->join('commande_clients', 'ventes.commande_client_id', '=', 'commande_clients.id')
                 ->join('clients', 'commande_clients.client_id', '=', 'clients.id')
-                ->select('ventes.*', 'clients.raisonSociale', 'clients.telephone')
+                // ->select('ventes.*','vendus*', 'clients.raisonSociale', 'clients.telephone', "vendus")
                 ->whereBetween('date', [$request->debut, $request->fin])
                 ->orderByDesc('ventes.code')
                 ->get();
             $user = null;
         } else {
-            $ventes = Vente::where('ventes.statut', 'Vendue')
+            $ventes = Vente::with("vendus")->where('ventes.statut', 'Vendue')
+                // ->join('vendus', 'ventes.id', '=', 'vendus.vente_id')
                 ->join('commande_clients', 'ventes.commande_client_id', '=', 'commande_clients.id')
                 ->join('clients', 'commande_clients.client_id', '=', 'clients.id')
-                ->select('ventes.*', 'clients.raisonSociale', 'clients.telephone')
+                // ->select('ventes.*','vendus*', 'clients.raisonSociale', 'clients.telephone')
                 ->whereBetween('date', [$request->debut, $request->fin])
                 ->where('ventes.users', $request->user)
                 ->orderByDesc('ventes.code')
                 ->get();
             count($ventes) > 0 ? $user = $ventes[0]->utilisateur : $user = null;
         }
+
         return redirect()->route('edition.etatventeperiode')->withInput()->with('resultat', ['ventes' => $ventes, 'user' => $user, 'debut' => $request->debut, 'fin' => $request->fin]);
     }
 

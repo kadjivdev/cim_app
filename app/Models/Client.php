@@ -81,6 +81,7 @@ class Client extends Model
     {
         return $this->hasMany(DetteReglement::class, 'client', 'id');
     }
+    
     public function _deletedVentes()
     {
         return $this->hasMany(DeletedVente::class, 'ctl_payeur');

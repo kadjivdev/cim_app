@@ -135,7 +135,7 @@
                                 </div>
                             </div>
 
-                            @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true)
+                            @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true)
                             <div class="row d-flex">
                                 <div class="col-4">
                                     <div class="info-box">
@@ -217,7 +217,7 @@
                                     <div class="info-box">
                                         <div class="info-box-content text-white bg-black">
                                             <strong class="info-box-text">Il nous doit au total: </strong>
-                                            @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true)
+                                            @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true)
                                             <input type="hidden" id="debit_old" value="{{-session('resultat')['client']['debit_old']}}">
                                             <span class="info-box-number" style="font-size: large" id="totalDu"></span>
                                             @endif

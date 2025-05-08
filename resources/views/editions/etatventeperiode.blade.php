@@ -85,6 +85,7 @@
                                                 <th>Code</th>
                                                 <th>date</th>
                                                 <th> Client</th>
+                                                <th>Chauf../Destin../Acteur</th>
                                                 <th>Type</th>
                                                 <th>Pu ciment</th>
                                                 <th>Qte</th>
@@ -117,6 +118,15 @@
                                                     {{$item->raisonSociale}} ({{$item->telephone}})
                                                     @if(substr($item->code,0,2) == 'VI')
                                                     {{$item->commandeclient->code}}
+                                                    @endif
+                                                </td>
+                                                <td class="text-center font-weight-bold">
+                                                    @if(count($item->vendus)>0)
+                                                    @foreach ($item->vendus as $vendu )
+                                                    {{ $vendu->programmation->chauffeur->nom}} {{ $vendu->programmation->chauffeur->prenom}} / {{ $item->destination }}/ <span class="badge text-white bg-warning">{{$item->user->name}}</span>
+                                                    @endforeach
+                                                    @else
+                                                    ---
                                                     @endif
                                                 </td>
                                                 <td>{{$item->typeVente->libelle}}</td>
@@ -246,7 +256,7 @@
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
-            "buttons": ["pdf", "print","excel","csv"],
+            "buttons": ["pdf", "print", "excel", "csv"],
             "order": [
                 [0, 'desc']
             ],
