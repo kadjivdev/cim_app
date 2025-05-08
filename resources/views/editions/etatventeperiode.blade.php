@@ -154,7 +154,9 @@
                                                     <span class="badge bg-danger"><i class="fa fa-times"></i> Anomalie</span>
                                                     @endif
 
-                                                    <!-- <a class="dropdown-item" href="{{route('reglements.index',['vente'=>$item->id])}}"><i class="fa-solid fa-file-invoice-dollar"></i> Règlement {{$item->id}} <span class="badge badge-info">{{$item->reglements ? count($item->reglements):0}}</span></a> -->
+                                                    @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists()==true)
+                                                    <a class="dropdown-item" href="{{route('reglements.index',['vente'=>$item->id])}}"><i class="fa-solid fa-file-invoice-dollar"></i> Règlement {{$item->id}} </a>
+                                                    @endif
                                                 </td>
                                             </tr>
                                             @endforeach
