@@ -479,18 +479,22 @@ class EditionController extends Controller
             'fin' => ['required']
         ]);
 
+        $ventes = collect();
+
         if ($request->user == 'tout') {
-            $ventes = Vente::with(["vendus","commandeclient.client"])->where('ventes.statut', 'Vendue')
+            Vente::with(["vendus", "commandeclient.client"])->where('statut', 'Vendue')
                 // ->join('vendus', 'ventes.id', '=', 'vendus.vente_id')
                 // ->join('commande_clients', 'ventes.commande_client_id', '=', 'commande_clients.id')
                 // ->join('clients', 'commande_clients.client_id', '=', 'clients.id')
                 // ->select('ventes.*','vendus*', 'clients.raisonSociale', 'clients.telephone', "vendus")
                 ->whereBetween('date', [$request->debut, $request->fin])
                 ->orderByDesc('ventes.code')
-                ->get();
+                ->chunk(100, function ($chunk) use (&$ventes) {
+                    $ventes = $ventes->merge($chunk); //merge the chunk
+                });
             $user = null;
         } else {
-            $ventes = Vente::with(["vendus","commandeclient.client"])->where('ventes.statut', 'Vendue')
+            Vente::with(["vendus", "commandeclient.client"])->where('statut', 'Vendue')
                 // ->join('vendus', 'ventes.id', '=', 'vendus.vente_id')
                 ->join('commande_clients', 'ventes.commande_client_id', '=', 'commande_clients.id')
                 ->join('clients', 'commande_clients.client_id', '=', 'clients.id')
@@ -498,10 +502,13 @@ class EditionController extends Controller
                 ->whereBetween('date', [$request->debut, $request->fin])
                 ->where('ventes.users', $request->user)
                 ->orderByDesc('ventes.code')
-                ->get();
+                ->chunk(100, function ($chunk) use (&$ventes) {
+                    $ventes = $ventes->merge($chunk); //merge the chunk
+                });
             count($ventes) > 0 ? $user = $ventes[0]->utilisateur : $user = null;
         }
-        // dd($ventes[0]);
+
+        // dd(count($ventes));
         return redirect()->route('edition.etatventeperiode')->withInput()->with('resultat', ['ventes' => $ventes, 'user' => $user, 'debut' => $request->debut, 'fin' => $request->fin]);
     }
 

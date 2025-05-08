@@ -115,9 +115,11 @@
                                                 <td>{{$item->code}}</td>
                                                 <td>{{date_format(date_create($item->date),'d/m/Y')}}</td>
                                                 <td>
+                                                    @if($item->commandeclient)
                                                     {{$item->commandeclient->client->raisonSociale}} ({{$item->commandeclient->client->telephone}})
                                                     @if(substr($item->code,0,2) == 'VI')
                                                     {{$item->commandeclient->code}}
+                                                    @endif
                                                     @endif
                                                 </td>
                                                 <td class="text-center font-weight-bold">

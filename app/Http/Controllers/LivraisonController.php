@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NotificateurProgrammationMail;
-use App\Mail\SuspectMail;
 use App\Models\BonCommande;
 use App\Models\Chauffeur;
 use App\Models\Fournisseur;
