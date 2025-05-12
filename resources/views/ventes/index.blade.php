@@ -91,6 +91,7 @@
                                         <th>Client</th>
                                         <th>PU</th>
                                         <th>Qté</th>
+                                        <th>Transport</th>
                                         <th>Montant</th>
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                         <th>Zone</th>
@@ -131,6 +132,7 @@
                                         </td>
                                         <td class="text-right pr-3 pu">{{ number_format($vente->pu,0,","," ") }}</td>
                                         <td class="text-right pr-3 qte">{{ number_format($vente->qteTotal,0,","," ") }}</td>
+                                        <td class="text-right pr-3 transport">{{ number_format($vente->transport,0,","," ") }}</td>
                                         <td class="text-right pr-3 montant">{{ number_format($vente->montant,0,","," ") }}</td>
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                         <td class="pl-2"> {{ $vente->commandeclient->zone->libelle }} </td>
@@ -243,6 +245,7 @@
                                         <th>Client</th>
                                         <th>PU</th>
                                         <th>Qté</th>
+                                        <th>Transport</th>
                                         <th>Montant</th>
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                         <th>Zone</th>
