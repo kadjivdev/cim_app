@@ -92,8 +92,8 @@
                                         <th>PU</th>
                                         <th>Qté</th>
                                         <th>Transport</th>
-                                        <th>Montant</th>
                                         <th>Remise</th>
+                                        <th>Montant</th>
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                         <th>Zone</th>
                                         @endif
