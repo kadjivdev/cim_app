@@ -4,7 +4,6 @@ use App\Models\Client;
 use App\Models\TypeCommande;
 use App\Models\User;
 use App\Models\Vente;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 
 function IS_FOFANA_ACCOUNT($user)
 {
