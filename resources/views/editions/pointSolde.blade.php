@@ -54,8 +54,13 @@
                                                 <option 
                                                 value="{{ $client->id }}" 
                                                     {{ old('client') == $client->id ? 'selected' : '' }}
-                                                    @if(!(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['RECOUVREUR'])->exists()) && Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists())
-                                                        @if($client->zone_id==Auth::user()->zone_id)
+                                                    @if(
+                                                        !(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() ||
+                                                            Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() ||
+                                                            Auth::user()->roles()->where('libelle', ['RECOUVREUR'])->exists()) &&
+                                                        Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists()
+                                                    )
+                                                        @if($client->zone_id!=Auth::user()->zone_id)
                                                         disabled
                                                         @endif
                                                     @endif
