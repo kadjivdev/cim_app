@@ -14,6 +14,7 @@ use App\Models\TypeClient;
 use App\Models\TypeDetailRecu;
 use App\Models\Vente;
 use App\Models\Zone;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -56,10 +57,34 @@ class clientsController extends Controller
 
         // LES REGLEMENTS SUR LE COMPTE DES CLIENTS
         $clients = $clients->map(function ($client) {
+            /**
+             * Les approvisionnements sur compte
+             */
             $client["appro"] = $client->reglements->where("for_dette", false)
                 ->whereNull("vente_id")->whereNotNull("client_id")->sum("montant");
+
+            /**
+             * Les reglements sur ventes
+             */
             $client["reglt"] = $client->reglements->whereNotNull("vente_id")
                 ->whereNotNull("client_id")->sum("montant");
+
+            /**
+             * Obtention des ventes non reglée totalement
+             */
+            $ventesAmount = Collection::make(Vente::join('commande_clients', 'ventes.commande_client_id', '=', 'commande_clients.id')
+                ->join('clients', 'commande_clients.client_id', '=', 'clients.id')
+                ->join('zones', 'commande_clients.zone_id', '=', 'zones.id')
+                ->where('clients.id', $client->id)
+
+                // SEULE LES VENTES VALIDE SONT RECUPERES
+                ->where('valide', true)
+
+                ->select('ventes.montant')
+                ->get())->sum("montant");
+
+            $client["resteVenteAmount"] = $ventesAmount - $client["reglt"];
+
             return $client;
         });
 

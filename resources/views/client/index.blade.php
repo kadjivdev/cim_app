@@ -122,7 +122,7 @@
                                     <tr>
                                         <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
-                                        <th>Statut</th>
+                                        <th>Reste Vente</th>
                                         <th>Zone</th>
                                         <th>Répresentant/Agent</th>
                                         <th>Telephone</th>
@@ -141,18 +141,7 @@
                                         <!-- <td>{{ $loop->index +1 }}</td> -->
                                         <td class="ml-5 pr-5">{{ $client->raisonSociale ? $client->raisonSociale : $client->nom }} ({{$client->id}})</td>
                                         <td>
-                                            @if($client->Is_Bef())
-                                            <span class="badge bg-dark">CLIENT_BEF ({{$client->debit_old}})</span>
-                                            @endif <br>
-
-                                            @if($client->Is_Inactif())
-                                            <span class="badge bg-dark">CLIENT_INACTIF</span>
-                                            @endif
-                                            <br>
-                                            @if(!$client->Is_Bef() && !$client->Is_Inactif())
-                                            <span class="badge bg-dark">Actif</span>
-                                            @endif
-
+                                            <span class="badge bg-danger">{{number_format($client->resteVenteAmount,0,'',' ')}} Fcfa</span>
                                         </td>
                                         <td class="text-center"><span class="badge bg-warning">{{GetClientZone($client)}}</span></td>
                                         <td class="text-center"><span class="badge bg-info">@if($client->_Zone) {{$client->_Zone->representant->nom}} {{$client->_Zone->representant->prenom}} ({{$client->_Zone->representant->telephone}}) / {{GetUserByZoneId($client->_Zone->id)}} @endif </span></td>
@@ -213,7 +202,7 @@
                                     <tr>
                                         <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
-                                        <th>Status</th>
+                                        <th>Reste Vente</th>
                                         <th>Zone</th>
                                         <th>Répresentant/Agent</th>
                                         <th>Telephone</th>
