@@ -120,7 +120,7 @@
                                 style="font-size: 12px">
                                 <thead class="text-white text-center bg-gradient-gray-dark">
                                     <tr>
-                                        <th>#</th>
+                                        <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
                                         <th>Statut</th>
                                         <th>Zone</th>
@@ -136,12 +136,9 @@
                                 </thead>
                                 <tbody>
                                     @if ($clients->count() > 0)
-
                                     @foreach ($clients as $client)
-                                    @php($credit=$client->reglements->where("for_dette", false)->whereNull("vente_id")->sum("montant"))
-                                    @php($debit=$client->reglements->whereNotNull("vente_id")->sum("montant"))
                                     <tr>
-                                        <td>{{ $loop->index +1 }}</td>
+                                        <!-- <td>{{ $loop->index +1 }}</td> -->
                                         <td class="ml-5 pr-5">{{ $client->raisonSociale ? $client->raisonSociale : $client->nom }} ({{$client->id}})</td>
                                         <td>
                                             @if($client->Is_Bef())
@@ -161,10 +158,10 @@
                                         <td class="text-center"><span class="badge bg-info">@if($client->_Zone) {{$client->_Zone->representant->nom}} {{$client->_Zone->representant->prenom}} ({{$client->_Zone->representant->telephone}}) / {{GetUserByZoneId($client->_Zone->id)}} @endif </span></td>
 
                                         <td class="ml-5 pr-5">{{ $client->telephone }}</td>
-                                        <td class="text-center"><span class="badge bg-warning">{{number_format($credit, '0', '', ' ')}} FCFA</span> </td>
-                                        <td class="text-center"><span class="badge bg-info"> {{number_format($debit, '0', '', ' ')}} FCFA</span></td>
-                                        <td class="text-center"><span class="badge bg-success"> {{number_format($credit-$debit, '0', '', ' ')}} FCFA</span></td>
-                                        <td class="text-center"><span class="badge bg-success">{{($credit-$debit)>0?"SOLD_EXIST":''}}</span></td>
+                                        <td class="text-center"><span class="badge bg-warning">{{number_format($client->appro, '0', '', ' ')}} FCFA</span> </td>
+                                        <td class="text-center"><span class="badge bg-info"> {{number_format($client->reglt, '0', '', ' ')}} FCFA</span></td>
+                                        <td class="text-center"><span class="badge bg-success"> {{number_format($client->appro-$client->reglt, '0', '', ' ')}} FCFA</span></td>
+                                        <td class="text-center"><span class="badge bg-success">{{($client->appro-$client->reglt)>0?"SOLD_EXIST":''}}</span></td>
 
                                         <td class="text-center">
                                             <a class="btn btn-secondary btn-sm"
@@ -214,7 +211,7 @@
                                 </tbody>
                                 <tfoot class="text-white text-center bg-gradient-gray-dark">
                                     <tr>
-                                        <th>#</th>
+                                        <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
                                         <th>Status</th>
                                         <th>Zone</th>

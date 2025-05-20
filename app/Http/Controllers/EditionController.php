@@ -196,10 +196,6 @@ class EditionController extends Controller
             $clients = $clients->merge($chunk); //merge the chunk
         });
 
-        // if (!(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['RECOUVREUR'])->exists()) && Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists()) {
-        //     $clients = $clients->where("zone_id", Auth::user()->zone_id);
-        // }
-
         $zones = Zone::all();
 
         //ventes

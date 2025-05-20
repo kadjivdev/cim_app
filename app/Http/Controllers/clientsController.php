@@ -9,6 +9,7 @@ use App\Models\Compte;
 use App\Models\Departement;
 use App\Models\DetteReglement;
 use App\Models\Porteuille;
+use App\Models\Reglement;
 use App\Models\TypeClient;
 use App\Models\TypeDetailRecu;
 use App\Models\Vente;
@@ -34,6 +35,7 @@ class clientsController extends Controller
             });
         }
 
+
         // UN AGENT NE VERA QUE LES CLIENTS SE TROUVANT DANS LA ZONE DE SON REPRESENTANT
         $user = Auth::user();
 
@@ -46,9 +48,19 @@ class clientsController extends Controller
             $clients = $clients->where("zone_id", $user->zone_id);
         }
 
+
         // NI INACTIF NI BEFS
         $clients = $clients->filter(function ($client) {
             return (!$client->Is_Bef() && !$client->Is_Inactif());
+        });
+
+        // LES REGLEMENTS SUR LE COMPTE DES CLIENTS
+        $clients = $clients->map(function ($client) {
+            $client["appro"] = $client->reglements->where("for_dette", false)
+                ->whereNull("vente_id")->whereNotNull("client_id")->sum("montant");
+            $client["reglt"] = $client->reglements->whereNotNull("vente_id")
+                ->whereNotNull("client_id")->sum("montant");
+            return $client;
         });
 
         $zones = Zone::all();
@@ -81,8 +93,6 @@ class clientsController extends Controller
         $clients = $clients->filter(function ($client) {
             return $client->Is_Inactif();
         });
-
-        // $clients = $clients->where('id','<',100);
 
         $zones = Zone::all();
         return view('client.index_inactif', compact('clients', "zones"));

@@ -53,9 +53,7 @@ use App\Http\Controllers\VenduController;
 use App\Models\Client;
 use App\Models\LogUser;
 use App\Models\Programmation;
-use App\Models\Recouvrement;
 use App\Models\Vendu;
-use App\Models\Vente;
 
 // use App\Models\Reglement;
 
@@ -106,7 +104,10 @@ Route::get("/find", function () {
 
 // VERIFICATION D4eXISTANCE DE BL
 Route::get("/bl-verification/{bl}", function ($bl) {
-    $bls = Programmation::where("bl", $bl)->orWhere("bl_gest", $bl)->get();
+    $bls = Programmation::where("bl", $bl)
+        ->orWhere("bl_gest", $bl)
+        ->get();
+
     return response()->json(
         [
             "bls" => $bls,
