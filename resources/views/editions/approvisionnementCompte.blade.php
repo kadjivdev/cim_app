@@ -74,6 +74,7 @@
                                                     <th>Dette</th>
                                                     <th>Reversement</th>
                                                     <th>Preuve</th>
+                                                    <th>Inséré le</th>
                                                     <th>Par</th>
                                                 </tr>
                                             </thead>
@@ -91,7 +92,6 @@
                                                             {{$reglement->client->raisonSociale}}
                                                         </b>
                                                     </td>
-                                                    <!-- <td class="text-center">{{date_format(date_create($reglement->created_at),'d/m/Y H:i')}}</td> -->
                                                     <td class="text-center">{{date_format(date_create($reglement->date),'d/m/Y')}}</td>
                                                     <td class="text-center"><span class="badge bg-success">{{!$reglement->for_dette? number_format($reglement->montant,0,',',' '):0}} </span> </td>
                                                     <td class="text-center"><span class="badge bg-success">{{$reglement->for_dette? number_format(-$reglement->montant,0,',',' '):0}} </span> </td>
@@ -103,6 +103,7 @@
                                                         @endif
                                                     </td>
                                                     <td class="text-center"> <a href="{{$reglement->document}}" class="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer"><i class="bi bi-file-earmark-pdf"></i></a> </td>
+                                                    <td class="text-center">{{date_format(date_create($reglement->created_at),'d/m/Y H:i')}}</td>
                                                     <td class="text-center"> <span class="badge bg-danger">{{$reglement->utilisateur?$reglement->utilisateur->name:"---"}} </span> </td>
                                                 </tr>
                                                 @endforeach
@@ -117,6 +118,7 @@
                                                     <th>Dette</th>
                                                     <th>Reversement</th>
                                                     <th>Preuve</th>
+                                                    <th>Inséré le</th>
                                                     <th>Par</th>
                                                 </tr>
                                             </tfoot>
