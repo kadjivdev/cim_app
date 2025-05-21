@@ -472,7 +472,7 @@
 
 @section('script')
 
-@if (session('resultat'))
+@if(session('resultat'))
 <script>
     $(function() {
         // Récupérer les éléments
