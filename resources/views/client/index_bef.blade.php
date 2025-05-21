@@ -53,15 +53,6 @@
                         </div>
                         @endif
 
-                        @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists())
-                        <div class="card-header">
-                            <a href="{{ route('newclient.create') }}" class="btn btn-success btn-sm">
-                                <i class="fas fa-solid fa-plus"></i>
-                                Ajouter
-                            </a>
-                        </div>
-                        @endif
-
                         <div class="modal fade" id="modal-default">
                             <div class="modal-dialog">
                                 <div class="modal-content">
