@@ -333,6 +333,11 @@ class ProgrammationController extends Controller
                     'email' => $zone->representant->email
                 ];
 
+                /**
+                 * 
+                 */
+
+
                 $subject = 'ANNULATION PROGRAMMATION N° ' . $programmation->code . ' DU ' . date_format(date_create($programmation->dateprogrammer), 'd/m/Y');
                 $message_html = "<p style='color: red'>Nous vous informons que la programmation ci-dessous a été annulée pour votre zone. merci de ne pas prendre ça en compte.</p>";
                 $lienAction = route('programmations.index');

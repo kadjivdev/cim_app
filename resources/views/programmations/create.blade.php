@@ -278,10 +278,10 @@
                                                     @if ($programmation->detailboncommande->boncommande->status !='livrer')
                                                     <td class="text-center">
                                                         @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CREANT'])->exists())
-                                                        <!-- @if($programmation->statut == 'Valider')
+                                                        @if($programmation->statut == 'Valider')
                                                         <span id="annuler-{{ $programmation->id }}"> <a class="btn btn-primary btn-sm" title="Annuler une programmation" href="{{ route('programmations.show', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id, 'total' => $total]) }}"><i class="fa-regular fa-rectangle-xmark"></i></a>
                                                         </span>
-                                                        @endif -->
+                                                        @endif
 
                                                         @if(($programmation->statut != 'Livrer') && ($programmation->statut != 'Annuler') && ($programmation->imprimer) && ($programmation->bl_gest == Null))
                                                         <span id="bl-{{ $programmation->id }}"> <a class="btn btn-dark btn-sm" onclick="getId({{ $programmation->id }})" id="bl_prog" title="BL Gestionnaire" href="{{-- {{ route('programmations.dateSortie', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id]) }} --}}#" data-toggle="modal" data-target="#modal-sm"><b>BL</b></a></span>
