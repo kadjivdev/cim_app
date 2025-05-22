@@ -363,21 +363,30 @@ class ProgrammationController extends Controller
 
     public function destroy(DetailBonCommande $detailboncommande, Programmation $programmation)
     {
-        ####___VERIFIONS S'IL Y A UNE VENTE SUR CETTE PROGRAMMATION
-        if (count($programmation->vendus) != 0) {
-            return back()->with("error", "Il y a des ventes attachées à cette programmations!");
-        }
+        try {
+            DB::beginTransaction();
+            ####___VERIFIONS S'IL Y A UNE VENTE SUR CETTE PROGRAMMATION
 
-        /**
-         * Changement de status du bon de commande
-         */
-        $programmation->detailboncommande
-            ->boncommande()->update(["statut" => 'Valider']);
+            if (count($programmation->vendus) != 0) {
+                return back()->with("error", "Il y a des ventes attachées à cette programmations!");
+            }
 
-        ControlesTools::generateLog($programmation, 'Programmation', 'Suppression ligne');
-        $programmation = $programmation->delete();
-        if ($programmation) {
-            return redirect()->route('programmations.create', ['detailboncommande' => $detailboncommande->id]);
+            /**
+             * Changement de status du bon de commande
+             */
+            $programmation->detailboncommande
+                ->boncommande()->update(["statut" => 'Valider']);
+
+            ControlesTools::generateLog($programmation, 'Programmation', 'Suppression ligne');
+            $programmation->delete();
+
+            DB::commit();
+            return redirect()->route('programmations.create', ['detailboncommande' => $detailboncommande->id])
+            ->with("message","Suppression éffectuée avec succès!");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('programmations.create', ['detailboncommande' => $detailboncommande->id])
+            ->with("error","Erreure de suppression ".$e->getMessage());
         }
     }
 
