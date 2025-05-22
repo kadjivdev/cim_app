@@ -104,7 +104,7 @@ Route::get("/find", function () {
 
 // VERIFICATION D4eXISTANCE DE BL
 Route::get("/bl-verification/{bl}", function ($bl) {
-    $bls = Programmation::where("bl", $bl)
+    $bls = Programmation::with("detailboncommande.boncommande")->where("bl", $bl)
         ->orWhere("bl_gest", $bl)
         ->get();
 

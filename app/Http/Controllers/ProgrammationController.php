@@ -230,7 +230,7 @@ class ProgrammationController extends Controller
                         };
                     };
                 }
-                
+
                 $programmation = Programmation::create([
                     'code' => $code,
                     'dateprogrammer' => $request->dateprogrammer,
@@ -364,9 +364,15 @@ class ProgrammationController extends Controller
     public function destroy(DetailBonCommande $detailboncommande, Programmation $programmation)
     {
         ####___VERIFIONS S'IL Y A UNE VENTE SUR CETTE PROGRAMMATION
-        if (count($programmation->vendus)!=0) {
+        if (count($programmation->vendus) != 0) {
             return back()->with("error", "Il y a des ventes attachées à cette programmations!");
         }
+
+        /**
+         * Changement de status du bon de commande
+         */
+        $programmation->detailboncommande
+            ->boncommande()->update(["statut" => 'Valider']);
 
         ControlesTools::generateLog($programmation, 'Programmation', 'Suppression ligne');
         $programmation = $programmation->delete();
