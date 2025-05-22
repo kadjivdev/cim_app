@@ -314,7 +314,7 @@
                         </li>
                         <!-- les inactifs -->
                         <li class="nav-item">
-                            <a href="{{ route('newclient.inactif') }}" class="nav-link {{ (request()->is('newclient/index/inactif')) ? 'active' : '' }}">
+                            <a href="{{ route('newclient.inactif') }}" class="nav-link {{ (request()->is('clients/index/inactif')) ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-solid fa-hand-holding-hand  text-cyan"></i>
                                 <p>
                                     Client inactifs
@@ -324,7 +324,7 @@
 
                         <!-- les befs -->
                         <li class="nav-item">
-                            <a href="{{ route('newclient.befs') }}" class="nav-link {{ (request()->is('newclient/index/befs')) ? 'active' : '' }}">
+                            <a href="{{ route('newclient.befs') }}" class="nav-link {{ (request()->is('clients/index/bef')) ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-solid fa-hand-holding-hand  text-cyan"></i>
                                 <p>
                                     Client befs

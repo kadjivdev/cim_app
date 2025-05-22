@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>CLIENTS</h1>
+                    <h1>CLIENTS ACTIFS</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -113,7 +113,7 @@
                                 </div>
                             </div>
                         </form>
-                        
+
                         <!-- /.card-header -->
                         <div class="card-body">
                             <table id="example1" class="table table-bordered table-striped table-sm"
@@ -123,12 +123,14 @@
                                         <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
                                         <th>Reste Vente</th>
+                                        <th>Dette Ancienne</th>
+                                        <th>Solde</th>
+                                        <th>Dette Total</th>
                                         <th>Zone</th>
                                         <th>Répresentant/Agent</th>
                                         <th>Telephone</th>
                                         <th>Appro</th>
                                         <th>Reglé</th>
-                                        <th>Solde</th>
                                         <th>Etat</th>
                                         <th>MAJ</th>
                                         <th>Action</th>
@@ -137,12 +139,17 @@
                                 <tbody>
                                     @if ($clients->count() > 0)
                                     @foreach ($clients as $client)
+                                    @php($solde = $client->appro-$client->reglt)
+                                    @php($soldeReelle = $client->resteVenteAmount-$solde)
+                                    @php($detteTotal = $soldeReelle- $client->debit_old)
                                     <tr>
                                         <!-- <td>{{ $loop->index +1 }}</td> -->
                                         <td class="ml-5 pr-5">{{ $client->raisonSociale ? $client->raisonSociale : $client->nom }} ({{$client->id}})</td>
-                                        <td>
-                                            <span class="badge bg-danger">{{number_format($client->resteVenteAmount,0,'',' ')}} Fcfa</span>
-                                        </td>
+                                        <td><span class="badge bg-danger">{{number_format($client->resteVenteAmount,0,'',' ')}} Fcfa</span></td>
+                                        <td class="text-center"> <span class="badge bg-danger">{{number_format(-$client->debit_old,0," "," ") }} </span> </td>
+                                        <td class="text-center"><span class="badge bg-success">{{number_format($solde,0," "," ")}} fcfa</span> <small>{{$solde>0?"SOLD_EXIST":''}}</small></td>
+                                        <td class="text-center"> <span class="badge bg-danger">{{number_format($detteTotal,0," "," ") }} </span> </td>
+
                                         <td class="text-center"><span class="badge bg-warning">{{GetClientZone($client)}}</span></td>
                                         <td class="text-center"><span class="badge bg-info">@if($client->_Zone) {{$client->_Zone->representant->nom}} {{$client->_Zone->representant->prenom}} ({{$client->_Zone->representant->telephone}}) / {{GetUserByZoneId($client->_Zone->id)}} @endif </span></td>
 
@@ -150,7 +157,6 @@
                                         <td class="text-center"><span class="badge bg-warning">{{number_format($client->appro, '0', '', ' ')}} FCFA</span> </td>
                                         <td class="text-center"><span class="badge bg-info"> {{number_format($client->reglt, '0', '', ' ')}} FCFA</span></td>
                                         <td class="text-center"><span class="badge bg-success"> {{number_format($client->appro-$client->reglt, '0', '', ' ')}} FCFA</span></td>
-                                        <td class="text-center"><span class="badge bg-success">{{($client->appro-$client->reglt)>0?"SOLD_EXIST":''}}</span></td>
 
                                         <td class="text-center">
                                             <a class="btn btn-secondary btn-sm"
@@ -203,12 +209,14 @@
                                         <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
                                         <th>Reste Vente</th>
+                                        <th>Dette Ancienne</th>
+                                        <th>Solde</th>
+                                        <th>Dette Total</th>
                                         <th>Zone</th>
                                         <th>Répresentant/Agent</th>
                                         <th>Telephone</th>
                                         <th>Appro</th>
                                         <th>Reglé</th>
-                                        <th>Solde</th>
                                         <th>Etat</th>
                                         <th>MAJ</th>
                                         <th>Action</th>
@@ -259,7 +267,8 @@
 
 @section('script')
 <script>
-    function affectToZone(id) {
+    async function affectToZone(id) {
+        // alert("{{env('APP_BASE_URL')}}client/")
         $("#locator_rooms").empty()
         axios.get("{{env('APP_BASE_URL')}}client/" + id + "/retrieve").then((response) => {
             var client = response.data

@@ -53,73 +53,23 @@
                         </div>
                         @endif
 
-                        <div class="modal fade" id="modal-default">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Nouveau Clients</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form method="POST" action="{{ route('newclient.store') }}">
-                                        @csrf
-                                        <div class="modal-body">
-
-                                        </div>
-                                        <div class="modal-footer justify-content-between">
-                                            <div class="col-sm-4">
-                                                <a href="{{ route('clients.index') }}"
-                                                    class="btn btn-sm btn-secondary btn-block">
-                                                    <i class="fa-solid fa-circle-left mr-1"></i>
-                                                    {{ __('Retour') }}
-                                                </a>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <button type="submit" class="btn btn-success btn-block">Enregistrer
-                                                    <i class="fa-solid fa-floppy-disk"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-                        <form action="" method="get">
-                            <div class="row">
-                                <div class="col-1"></div>
-                                <div class="col-8">
-                                    <div class="form-group m-1">
-                                        <label for="">Recherche Client</label>
-                                        <input type="text" class="form-control" name="search" value="{{old('search')}}" required>
-                                    </div>
-                                    @error('search')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="col-2">
-                                    <button class="btn btn-primary" type="submit" style="margin-top: 2em">Afficher</button>
-                                </div>
-                            </div>
-                        </form>
                         <!-- /.card-header -->
                         <div class="card-body">
                             <table id="example1" class="table table-bordered table-striped table-sm"
                                 style="font-size: 12px">
                                 <thead class="text-white text-center bg-gradient-gray-dark">
                                     <tr>
-                                        <th>#</th>
+                                        <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
-                                        <th>Statut</th>
-                                        <th>Dette</th>
+                                        <th>Reste Vente</th>
+                                        <th>Dette Ancienne</th>
+                                        <th>Solde</th>
+                                        <th>Dette Total</th>
                                         <th>Zone</th>
                                         <th>Répresentant/Agent</th>
                                         <th>Telephone</th>
                                         <th>Appro</th>
                                         <th>Reglé</th>
-                                        <th>Solde</th>
                                         <th>Etat</th>
                                         <th>MAJ</th>
                                         <th>Action</th>
@@ -127,36 +77,25 @@
                                 </thead>
                                 <tbody>
                                     @if ($clients->count() > 0)
-
                                     @foreach ($clients as $client)
-                                    @php($credit=$client->reglements->where("for_dette", false)->whereNull("vente_id")->sum("montant"))
-                                    @php($debit=$client->reglements->whereNotNull("vente_id")->sum("montant"))
+                                    @php($solde = $client->appro-$client->reglt)
+                                    @php($soldeReelle = $client->resteVenteAmount-$solde)
+                                    @php($detteTotal = $soldeReelle- $client->debit_old)
                                     <tr>
-                                        <td>{{ $loop->index +1 }}</td>
+                                        <!-- <td>{{ $loop->index +1 }}</td> -->
                                         <td class="ml-5 pr-5">{{ $client->raisonSociale ? $client->raisonSociale : $client->nom }} ({{$client->id}})</td>
-                                        <td>
-                                            @if($client->Is_Bef())
-                                            <span class="badge bg-dark">CLIENT_BEF </span>
-                                            @endif <br>
-
-                                            @if($client->Is_Inactif())
-                                            <span class="badge bg-dark">CLIENT_INACTIF</span>
-                                            @endif
-                                            <br>
-                                            @if(!$client->Is_Bef() && !$client->Is_Inactif())
-                                            <span class="badge bg-dark">Actif</span>
-                                            @endif
-
-                                        </td>
+                                        <td><span class="badge bg-danger">{{number_format($client->resteVenteAmount,0,'',' ')}} Fcfa</span></td>
                                         <td class="text-center"> <span class="badge bg-danger">{{number_format(-$client->debit_old,0," "," ") }} </span> </td>
+                                        <td class="text-center"><span class="badge bg-success">{{number_format($solde,0," "," ")}} fcfa</span> <small>{{$solde>0?"SOLD_EXIST":''}}</small></td>
+                                        <td class="text-center"> <span class="badge bg-danger">{{number_format($detteTotal,0," "," ") }} </span> </td>
+
                                         <td class="text-center"><span class="badge bg-warning">{{GetClientZone($client)}}</span></td>
                                         <td class="text-center"><span class="badge bg-info">@if($client->_Zone) {{$client->_Zone->representant->nom}} {{$client->_Zone->representant->prenom}} ({{$client->_Zone->representant->telephone}}) / {{GetUserByZoneId($client->_Zone->id)}} @endif </span></td>
 
                                         <td class="ml-5 pr-5">{{ $client->telephone }}</td>
-                                        <td class="text-center"><span class="badge bg-warning">{{number_format($credit, '0', '', ' ')}} FCFA</span> </td>
-                                        <td class="text-center"><span class="badge bg-info"> {{number_format($debit, '0', '', ' ')}} FCFA</span></td>
-                                        <td class="text-center"><span class="badge bg-success"> {{number_format($credit-$debit, '0', '', ' ')}} FCFA</span></td>
-                                        <td class="text-center"><span class="badge bg-success">{{($credit-$debit)>0?"SOLD_EXIST":''}}</span></td>
+                                        <td class="text-center"><span class="badge bg-warning">{{number_format($client->appro, '0', '', ' ')}} FCFA</span> </td>
+                                        <td class="text-center"><span class="badge bg-info"> {{number_format($client->reglt, '0', '', ' ')}} FCFA</span></td>
+                                        <td class="text-center"><span class="badge bg-success"> {{number_format($client->appro-$client->reglt, '0', '', ' ')}} FCFA</span></td>
 
                                         <td class="text-center">
                                             <a class="btn btn-secondary btn-sm"
@@ -206,29 +145,23 @@
                                 </tbody>
                                 <tfoot class="text-white text-center bg-gradient-gray-dark">
                                     <tr>
-                                        <th>#</th>
+                                        <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
-                                        <th>Status</th>
-                                        <th>Dette</th>
+                                        <th>Reste Vente</th>
+                                        <th>Dette Ancienne</th>
+                                        <th>Solde</th>
+                                        <th>Dette Total</th>
                                         <th>Zone</th>
                                         <th>Répresentant/Agent</th>
                                         <th>Telephone</th>
                                         <th>Appro</th>
                                         <th>Reglé</th>
-                                        <th>Solde</th>
                                         <th>Etat</th>
                                         <th>MAJ</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
                             </table>
-
-                            <!--  -->
-                            <div class="row">
-                                <div class="col-12">
-                                    <h5 class="">Dette totale: <span id="total">{{number_format(-$clients->sum("debit_old"),0," "," ")}} FCFA</span> </h5>
-                                </div>
-                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -282,7 +215,7 @@
             search: 'applied'
         }).data().sum()
 
-        const _totalDette = totalDette>0?totalDette:-totalDette
+        const _totalDette = totalDette > 0 ? totalDette : -totalDette
         $("#total").html(new Intl.NumberFormat().format(_totalDette) + " FCFA ")
     })
 
