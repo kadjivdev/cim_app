@@ -68,8 +68,6 @@ class Client extends Model
     public function agents()
     {
         return $this->belongsTo(Agent::class, 'portefeuille');
-        /* ->withPivot('datedebut','datefin','statut')
-        ->withTimestamps(); */
     }
 
     public function getFilleulFiscAttribute($value)
@@ -100,6 +98,6 @@ class Client extends Model
 
     public function  Is_Inactif()
     {
-        return $this->commandeclients()->count() == 0 && !$this->debit_old && $this->created_at < "2024-12-31" && !in_array($this->id, [1518,1435,1669,728,890,2482,1559,2150,643,1409]) ;
+        return $this->commandeclients()->count() == 0 && !$this->debit_old && $this->created_at < "2024-12-31" && !in_array($this->id, [1518,1435,1669,728,890,2482,1559,2150,643,1409,445]) ;
     }
 }

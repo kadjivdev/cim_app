@@ -54,7 +54,7 @@
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label>BL<span class="text-danger">*</span> {{$programmation->bl_gest}} </label>
-                                                <input type="text" class="form-control form-control-sm" name="bl" style="text-transform: uppercase" hidden value="{{ $programmation->bl_gest }}"  autocomplete="bl" autofocus>
+                                                <input type="text" class="form-control form-control-sm" name="bl" hidden value="{{ $programmation->bl_gest }}"  autocomplete="bl" autofocus>
                                                 <input type="text" class="form-control form-control-sm" disabled style="text-transform: uppercase"  value="{{ $programmation->bl_gest }}">
                                                 @error('bl')
                                                     <span class="text-danger">{{ $message }}</span>
