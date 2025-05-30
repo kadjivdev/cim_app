@@ -520,51 +520,43 @@ class clientsController extends Controller
     public function update(Request $request, Client $client)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'logo' => ['nullable', 'image', 'mimes:jpg,bmp,png'],
-                'sigle' => ['nullable', 'string', 'max:255'],
-                'raisonsociale' => ['required', 'string', 'max:255'],
-                'telephone' => ['required', 'string', 'max:255'],
-                'email' => ['nullable', 'string', 'email', 'max:255'],
-                'adresse' => ['nullable', 'string', 'max:255'],
-                'domaine' => ['nullable', 'string', 'max:255'],
-                'rccm' => ['nullable', 'string', 'max:255'],
-                'ifu' => ['nullable'],
-                'numerocompte' => ['nullable', 'string'],
-                'departement_id' => ['required', 'integer'],
-                'type_client_id' => ['required', 'integer'],
-            ]);
-
-            if ($validator->fails()) {
-                return back()->withErrors($validator->errors())->withInput();
-            }
-
+            
+            $data = $request->all();
 
             $logo = "";
             /* Uploader les images dans la base de données */
             if ($request->file('logo')) {
+                $request->validate(
+                    [
+                        'logo' => ['nullable', 'image', 'mimes:jpg,bmp,png']
+                    ],
+                    [
+                        "logo.image"=>"Le logo doit être une image de type .jpg,bmp,png"
+                    ]
+                );
                 $image = $request->file('logo');
                 $logo = time() . '.' . $image->extension();
                 $image->move(public_path('images'), $logo);
             } else {
                 $logo =  $client->logo;
             }
+            $data["logo"] = $logo;
 
-            $client->raisonSociale = $request->raisonsociale;
-            $client->logo = $logo;
-            $client->ifu = $request->ifu;
-            $client->rccm = $request->rccm;
-            $client->telephone = $request->telephone;
-            $client->email = $request->email;
-            $client->adresse = $request->adresse;
-            $client->domaine = $request->domaine;
-            $client->sigle = $request->sigle;
-            $client->type_client_id = $request->type_client_id;
-            $client->numerocompte = $request->numerocompte;
-            $client->departement_id = $request->departement_id;
-            $client->parent =  $client->parent;
-            $client->filleulFisc =  json_encode($request->filleulFisc);
-            $client->update();
+            // TRAITEMENT DU BORDEAREAU DE RECU
+            if ($request->file("bordereau_receit")) {
+                $rc = $request->file("bordereau_receit");
+                $rc_name = $rc->getClientOriginalName();
+
+                $rc->move("files", $rc_name);
+
+                ##___Formation du lien du fichier à entregistrer
+                $bordereau_receit = asset("/files/" . $rc_name);
+            } else {
+                $bordereau_receit = $client->bordereau_receit;
+            }
+            $data["bordereau_receit"] = $bordereau_receit;
+            
+            $client->update($data);
             Session()->flash('message', 'Client Modifié avec succès!');
             return redirect()->route('newclient.index');
         } catch (\Throwable $e) {

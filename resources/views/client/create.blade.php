@@ -233,12 +233,9 @@
                                         </div>
 
                                     </div>
-
-
                                 </div>
 
                                 <span id="agent1" style="display:none">
-
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="form-group">
@@ -261,7 +258,6 @@
                                     </div>
 
                                 </span>
-
                             </div>
                             <div class="card-footer">
                                 <div class="row justify-content-center">
