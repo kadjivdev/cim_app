@@ -61,10 +61,12 @@
                                     <tr>
                                         <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
+                                        @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true)
                                         <th>Reste Vente</th>
                                         <th>Dette Ancienne</th>
                                         <th>Solde</th>
                                         <th>Dette Total</th>
+                                        @endif
                                         <th>Zone</th>
                                         <th>Répresentant/Agent</th>
                                         <th>Telephone</th>
@@ -147,10 +149,12 @@
                                     <tr>
                                         <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
+                                        @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true)
                                         <th>Reste Vente</th>
                                         <th>Dette Ancienne</th>
                                         <th>Solde</th>
                                         <th>Dette Total</th>
+                                        @endif
                                         <th>Zone</th>
                                         <th>Répresentant/Agent</th>
                                         <th>Telephone</th>
