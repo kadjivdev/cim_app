@@ -261,6 +261,10 @@ function GetVenteDeletedClient($venteDeleted)
 ###___Verifions si le client a une dette à regler
 function IsClientHasADebt($clientId)
 {
+    if(!$clientId){
+        return false;
+    }
+
     $client = Client::find($clientId);
     if (!$client->debit_old || $client->debit_old == 0) {
         return false;
