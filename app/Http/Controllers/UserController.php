@@ -134,7 +134,6 @@ class UserController extends Controller
             $verif = User::all()->whereNotIn('id', $user->id)->firstWhere('email', '=', $request->email);
 
             if ($verif) {
-
                 Session()->flash('error', 'L\'email existe déjà');
                 return redirect()->route('users.index');
             }
