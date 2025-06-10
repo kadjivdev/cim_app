@@ -91,7 +91,7 @@ class UserController extends Controller
 
             $request->validate([
                 'representent_id' => ['required', 'integer'],
-                'zone_id' => ['required', 'integer'],
+                // 'zone_id' => ['required', 'integer'],
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['string', 'email'],
             ]);
