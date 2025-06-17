@@ -50,9 +50,9 @@ class clientsController extends Controller
         }
 
 
-        // NI INACTIF NI BEFS
+        // NI INACTIF NI BEFS NI AJOUTE AU BEFS PAR FORCE
         $clients = $clients->filter(function ($client) {
-            return (!$client->Is_Bef() && !$client->Is_Inactif());
+            return (!$client->Is_Bef() && !$client->Is_Inactif() && !$client->Added_To_Bef());
         });
 
         // LES REGLEMENTS SUR LE COMPTE DES CLIENTS
@@ -147,7 +147,7 @@ class clientsController extends Controller
 
         // LES BEFS
         $clients = $clients->filter(function ($client) {
-            return $client->Is_Bef();
+            return ($client->Is_Bef() || $client->Added_To_Bef());
         });
 
         // $clients = $clients->where('id','<',100);
