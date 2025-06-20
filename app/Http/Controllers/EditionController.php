@@ -890,7 +890,7 @@ class EditionController extends Controller
     {
         ## QUAND C'EST UNE REQUETE GET
         if ($request->method() == "GET") {
-            $reglements = Reglement::whereNull("vente_id")->whereNotNull("client_id")->orderBy('id', 'desc')->get();
+            $reglements = Reglement::with("compte")->whereNull("vente_id")->whereNotNull("client_id")->orderBy('id', 'desc')->get();
 
             session()->put('result', false);
             return view('editions.approvisionnementCompte', compact('reglements'));

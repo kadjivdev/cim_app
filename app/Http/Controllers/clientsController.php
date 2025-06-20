@@ -321,8 +321,8 @@ class clientsController extends Controller
      * Affectation d'agent un client 
      *
      * @param Request $request
-     * 
      */
+
     public function affectionAgent(Request $request)
     {
         try {
@@ -387,6 +387,7 @@ class clientsController extends Controller
             }
         }
     }
+    
     // Liste des agents affecter à un client.
     public function affectationAgentListe() {}
 
