@@ -226,7 +226,12 @@
                 @endif
                 @endif
 
-                @if (Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists()||Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists() ||Auth::user()->roles()->where('libelle', ['GESTIONNAIRE'])->exists() || Auth::user()->roles()->where('libelle', ['COMPTABLE'])->exists())
+                @if (Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() 
+                || Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists()
+                ||Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists() 
+                ||Auth::user()->roles()->where('libelle', ['GESTIONNAIRE'])->exists() 
+                || Auth::user()->roles()->where('libelle', ['COMPTABLE'])->exists()
+                || Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists())
                 <li class="nav-header">CONTROLLER</li>
                 <li class="nav-item {{request()->route()->getPrefix() == '/controle' ? 'menu-open':''}}">
                     <a href="#" class="nav-link {{request()->route()->getPrefix() == '/controle' ? 'active':''}}">
@@ -237,7 +242,6 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-
                         @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() 
                         || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() 
                         || Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists() 
