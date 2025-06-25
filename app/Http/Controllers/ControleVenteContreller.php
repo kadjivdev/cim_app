@@ -35,7 +35,7 @@ class ControleVenteContreller extends Controller
 
         ####____ POUR DJIBRIL 1 MR AIME, ON RECUPERE LES REGLEMENTS NON VALIDES
         $user = Auth::user();
-        if (IS_DJIBRIL_ACCOUNT($user) || IS_AIME_ACCOUNT($user)) {
+        if (IS_DJIBRIL_ACCOUNT($user) || IS_RODOLPHO_ACCOUNT($user) || IS_AIME_ACCOUNT($user)) {
             $reglements = $reglements->where("statut", 0);
         }
 

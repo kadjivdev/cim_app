@@ -238,7 +238,11 @@
                     </a>
                     <ul class="nav nav-treeview">
 
-                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists() || Auth::user()->roles()->where('libelle', ['COMPTABLE'])->exists())
+                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() 
+                        || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() 
+                        || Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists() 
+                        || Auth::user()->roles()->where('libelle', ['COMPTABLE'])->exists()
+                        || Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists())
                         <li class="nav-item">
                             <a href="{{ route('ctlventes.index') }}" class="nav-link {{ (request()->is('controle/*')) ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-solid fa-cogs  text-cyan"></i>
