@@ -116,7 +116,7 @@
 
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <h3 class=""> Dette total: <span class="badge bg-light tetx-dark border"><strong id="totalAmount">{{number_format($clients->sum("resteVenteAmount"),2,','," ") }} FCFA</strong></span> </h3>
+                            <h3 class=""> Dette totale: <span class="badge bg-light text-dark border"><strong id="totalAmount">{{number_format($clients->sum("resteVenteAmount"),2,','," ") }} FCFA</strong></span> </h3>
                             <table id="example1" class="table table-bordered table-striped table-sm"
                                 style="font-size: 12px">
                                 <thead class="text-white text-center bg-gradient-gray-dark">
