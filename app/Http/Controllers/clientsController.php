@@ -150,6 +150,29 @@ class clientsController extends Controller
             return ($client->Is_Bef() || $client->Added_To_Bef());
         });
 
+        // LES REGLEMENTS SUR LE COMPTE DES CLIENTS
+        $clients = $clients->map(function ($client) {
+            /**
+             * Les approvisionnements sur compte
+             */
+            $client["appro"] = $client->reglements->where("for_dette", false)
+                ->whereNull("vente_id")->whereNotNull("client_id")->sum("montant");
+
+            /**
+             * Les reglements sur ventes
+             */
+            $client["reglt"] = $client->reglements->whereNotNull("vente_id")
+                ->whereNotNull("client_id")->sum("montant");
+
+            $solde = $client["appro"] - $client["reglt"];
+            $soldeReelle = $client->resteVenteAmount - $solde;
+
+
+            $client["resteVenteAmount"] = $soldeReelle - $client->debit_old;
+
+            return $client;
+        });
+
         // $clients = $clients->where('id','<',100);
 
         $zones = Zone::all();
@@ -387,7 +410,7 @@ class clientsController extends Controller
             }
         }
     }
-    
+
     // Liste des agents affecter à un client.
     public function affectationAgentListe() {}
 
@@ -521,7 +544,7 @@ class clientsController extends Controller
     public function update(Request $request, Client $client)
     {
         try {
-            
+
             $data = $request->all();
 
             $logo = "";
@@ -532,7 +555,7 @@ class clientsController extends Controller
                         'logo' => ['nullable', 'image', 'mimes:jpg,bmp,png']
                     ],
                     [
-                        "logo.image"=>"Le logo doit être une image de type .jpg,bmp,png"
+                        "logo.image" => "Le logo doit être une image de type .jpg,bmp,png"
                     ]
                 );
                 $image = $request->file('logo');
@@ -556,7 +579,7 @@ class clientsController extends Controller
                 $bordereau_receit = $client->bordereau_receit;
             }
             $data["bordereau_receit"] = $bordereau_receit;
-            
+
             $client->update($data);
             Session()->flash('message', 'Client Modifié avec succès!');
             return redirect()->route('newclient.index');
