@@ -524,7 +524,7 @@
             updateTotalAmount();
         });
         // Appel initial
-        updateTotalAmount();
+        // updateTotalAmount();
 
         $('#example2').DataTable({
             "paging": true,
