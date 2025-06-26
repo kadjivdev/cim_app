@@ -55,6 +55,7 @@
 
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <h3 class=""> Dette total: <span class="badge bg-light tetx-dark border"><strong id="totalAmount">{{number_format($clients->sum("resteVenteAmount"),2,','," ") }} FCFA</strong></span> </h3>
                             <table id="example1" class="table table-bordered table-striped table-sm"
                                 style="font-size: 12px">
                                 <thead class="text-white text-center bg-gradient-gray-dark">
@@ -90,7 +91,7 @@
                                         <td><span class="badge bg-danger">{{number_format($client->resteVenteAmount,0,'',' ')}} Fcfa</span></td>
                                         <td class="text-center"> <span class="badge bg-danger">{{number_format(-$client->debit_old,0," "," ") }} </span> </td>
                                         <td class="text-center"><span class="badge bg-success">{{number_format($solde,0," "," ")}} fcfa</span> <small>{{$solde>0?"SOLD_EXIST":''}}</small></td>
-                                        <td class="text-center"> <span class="badge bg-danger">{{number_format($detteTotal,0," "," ") }} </span> </td>
+                                        <td class="text-center dette-total"> <span class="badge bg-danger">{{number_format($detteTotal,0," "," ") }} </span> </td>
                                         @endif
 
                                         <td class="text-center"><span class="badge bg-warning">{{GetClientZone($client)}}</span></td>
@@ -227,8 +228,17 @@
         })
     }
 
+    function updateTotalAmount() {
+        let total = 0;
+        $('#example1 tbody tr:visible .dette-total span').each(function() {
+            let value = $(this).text().replace(/\s/g, '').replace(/[^\d\-]/g, '');
+            total += parseInt(value) || 0;
+        });
+        $('#totalAmount').text(total.toLocaleString('fr-FR') + ' FCFA');
+    }
+
     $(function() {
-        $("#example1").DataTable({
+        var table = $("#example1").DataTable({
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
@@ -447,7 +457,13 @@
                     }
                 }
             },
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        }).on('draw', function() {
+            updateTotalAmount();
+        });
+        // Appel initial
+        updateTotalAmount();
+
+
         $('#example2').DataTable({
             "paging": true,
             "lengthChange": false,

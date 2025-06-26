@@ -33,22 +33,6 @@ class AvoirController extends Controller
             }
         }
 
-        // if ((in_array(2, $tab)|| in_array(6, $tab))) {
-        //     $rolesExist = $user->roles()->where('id', 6)->first();
-        //     $rolesExist2 = $user->roles()->where('id', 2)->first();
-        //     if ($rolesExist || $rolesExist2) {
-        //         Session()->flash('error', 'vous ne pouvez pas associé un Gestionnaire  et un Validateur');
-        //         return redirect()->route('avoirs.index', ['user' => $user->id]);
-        //     }
-        // }
-        // if ((in_array(2, $tab)|| in_array(6, $tab))) {
-        //     $rolesExist = $user->roles()->where('id', 6)->first();
-        //     $rolesExist2 = $user->roles()->where('id', 2)->first();
-        //     if ($rolesExist || $rolesExist2) {
-        //         Session()->flash('error', 'vous ne pouvez pas associé un Gestionnaire  et un Validateur');
-        //         return redirect()->route('avoirs.index', ['user' => $user->id]);
-        //     }
-        // }
 
         $avoir ='';
         $roles = $request->role_id;
