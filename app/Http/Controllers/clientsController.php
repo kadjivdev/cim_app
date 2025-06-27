@@ -179,7 +179,7 @@ class clientsController extends Controller
             $client["solde"] = $client["appro"] - $client["reglt"];
             $client["resteVenteAmount"] = $ventesAmount - $client["reglt"];
 
-            $client["detteTotale"] = $client["resteVenteAmount"] - $client->debit_old;
+            $client["detteTotale"] = $client["resteVenteAmount"] - $client->debit_old - $client["solde"];
 
             return $client;
         });
