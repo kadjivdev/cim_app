@@ -81,16 +81,12 @@
                                 <tbody>
                                     @if ($clients->count() > 0)
                                     @foreach ($clients as $client)
-                                    @php($solde = $client->appro-$client->reglt)
-                                    @php($soldeReelle = $client->resteVenteAmount-$solde)
-                                    @php($detteTotal = $soldeReelle- $client->debit_old)
                                     <tr>
-                                        <!-- <td>{{ $loop->index +1 }}</td> -->
                                         <td class="ml-5 pr-5">{{ $client->raisonSociale ? $client->raisonSociale : $client->nom }} ({{$client->id}})</td>
                                         @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true)
                                         <td><span class="badge bg-danger">{{number_format($client->resteVenteAmount,0,'',' ')}} Fcfa</span></td>
                                         <td class="text-center"> <span class="badge bg-danger">{{number_format(-$client->debit_old,0," "," ") }} </span> </td>
-                                        <td class="text-center"><span class="badge bg-success">{{number_format($client->solde,0," "," ")}} fcfa</span> <small>{{$solde>0?"SOLD_EXIST":''}}</small></td>
+                                        <td class="text-center"><span class="badge bg-success">{{number_format($client->solde,0," "," ")}} fcfa</span> <small>{{$client->solde>0?"SOLD_EXIST":''}}</small></td>
                                         <td class="text-center dette-total"> <span class="badge bg-danger">{{number_format($client->detteTotale,0," "," ") }} </span> </td>
                                         @endif
 
@@ -239,7 +235,7 @@
     }
 
     $(function() {
-        var table = $("#example1").DataTable({
+        $("#example1").DataTable({
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
@@ -460,20 +456,9 @@
             },
         }).on('draw', function() {
             updateTotalAmount();
-        });
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         // Appel initial
         // updateTotalAmount();
-
-
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
     });
 </script>
 @endsection
