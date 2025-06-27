@@ -184,8 +184,6 @@ class clientsController extends Controller
             return $client;
         });
 
-        // $clients = $clients->where('id','<',100);
-
         $zones = Zone::all();
         return view('client.index_bef', compact('clients', "zones"));
     }
