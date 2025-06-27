@@ -90,8 +90,8 @@
                                         @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true)
                                         <td><span class="badge bg-danger">{{number_format($client->resteVenteAmount,0,'',' ')}} Fcfa</span></td>
                                         <td class="text-center"> <span class="badge bg-danger">{{number_format(-$client->debit_old,0," "," ") }} </span> </td>
-                                        <td class="text-center"><span class="badge bg-success">{{number_format($solde,0," "," ")}} fcfa</span> <small>{{$solde>0?"SOLD_EXIST":''}}</small></td>
-                                        <td class="text-center dette-total"> <span class="badge bg-danger">{{number_format($detteTotal,0," "," ") }} </span> </td>
+                                        <td class="text-center"><span class="badge bg-success">{{number_format($client->solde,0," "," ")}} fcfa</span> <small>{{$solde>0?"SOLD_EXIST":''}}</small></td>
+                                        <td class="text-center dette-total"> <span class="badge bg-danger">{{number_format($client->detteTotale,0," "," ") }} </span> </td>
                                         @endif
 
                                         <td class="text-center"><span class="badge bg-warning">{{GetClientZone($client)}}</span></td>

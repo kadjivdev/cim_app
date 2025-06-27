@@ -158,17 +158,28 @@ class clientsController extends Controller
             $client["appro"] = $client->reglements->where("for_dette", false)
                 ->whereNull("vente_id")->whereNotNull("client_id")->sum("montant");
 
+
             /**
              * Les reglements sur ventes
              */
             $client["reglt"] = $client->reglements->whereNotNull("vente_id")
                 ->whereNotNull("client_id")->sum("montant");
 
-            $solde = $client["appro"] - $client["reglt"];
-            $soldeReelle = $client->resteVenteAmount - $solde;
+            $ventesAmount = Collection::make(Vente::join('commande_clients', 'ventes.commande_client_id', '=', 'commande_clients.id')
+                ->join('clients', 'commande_clients.client_id', '=', 'clients.id')
+                ->join('zones', 'commande_clients.zone_id', '=', 'zones.id')
+                ->where('clients.id', $client->id)
 
+                // SEULE LES VENTES VALIDE SONT RECUPERES
+                ->where('valide', true)
 
-            $client["resteVenteAmount"] = $soldeReelle - $client->debit_old;
+                ->select('ventes.montant')
+                ->get())->sum("montant");
+
+            $client["solde"] = $client["appro"] - $client["reglt"];
+            $client["resteVenteAmount"] = $ventesAmount - $client["reglt"];
+
+            $client["detteTotale"] = $client["resteVenteAmount"] - $client->debit_old;
 
             return $client;
         });
