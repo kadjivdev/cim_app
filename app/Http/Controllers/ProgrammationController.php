@@ -29,89 +29,25 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ProgrammationController extends Controller
 {
-    public function __construct()
-    {
-        // $this->middleware(['superviseur'])->only([]);
-    }
-
     public function index(Request $request)
     {
-        if ($request->statuts) {
-            if ($request->statuts == 1) {
+        $detailboncommandes = DetailBonCommande::with(['boncommande', 'produit', 'programmations'])
+            ->whereHas("boncommande", function ($query) use ($request) {
                 if ($request->debut && $request->fin) {
-                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer', 'Livrer'])->whereBetween('dateBon', [$request->debut, $request->fin])->pluck('id');
-                    $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)
-                        ->orderByDesc('id')->get();
+                    $query->whereIn('statut', ['Valider', 'Programmer', 'Livrer'])
+                        ->whereBetween('dateBon', [$request->debut, $request->fin]);
                 } else {
-
-                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
-                    $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->orderByDesc('id')->get();
+                    $query->whereIn('statut', ['Valider', 'Programmer', 'Livrer']);
                 }
-            } elseif ($request->statuts == 2) {
-                if ($request->debut && $request->fin) {
-                    $boncommandesV = BonCommande::where('statut', 'Valider')->whereBetween('dateBon', [$request->debut, $request->fin])->pluck('id');
-                    $programmations = Programmation::pluck('detail_bon_commande_id');
-                    $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)
-                        ->whereNotIn('id', $programmations)->orderByDesc('id')->get();
-                } else {
+            })
+            ->latest()
+            ->get();
 
-                    $boncommandesV = BonCommande::where('statut', 'Valider')->pluck('id');
-                    $programmations = Programmation::pluck('detail_bon_commande_id');
-                    $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)
-                        ->whereNotIn('id', $programmations)->orderByDesc('id')->get();
-                }
-            } elseif ($request->statuts == 3) {
-                if ($request->debut && $request->fin) {
-                    $boncommandesV = BonCommande::where('statut', 'Valider')->whereBetween('dateBon', [$request->debut, $request->fin])->pluck('id');
-                    $programmations = Programmation::pluck('detail_bon_commande_id');
-                    $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)
-                        ->whereIn('id', $programmations)->orderByDesc('id')->get();
-                } else {
+        $userRoles = auth()->user()
+            ->roles()->pluck('libelle')
+            ->toArray();
 
-                    $boncommandesV = BonCommande::where('statut', 'Valider')->pluck('id');
-                    $programmations = Programmation::pluck('detail_bon_commande_id');
-                    $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)
-                        ->whereIn('id', $programmations)->orderByDesc('id')->get();
-                }
-            } elseif ($request->statuts == 4) {
-                if ($request->debut && $request->fin) {
-
-                    $boncommandesV = BonCommande::where('statut', 'Programmer')->whereBetween('dateBon', [$request->debut, $request->fin])->pluck('id');
-                    $programmations = Programmation::pluck('detail_bon_commande_id');
-                    $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)
-                        ->whereNotIn('id', $programmations)->orderByDesc('id')->get();
-                } else {
-                    $boncommandesV = BonCommande::where('statut', 'Programmer')->pluck('id');
-                    $programmations = Programmation::pluck('detail_bon_commande_id');
-                    $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)
-                        ->whereIn('id', $programmations)->orderByDesc('id')->get();
-                }
-            } elseif ($request->statuts == 5) {
-                if ($request->debut && $request->fin) {
-                    $boncommandesV = BonCommande::where('statut', 'Livrer')->whereBetween('dateBon', [$request->debut, $request->fin])->pluck('id');
-                    $programmations = Programmation::pluck('detail_bon_commande_id');
-                    $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)
-
-                        ->whereNotIn('id', $programmations)->orderByDesc('id')->get();
-                } else {
-                    $boncommandesV = BonCommande::where('statut', 'Livrer')->pluck('id');
-                    $programmations = Programmation::pluck('detail_bon_commande_id');
-                    $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)
-                        ->whereIn('id', $programmations)->orderByDesc('id')->get();
-                }
-            }
-        } else {
-            if ($request->debut && $request->fin) {
-                $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->whereBetween('dateBon', [$request->debut, $request->fin])->pluck('id');
-                $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)
-                    ->orderByDesc('id')->get();
-            } else {
-                $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer', 'Livrer'])->pluck('id');
-                $detailboncommandes = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->orderByDesc('id')->get();
-            }
-        }
-        $req = $request->statuts;
-        return view('programmations.index', compact('detailboncommandes', 'req'));
+        return view('programmations.index', compact('detailboncommandes', 'userRoles'));
     }
 
     public function create(DetailBonCommande $detailboncommande, Programmation $programmation = NULL)
@@ -215,7 +151,7 @@ class ProgrammationController extends Controller
                     ->selectRaw('SUM(qteprogrammer)')
                     ->first();
 
-                if (!($SumQtiteProgDetailCmde)) {;
+                if (!($SumQtiteProgDetailCmde)) {
                     if ($SumQtiteProgDetailCmde == $detailboncommande->qteCommander) {
 
                         Session()->flash('alert', 'Atention la quantité commander a été entièrement programmer déjâ!');
@@ -387,11 +323,11 @@ class ProgrammationController extends Controller
 
             DB::commit();
             return redirect()->route('programmations.create', ['detailboncommande' => $detailboncommande->id])
-            ->with("message","Suppression éffectuée avec succès!");
+                ->with("message", "Suppression éffectuée avec succès!");
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('programmations.create', ['detailboncommande' => $detailboncommande->id])
-            ->with("error","Erreure de suppression ".$e->getMessage());
+                ->with("error", "Erreure de suppression " . $e->getMessage());
         }
     }
 
@@ -403,10 +339,6 @@ class ProgrammationController extends Controller
 
     public function postEditionProgramme(Request $request)
     {
-        // dd($request->debut, $request->fin);
-        // $bon = BonCommande::where("code","BCI-0531")->first();
-        // $pro = $bon->detailboncommandes[0]->programmations->whereBetween("dateprogrammer",[$request->debut,$request->fin]);
-        // dd($pro->pluck("code"));
 
         $programmes = DB::select("
             SELECT

@@ -115,7 +115,6 @@
         function editFournisseur(oldFournisseur){
             if($('#fournisseur_id').val() != oldFournisseur){
                 $('#confirmation_msg').removeAttr('hidden');
-                //$('#confirmation').attr('required','required');
             }
             else {
                 $('#confirmation_msg').attr('hidden','hidden');

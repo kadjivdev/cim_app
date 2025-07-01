@@ -13,58 +13,60 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // QUAND C'EST NI UN ADMINISTRATEUR, NI UN CONTROLEUR ,NI UN VALIDATEUR,NI UN SUPERVISEUR
-        if (!Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() &&  !Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists()  && !Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists() && !Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists()) {
 
-            ###___CONTROLLEUR DE VENTE
-            if (Auth::user()->roles()->where('libelle', ['CONTROLEUR VENTE'])->exists()) {
+        $user = Auth::user();
+        // Eager load les rôles une seule fois
+        $userRoles = $user->roles->pluck('libelle')->toArray();
+
+        // Redirections selon le rôle
+        if (array_intersect($userRoles, ['ADMINISTRATEUR', 'CONTROLEUR', 'VALIDATEUR', 'SUPERVISEUR'])) {
+            if (in_array('CONTROLEUR VENTE', $userRoles)) {
                 return redirect()->route('ventes.venteAEnvoyerComptabiliser');
             }
-
-            // QUAND C'EST UN GESTIONNAIRE, COMPTABLE ,VALIDATEUR OU CONTROLLEUR DE VENTE
-            if (Auth::user()->roles()->where('libelle', ['GESTIONNAIRE'])->exists() || Auth::user()->roles()->where('libelle', ['COMPTABLE'])->exists() || Auth::user()->roles()->where('libelle', 'VALIDATEUR')->exists()) {
-                return redirect()->route("boncommandes.index");
-            };
-
-            // QUAND C'EST UN VENDEUR, SUPERVISEUR
-            if (Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() || Auth::user()->roles()->where('libelle', 'SUPERVISEUR')->exists()) {
-                return redirect()->route("livraisons.index");
+            if (array_intersect($userRoles, ['GESTIONNAIRE', 'COMPTABLE', 'VALIDATEUR'])) {
+                return redirect()->route('boncommandes.index');
+            }
+            if (array_intersect($userRoles, ['VENDEUR', 'SUPERVISEUR'])) {
+                return redirect()->route('livraisons.index');
             }
         }
 
-        #####___
+        // Statistiques
         $boncommandesP = BonCommande::where('statut', 'Préparation')->count();
         $boncommandesV = BonCommande::where('statut', 'Valider')->count();
         $programmationsV = Programmation::where('statut', 'Valider')->count();
-        $cdes = BonCommande::where('statut', 'Valider')->get();
-        $_progs = Programmation::where('statut', "Livrer")->get();
+        $cdes = BonCommande::with('recus')->where('statut', 'Valider')->get();
+        $_progs = Programmation::where('statut', 'Livrer')->get();
         $progs = $_progs->count();
-        $livs = Programmation::whereNotNull('qtelivrer')->get();
+        $qteLiv = $_progs->sum('qtelivrer');
         $sansRecu = 0;
-        $nbrLiv = 0;
-        $qteLiv = $_progs->sum("qtelivrer");
-
         foreach ($cdes as $cde) {
-            if (!$cde->recus->first)
+            if ($cde->recus->isEmpty()) {
                 $sansRecu++;
-        }
-
-        $produitNP = $progs; 
-        $now = Carbon::now();
-        $vente = Vente::where('statut', 'Vendue')->whereBetween('date', [$now->startOfWeek()->format('Y-m-d'), $now->endOfWeek()->format('Y-m-d')])->sum('montant');
-
-        $cde = CommandeClient::where('statut', 'Valider')->whereBetween('dateBon', [$now->startOfWeek()->format('Y-m-d'), $now->endOfWeek()->format('Y-m-d')])->count();
-        $impayer = 0;
-        $client = 0;
-        $umpaid_vente = 0;
-        $ventes = Vente::where('statut', 'Vendue')->where('type_vente_id', 2)->orderByDesc('code')->get();
-
-        foreach ($ventes as $vte) {
-            if (($vte->montant - $vte->reglements()->sum('montant')) != 0) {
-                $umpaid_vente++;
-                $impayer += $vte->montant - $vte->reglements()->sum('montant');
             }
         }
-        return view('dashboard', compact('boncommandesP', 'boncommandesV', 'programmationsV', 'produitNP', 'sansRecu', 'nbrLiv', 'qteLiv', 'vente', 'cde', 'client', 'impayer', "umpaid_vente"));
+        $produitNP = $progs;
+        $now = Carbon::now();
+        $vente = Vente::where('statut', 'Vendue')
+            ->whereBetween('date', [$now->copy()->startOfWeek()->format('Y-m-d'), $now->copy()->endOfWeek()->format('Y-m-d')])
+            ->sum('montant');
+        $cde = CommandeClient::where('statut', 'Valider')
+            ->whereBetween('dateBon', [$now->copy()->startOfWeek()->format('Y-m-d'), $now->copy()->endOfWeek()->format('Y-m-d')])
+            ->count();
+        $impayer = 0;
+        $umpaid_vente = 0;
+        $ventes = Vente::with('reglements')
+            ->where('statut', 'Vendue')
+            ->where('type_vente_id', 2)
+            ->orderByDesc('code')->get();
+        foreach ($ventes as $vte) {
+            $reglementsSum = $vte->reglements->sum('montant');
+            if (($vte->montant - $reglementsSum) != 0) {
+                $umpaid_vente++;
+                $impayer += $vte->montant - $reglementsSum;
+            }
+        }
+        // Variables inutilisées supprimées : $nbrLiv, $client
+        return view('dashboard', compact('boncommandesP', 'boncommandesV', 'programmationsV', 'produitNP', 'sansRecu', 'qteLiv', 'vente', 'cde', 'impayer', 'umpaid_vente'));
     }
 }

@@ -27,7 +27,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class BonCommandeController extends Controller
 {
-    protected $typecommandes, $fournisseurs, $produits;
+    protected $typecommandes, $fournisseurs, $produits, $userRoles;
 
     public function __construct(TypeCommande $typecommandes, Fournisseur $fournisseurs, Produit $produits)
     {
@@ -37,32 +37,46 @@ class BonCommandeController extends Controller
         $this->typecommandes = $typecommandes;
         $this->fournisseurs = $fournisseurs;
         $this->produits = $produits;
+
+        $this->middleware(function ($request, $next) {
+            $this->userRoles = auth()->user() ?
+                auth()->user()->roles()
+                ->pluck("libelle")->toArray() : [];
+
+            return $next($request);
+        });
     }
 
     public function index(Request $request)
     {
+        $userRoles = $this->userRoles;
         // bons en préparation
-        $pre_boncommandes = BonCommande::orderBy('code', 'desc')->whereIn("statut", ['Préparation', 'En attente de validation','Envoyé'])->get();
-        $query = BonCommande::orderBy('code', 'desc')->whereNotIn("statut", ['Préparation', 'En attente de validation','Envoyé']);
+        $pre_boncommandes = BonCommande::with(['typecommande', 'fournisseur', 'detailboncommandes.programmations.zone._user', 'accusedocuments', 'recus'])->orderBy('code', 'desc')
+            ->whereIn("statut", ['Préparation', 'En attente de validation', 'Envoyé'])
+            ->get();
+        $query = BonCommande::with(['typecommande', 'fournisseur', 'detailboncommandes.programmations.zone._user', 'accusedocuments', 'recus'])->orderBy('code', 'desc')
+            ->whereNotIn("statut", ['Préparation', 'En attente de validation', 'Envoyé']);
 
         if ($request->debut && $request->fin) {
             $boncommandes = $query->whereBetween('dateBon', [$request->debut, $request->fin])->get();
             $req = $request->all();
-            return view('boncommandes.index', compact('boncommandes', 'req', 'pre_boncommandes'));
+        } else {
+            $boncommandes = $query->get();
+            $req = null;
         }
 
-        $boncommandes = $query->get();
-        return view('boncommandes.index', compact('boncommandes', 'pre_boncommandes'));
+        return view('boncommandes.index', compact('boncommandes', 'req', 'pre_boncommandes', 'userRoles'));
     }
 
     public function create(Request $request, BonCommande $boncommandes = NULL)
     {
-        if (Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists()) {
+        $userRoles = $this->userRoles;
+        if (in_array('GESTIONNAIRE', $this->userRoles)) {
             $typecommandes = $this->typecommandes->orderBy('libelle')->get();
             $fournisseurs = $this->fournisseurs->orderBy('sigle')->get();
             $produits = $this->produits->orderBy('libelle')->get();
             $redirectto = $request->redirectto;
-            return view('boncommandes.create', compact('boncommandes', 'typecommandes', 'fournisseurs', 'produits', 'redirectto'));
+            return view('boncommandes.create', compact('boncommandes', 'typecommandes', 'fournisseurs', 'produits', 'redirectto', 'userRoles'));
         } else {
             Session()->flash('message', 'Vous ne pouvez pas accéder à cette option!');
             return redirect()->route('boncommandes.index');
@@ -73,7 +87,6 @@ class BonCommandeController extends Controller
     {
         try {
             if ($boncommandes) {
-
                 $validator = Validator::make($request->all(), [
                     'code' => ['required', 'string', 'max:255', Rule::unique('bon_commandes')->ignore($boncommandes->id)],
                     'dateBon' => ['required'],
@@ -101,7 +114,6 @@ class BonCommandeController extends Controller
                     return redirect()->route('boncommandes.edit', ['boncommande' => $boncommandes->id]);
                 }
             } else {
-
                 $validator = Validator::make($request->all(), [
                     'dateBon' => ['required'],
                     'fournisseur_id' => ['required'],
@@ -126,13 +138,9 @@ class BonCommandeController extends Controller
                 ]);
 
                 if ($boncommandes) {
-
                     $valeur = $parametre->valeur;
-
                     $valeur = $valeur + 1;
-
                     $parametres = Parametre::find(env('PARAMETRE'));
-
                     $parametre = $parametres->update([
                         'valeur' => $valeur,
                     ]);
@@ -156,8 +164,13 @@ class BonCommandeController extends Controller
     public function show(BonCommande $boncommande)
     {
         $entreprise = Entreprise::find(1);
-        $boncommandes = $boncommande;
-        $detailboncommandes = DetailBonCommande::where('bon_commande_id', $boncommandes->id)->get();
+        $boncommandes = $boncommande->load(['typecommande', 'fournisseur', 'detailboncommandes.programmations.zone._user', 'accusedocuments', 'recus']);
+        $detailboncommandes = DetailBonCommande::with([
+            'boncommande',
+            'produit',
+            'programmations',
+        ])
+            ->where('bon_commande_id', $boncommandes->id)->get();
 
         return view('boncommandes.show', compact('boncommandes', 'detailboncommandes', 'entreprise'));
     }
@@ -165,7 +178,7 @@ class BonCommandeController extends Controller
 
     public function valider(BonCommande $boncommande)
     {
-        if (Auth::user()->roles()->where('libelle', 'VALIDATEUR')->exists()) {
+        if (in_array($this->userRoles, ['VALIDATEUR'])) {
             $boncommandes = $boncommande;
             $recus = Recu::all()->where('bon_commande_id', $boncommande->id);
             return view('boncommandes.valider', compact('boncommandes'));
@@ -206,15 +219,17 @@ class BonCommandeController extends Controller
 
     public function edit(BonCommande $boncommande, DetailBonCommande $detailboncommande = NULL)
     {
+        $userRoles = $this->userRoles;
         $fournisseur = $this->fournisseurs->findOrFail($boncommande->fournisseur_id);
-        $produits = $fournisseur->produits()->get();
+        $produits = $fournisseur->produits;
         $boncommandes = $boncommande;
 
-        return view('boncommandes.edit', compact('boncommandes', 'detailboncommande', 'produits'));
+        return view('boncommandes.edit', compact('boncommandes', 'detailboncommande', 'produits','userRoles'));
     }
 
     public function update(Request $request, BonCommande $boncommande)
     {
+        dd("updating ....");
         try {
             if ($boncommande->statut == 'Valider') {
 

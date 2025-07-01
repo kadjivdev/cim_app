@@ -37,7 +37,6 @@
                             <div class="small-box bg-info">
                                 <div class="inner">
                                     <button class="btn btn-sm btn-light  w-100 text-center"><strong>{{number_format($boncommandesP,0,'',' ')}} </strong> </button>
-
                                     <p>Commande en préparation.</p>
                                 </div>
                                 <div class="icon">

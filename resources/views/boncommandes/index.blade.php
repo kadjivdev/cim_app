@@ -3,33 +3,20 @@
 @section('content')
 
 <div class="content-wrapper">
-
     <section class="content-header">
-
         <div class="container-fluid">
-
             <div class="row mb-2">
-
                 <div class="col-sm-6">
                     <h1>BON DE COMMANDES</h1>
                 </div>
-
                 <div class="col-sm-6">
-
                     <ol class="breadcrumb float-sm-right">
-
                         <li class="breadcrumb-item"><a href="#">Acceuil</a></li>
-
                         <li class="breadcrumb-item active">Listes des bons de commande</li>
-
                     </ol>
-
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
     <!-- Main content -->
@@ -59,16 +46,14 @@
                                 <h3 class="card-title"></h3>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DE BON DE COMMANDE'])->exists())
+                                        @if(in_array('ADMINISTRATEUR',$userRoles) || in_array('CONTROLEUR DE BON DE COMMANDE',$userRoles))
                                         <a class="btn btn-success btn-sm" href="{{route('boncommandes.create')}}">
                                             <i class="fas fa-solid fa-plus"></i>
                                             Créer
                                         </a>
                                         @endif
                                     </div>
-                                    <div class="col-sm-9 ">
-
-                                    </div>
+                                    <div class="col-sm-9 "></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-1"></div>
@@ -116,7 +101,7 @@
                                         <th>Type</th>
                                         <th>Statut</th>
                                         <th>Utilisateur</th>
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DE BON DE COMMANDE'])->exists())
+                                        @if(array_intersect(['ADMINISTRATEUR','CONTROLEUR DE BON DE COMMANDE'],$userRoles))
                                         <th>Actualisation</th>
                                         <th>Action</th>
                                         @endif
@@ -188,13 +173,13 @@
                                         @endif
                                         <td>{{ $boncommande->users }}</td>
 
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DE BON DE COMMANDE'])->exists())
+                                        @if(array_intersect(['ADMINISTRATEUR','CONTROLEUR DE BON DE COMMANDE'],$userRoles))
                                         <td class="text-center">
                                             @if(count($boncommande->detailboncommandes) > 0)
                                             <a class="btn btn-primary btn-sm" href="{{ route('boncommandes.show', ['boncommande'=>$boncommande->id]) }}" title="Voir détail et imprimer"><i class="fa-regular fa-eye"></i></a>
                                             @endif
 
-                                            @if(Auth::user()->roles()->where('libelle', 'VALIDATEUR')->exists())
+                                            @if(in_array('VALIDATEUR',$userRoles))
                                             @if(count($boncommande->recus) > 0 && $boncommande->statut == 'Envoyé')
                                             <a class="btn btn-success btn-sm" href="{{ route('boncommandes.valider', ['boncommande'=>$boncommande->id]) }}" title="Valider la commande "><i class="fa-solid fa-circle-check"></i></a>
                                             @endif
@@ -202,9 +187,8 @@
 
                                             @if ($boncommande->statut == 'Préparation')
                                             <a class="btn btn-secondary btn-sm" href="{{ route('boncommandes.edit', ['boncommande'=>$boncommande->id]) }}"><i class="fa-solid fa-circle-plus"></i></a>
-                                            @if(Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists())
+                                            @if(in_array('GESTIONNAIRE',$userRoles))
                                             <a class="btn btn-warning btn-sm" href="{{ route('boncommandes.create', ['boncommandes'=>$boncommande->id]) }}"><i class="fa-solid fa-pen-to-square"></i></a>
-
                                             @endif
                                             @elseif ($boncommande->statut == 'Valider' && count($boncommande->recus) == 0)
                                             <a class="btn btn-info btn-sm" href="{{ route('boncommandes.invalider', ['boncommande'=>$boncommande->id]) }}"><i class="fa-regular fa-rectangle-xmark"></i></a>
@@ -222,17 +206,16 @@
                                                 <div class="dropdown-menu dropdown-menu-md-right dropdown-menu-icon-list drop text-sm">
                                                     <a class="dropdown-item" href="{{ route('recus.index', ['boncommandes'=>$boncommande->id]) }}" title="Enregistrer reçus"><i class="fa-solid fa-file-invoice-dollar"></i> Reçu <span class="badge badge-info">{{count($boncommande->recus)}}</span></a>
                                                     <a class="dropdown-item" href="{{ route('accusedocuments.index', ['boncommandes'=>$boncommande->id]) }}" target="_blank" title="Enregistrer document"><i class="fa-solid fa-file-invoice"></i> Accusé <span class="badge badge-info">{{count($boncommande->accusedocuments)}}</span></a>
-                                                    @if(Auth::user()->roles()->where('libelle', 'VALIDATEUR')->exists()== true)
+                                                    @if(in_array('VALIDATEUR',$userRoles))
                                                     @if( (count($boncommande->recus) > 0) && ($boncommande->statut == 'Envoyé') )
                                                     <a class="dropdown-item" href="{{ route('boncommandes.retourner', ['boncommandes'=>$boncommande->id]) }}"><i class="fa-solid fa-undo"></i> Retourner </a>
                                                     @endif
                                                     @endif
-                                                    @if(Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists()== true)
+                                                    @if(in_array('GESTIONNAIRE',$userRoles))
                                                     @if( (count($boncommande->recus) > 0) && ($boncommande->statut == 'Préparation') )
                                                     <a class="dropdown-item" href="{{ route('boncommandes.envoyer', ['boncommandes'=>$boncommande->id]) }}"><i class="fa-solid fa-paper-plane"></i> Envoyer </a>
                                                     @endif
                                                     @endif
-                                                    <!--<a class="dropdown-item" href=""><i class="fa-solid fa-industry"></i> Chantiers</a> -->
                                                 </div>
                                             </div>
                                         </td>
@@ -299,13 +282,13 @@
                                         @endif
                                         <td>{{ $boncommande->users }}</td>
 
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DE BON DE COMMANDE'])->exists())
+                                        @if(in_array('CONTROLEUR DE BON DE COMMANDE',$userRoles))
                                         <td class="text-center">
                                             @if(count($boncommande->detailboncommandes) > 0)
                                             <a class="btn btn-primary btn-sm" href="{{ route('boncommandes.show', ['boncommande'=>$boncommande->id]) }}" title="Voir détail et imprimer"><i class="fa-regular fa-eye"></i></a>
                                             @endif
 
-                                            @if(Auth::user()->roles()->where('libelle', 'VALIDATEUR')->exists())
+                                            @if(in_array('VALIDATEUR',$userRoles))
                                             @if(count($boncommande->recus) > 0 && $boncommande->statut == 'Envoyé')
                                             <a class="btn btn-success btn-sm" href="{{ route('boncommandes.valider', ['boncommande'=>$boncommande->id]) }}" title="Valider la commande "><i class="fa-solid fa-circle-check"></i></a>
                                             @endif
@@ -313,7 +296,7 @@
 
                                             @if ($boncommande->statut == 'Préparation')
                                             <a class="btn btn-secondary btn-sm" href="{{ route('boncommandes.edit', ['boncommande'=>$boncommande->id]) }}"><i class="fa-solid fa-circle-plus"></i></a>
-                                            @if(Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists())
+                                            @if(in_array('GESTIONNAIRE',$userRoles))
                                             <a class="btn btn-warning btn-sm" href="{{ route('boncommandes.create', ['boncommandes'=>$boncommande->id]) }}"><i class="fa-solid fa-pen-to-square"></i></a>
 
                                             @endif
@@ -333,18 +316,17 @@
                                                 <div class="dropdown-menu dropdown-menu-md-right dropdown-menu-icon-list drop text-sm">
                                                     <a class="dropdown-item" href="{{ route('recus.index', ['boncommandes'=>$boncommande->id]) }}" title="Enregistrer reçus"><i class="fa-solid fa-file-invoice-dollar"></i> Reçu <span class="badge badge-info">{{count($boncommande->recus)}}</span></a>
                                                     <a class="dropdown-item" href="{{ route('accusedocuments.index', ['boncommandes'=>$boncommande->id]) }}" target="_blank" title="Enregistrer document"><i class="fa-solid fa-file-invoice"></i> Accusé <span class="badge badge-info">{{count($boncommande->accusedocuments)}}</span></a>
-                                                    @if(Auth::user()->roles()->where('libelle', 'VALIDATEUR')->exists()== true)
+                                                    @if(in_array('VALIDATEUR',$userRoles))
                                                     @if( (count($boncommande->recus) > 0) && ($boncommande->statut == 'Envoyé') )
                                                     <a class="dropdown-item" href="{{ route('boncommandes.retourner', ['boncommandes'=>$boncommande->id]) }}"><i class="fa-solid fa-undo"></i> Retourner </a>
                                                     @endif
                                                     @endif
-                                                    @if(Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists()== true)
+                                                    @if(in_array('GESTIONNAIRE',$userRoles))
                                                     @if( (count($boncommande->recus) > 0) && ($boncommande->statut == 'Préparation') )
                                                     <a class="dropdown-item" href="{{ route('boncommandes.envoyer', ['boncommandes'=>$boncommande->id]) }}"><i class="fa-solid fa-paper-plane"></i> Envoyer </a>
                                                     @endif
                                                     @endif
-                                                    <!--<a class="dropdown-item" href=""><i class="fa-solid fa-industry"></i> Chantiers</a> -->
-                                                </div>
+                                                 </div>
                                             </div>
                                         </td>
                                         @endif
@@ -367,7 +349,7 @@
                                         <th>Type</th>
                                         <th>Statut</th>
                                         <th>Utilisateur</th>
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DE BON DE COMMANDE'])->exists())
+                                        @if(array_intersect(['ADMINISTRATEUR','CONTROLEUR DE BON DE COMMANDE'],$userRoles))
                                         <th>Actualisation</th>
                                         <th>Action</th>
                                         @endif

@@ -29,12 +29,10 @@ class Fournisseur extends Model
         return $this->hasMany(Telephone::class, 'fournisseur_id', 'id');
     }
 
-    
     public function produits()
     {
         return $this->belongsToMany(Produit::class, 'commercialisers', 'fournisseur_id', 'produit_id');
     }
-
 
     public function boncommandes()
     {

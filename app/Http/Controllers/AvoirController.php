@@ -24,24 +24,13 @@ class AvoirController extends Controller
         $roles = $request->role_id;
         $tab = $request->all()['role_id'];
         $roles = $user->roles()->whereIn('id', $tab)->get();
-        if ((in_array(1, $tab) || in_array(2, $tab))) {
-            $rolesExist = $user->roles()->where('id', 2)->first();
-            $rolesExist2 = $user->roles()->where('id', 1)->first();
-            if ($rolesExist || $rolesExist2) {
-                Session()->flash('error', 'vous ne pouvez pas associé Un Superviseur et un Gestionnaire ');
-                return redirect()->route('avoirs.index', ['user' => $user->id]);
-            }
-        }
-
 
         $avoir ='';
         $roles = $request->role_id;
 
 
         foreach($roles as $role) {
-
             $avoir = $user->roles()->attach([$role ]);
-
         }
 
         if (!$avoir) {

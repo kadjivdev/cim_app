@@ -28,20 +28,9 @@
                             <form id="statutsForm" action="" method="get">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DES PROGRAMMATIONS'])->exists())
+                                        @if(array_intersect(['ADMINISTRATEUR','CONTROLEUR DES PROGRAMMATIONS'],$userRoles))
                                         <a href="{{route('programmations.edition')}}" class="btn btn-primary">Imprimer un programme</a>
                                         @endif
-                                    </div>
-                                    <div class="col-sm-9 ">
-                                        <div class="form-group float-md-right">
-                                            <select class="custom-select form-control" id="statuts" name="statuts" onchange="submitStatuts()">
-                                                <option value="1" {{ $req == 1 ? 'selected':'' }}>Tout</option>
-                                                <option value="2" {{ $req == 2 ? 'selected':'' }}>Non Programmé</option>
-                                                <option value="3" {{ $req == 3 ? 'selected':'' }}>En cours</option>
-                                                <option value="4" {{ $req == 4 ? 'selected':'' }}>Programmé</option>
-                                                <option value="5" {{ $req == 5 ? 'selected':'' }}>Livré</option>
-                                            </select>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -85,7 +74,7 @@
                                         <th>Qté Reste</th>
                                         <th>Statut</th>
                                         <th>Pourcentage</th>
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DES PROGRAMMATIONS'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists())
+                                        @if(array_intersect(['ADMINISTRATEUR','CONTROLEUR DES PROGRAMMATIONS','CONTROLEUR'],$userRoles))
                                         <th>Action</th>
                                         @endif
                                     </tr>
@@ -104,7 +93,6 @@
                                         <td class="text-right qteCommande">{{ number_format($detailboncommande->qteCommander,2,","," ") }}</td>
                                         <td class="text-right qtePro">{{ number_format(collect($detailboncommande->programmations()->whereIn('statut', ['Valider', 'Livrer'])->get())->sum('qteprogrammer'),2,","," ") }}</td>
                                         <td class="text-right qteReste">{{ number_format(($detailboncommande->qteCommander - collect($detailboncommande->programmations->whereIn('statut', ['Valider', 'Livrer']))->sum('qteprogrammer')),2,","," ") }}</td>
-
                                         <td class="text-center">
                                             @if((collect($detailboncommande->programmations->whereIn('statut', ['Valider', 'Livrer']))->sum('qteprogrammer')) == 0)
                                             <span class="badge badge-danger">Non programmé</span>
@@ -114,10 +102,9 @@
                                             <span class="badge badge-warning">En cours</span>
                                             @endif
                                         </td>
-
                                         <td class="text-right text-lg"><b>{{ number_format((intval(collect($detailboncommande->programmations()->whereIn('statut', ['Valider', 'Livrer'])->get())->sum('qteprogrammer'))*100)/intval($detailboncommande->qteCommander),2,',',' ') }}%</b></td>
 
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DES PROGRAMMATIONS'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists())
+                                        @if(array_intersect(['ADMINISTRATEUR','CONTROLEUR DES PROGRAMMATIONS','CONTROLEUR']))
                                         <td class="text-center">
                                             <div class="row">
                                                 <div class="col-sm-12 ">
@@ -142,7 +129,7 @@
                                         <th>Qté Reste</th>
                                         <th>Statut</th>
                                         <th>Pourcentage</th>
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR DES PROGRAMMATIONS'])->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists())
+                                        @if(array_intersect(['ADMINISTRATEUR','CONTROLEUR DES PROGRAMMATIONS','CONTROLEUR']))
                                         <th>Action</th>
                                         @endif
                                     </tr>
@@ -171,13 +158,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- /.card -->
                 </div>
-                <!-- /.col -->
             </div>
-            <!-- /.row -->
         </div>
-        <!-- /.container-fluid -->
     </section>
 </div>
 @endsection
@@ -185,7 +168,6 @@
 @section('script')
 <script>
     $('body').on('change', function() {
-        console.log('OK');
         const tableBody = document.querySelector('.table-body');
         let sumQte = 0;
         tableBody.querySelectorAll('tr').forEach(row => {
@@ -221,10 +203,6 @@
         });
 
     });
-
-    function submitStatuts() {
-        $('#statutsForm').submit();
-    }
 
     $(function() {
         $("#example1").DataTable({
