@@ -61,7 +61,7 @@ class VenteController extends Controller
 
         if (in_array(1, $roles) || in_array(2, $roles) || in_array(5, $roles) || in_array(8, $roles) || in_array(9, $roles) || in_array(10, $roles) || in_array(11, $roles)) {
             $user = Auth::user();
-            if (IS_FOFANA_ACCOUNT($user) || IS_HIPLYTE_ACCOUNT($user)) {
+            if (IS_FOFANA_ACCOUNT($user) || IS_HIPLYTE_ACCOUNT($user) || IS_MOULIZINE_ACCOUNT($user)) {
                 if (IS_HIPLYTE_ACCOUNT($user)) {
                     $ventes = $ventes->where('statut', '<>', 'En attente de modification')->where("users", $user->id);
                 } else {

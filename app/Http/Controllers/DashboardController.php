@@ -13,13 +13,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
-
         $user = Auth::user();
         // Eager load les rôles une seule fois
         $userRoles = $user->roles->pluck('libelle')->toArray();
 
         // Redirections selon le rôle
-        if (array_intersect($userRoles, ['ADMINISTRATEUR', 'CONTROLEUR', 'VALIDATEUR', 'SUPERVISEUR'])) {
+        if (!array_intersect($userRoles, ['ADMINISTRATEUR', 'CONTROLEUR', 'VALIDATEUR', 'SUPERVISEUR'])) {
             if (in_array('CONTROLEUR VENTE', $userRoles)) {
                 return redirect()->route('ventes.venteAEnvoyerComptabiliser');
             }

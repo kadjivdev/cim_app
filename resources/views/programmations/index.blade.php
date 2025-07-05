@@ -129,7 +129,7 @@
                                         <th>Qté Reste</th>
                                         <th>Statut</th>
                                         <th>Pourcentage</th>
-                                        @if(array_intersect(['ADMINISTRATEUR','CONTROLEUR DES PROGRAMMATIONS','CONTROLEUR']))
+                                        @if(array_intersect(['ADMINISTRATEUR','CONTROLEUR DES PROGRAMMATIONS','CONTROLEUR'],$userRoles))
                                         <th>Action</th>
                                         @endif
                                     </tr>

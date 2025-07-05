@@ -168,7 +168,7 @@
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
                                         @else
-                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CREANT'])->exists())
+                                        @if(array_intersect($userRoles,['ADMINISTRATEUR','CREANT']))
                                         <button type="submit" class="btn btn-sm btn-success btn-block" @if ($detailboncommande->qteCommander - intval($total) == 0) disabled @endif>
                                             {{ __('Enregistrer') }}
                                             <i class="fa-solid fa-floppy-disk"></i>
@@ -272,12 +272,13 @@
                                                         <span class="badge badge-primary">Imprimée</span>
                                                         @endif
                                                     </td>
+                                                    
                                                     <td class="text-center">
                                                         <textarea name="" rows="1" class="form-control" id="" disabled>{{ $programmation->observation?$programmation->observation:"---" }}</textarea>
                                                     </td>
                                                     @if ($programmation->detailboncommande->boncommande->status !='livrer')
                                                     <td class="text-center">
-                                                        @if(Auth::user()->roles()->where('libelle', ['ADMINISTRATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['CREANT'])->exists())
+                                                        @if(array_intersect($userRoles,['ADMINISTRATEUR','CREANT']))
                                                         @if($programmation->statut == 'Valider')
                                                         <span id="annuler-{{ $programmation->id }}"> <a class="btn btn-primary btn-sm" title="Annuler une programmation" href="{{ route('programmations.show', ['detailboncommande' => $detailboncommande->id, 'programmation' => $programmation->id, 'total' => $total]) }}"><i class="fa-regular fa-rectangle-xmark"></i></a>
                                                         </span>
@@ -326,14 +327,6 @@
                                             <i class="fa-solid fa-circle-check ml-1"></i>
                                         </a>
                                     </div>
-                                    <!--
-                                                    <div class="col-sm-4">
-                                                        <a href="" class="btn  btn-sm btn-block btn-success" >
-                                                            Valider tout
-                                                            <i class="fa-solid fa-check-double"></i>
-                                                        </a>
-                                                    </div>
-                                                -->
                                 </div>
                                 @endif
                             </div>
@@ -362,9 +355,7 @@
                 <button type="button" onclick="saveBl()" class="btn btn-primary" data-dismiss="modal">Save changes</button>
             </div>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>
 @endsection
 
