@@ -31,8 +31,8 @@ class BonCommandeController extends Controller
 
     public function __construct(TypeCommande $typecommandes, Fournisseur $fournisseurs, Produit $produits)
     {
-        $this->middleware('superviseur')->only(['valider', 'invalider', 'retournerCommande']);
-        $this->middleware('gest')->only(['create', 'delete', 'envoyerCommande']);
+        // $this->middleware('superviseur')->only(['valider', 'invalider', 'retournerCommande']);
+        // $this->middleware('gest')->only(['create', 'delete', 'envoyerCommande']);
 
         $this->typecommandes = $typecommandes;
         $this->fournisseurs = $fournisseurs;
@@ -178,7 +178,7 @@ class BonCommandeController extends Controller
 
     public function valider(BonCommande $boncommande)
     {
-        if (in_array($this->userRoles, ['VALIDATEUR'])) {
+        if (array_intersect($this->userRoles, ['VALIDATEUR'])) {
             $boncommandes = $boncommande;
             $recus = Recu::all()->where('bon_commande_id', $boncommande->id);
             return view('boncommandes.valider', compact('boncommandes'));
