@@ -229,7 +229,6 @@ class BonCommandeController extends Controller
 
     public function update(Request $request, BonCommande $boncommande)
     {
-        dd("updating ....");
         try {
             if ($boncommande->statut == 'Valider') {
 
