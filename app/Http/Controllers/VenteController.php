@@ -67,8 +67,8 @@ class VenteController extends Controller
                 || IS_MOULIZINE_ACCOUNT($user)
                 || IS_RUCHDANE_ACCOUNT($user)
             ) {
-                //les ventes passées par hypolite & Fofana
-                $ventes = $ventes->where('statut', '<>', 'En attente de modification')->whereIn("users", [11, 7]);
+                //les ventes passées par hypolite & Fofana & Ruchdane
+                $ventes = $ventes->where('statut', '<>', 'En attente de modification')->whereIn("users", [11, 7,43]);
             }
         } elseif (in_array(3, $roles)) {
             $ventes = $ventes->where('statut', '<>', 'Contrôller')
