@@ -14,6 +14,15 @@ function IS_FOFANA_ACCOUNT($user)
     return false;
 }
 
+function IS_RUCHDANE_ACCOUNT($user)
+{
+    if ($user->id == 43) {
+        return true;
+    }
+
+    return false;
+}
+
 function IS_MOULIZINE_ACCOUNT($user)
 {
     if ($user->id == 37) {
