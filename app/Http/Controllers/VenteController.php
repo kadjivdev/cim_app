@@ -66,13 +66,16 @@ class VenteController extends Controller
         if (array_intersect($roles, [1, 2, 5, 8, 9, 10, 11])) {
             if (
                 IS_FOFANA_ACCOUNT($user)
-                || IS_HIPLYTE_ACCOUNT($user)
                 || IS_RUCHDANE_ACCOUNT($user)
             ) {
                 //les ventes passées par hypolite & Fofana & Ruchdane
                 $ventes = $ventes->where('statut', '<>', 'En attente de modification')
                     ->whereIn("users", [11, 7, 43]);
             } elseif (IS_MOULIZINE_ACCOUNT($user)) {
+                //Moulizine n'a accès qu'à ses ventes à lui!
+                $ventes = $ventes->where('statut', '<>', 'En attente de modification')
+                    ->where("users", $user->id);
+            }elseif (IS_HIPLYTE_ACCOUNT($user)) {
                 //Moulizine n'a accès qu'à ses ventes à lui!
                 $ventes = $ventes->where('statut', '<>', 'En attente de modification')
                     ->where("users", $user->id);
