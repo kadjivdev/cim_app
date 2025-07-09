@@ -45,7 +45,9 @@ class VenteController extends Controller
 
     public function index(Request $request)
     {
-        $roles = Auth::user()->roles()->pluck('id')->toArray();
+        $roles = Auth::user()->roles()
+            ->pluck('id')->toArray();
+
         $commandeclients = CommandeClient::whereIn('statut', ['Préparation', 'Vendue', 'Validée', 'Livraison partielle', 'Livrée']);
 
         if ($request->debut && $request->fin) {
@@ -59,21 +61,30 @@ class VenteController extends Controller
             $ventes = $ventes->merge($chunk); //merge the chunk
         });
 
-        if (in_array(1, $roles) || in_array(2, $roles) || in_array(5, $roles) || in_array(8, $roles) || in_array(9, $roles) || in_array(10, $roles) || in_array(11, $roles)) {
-            $user = Auth::user();
+        $user = Auth::user();
+
+        if (array_intersect($roles, [1, 2, 5, 8, 9, 10, 11])) {
             if (
                 IS_FOFANA_ACCOUNT($user)
                 || IS_HIPLYTE_ACCOUNT($user)
-                || IS_MOULIZINE_ACCOUNT($user)
                 || IS_RUCHDANE_ACCOUNT($user)
             ) {
                 //les ventes passées par hypolite & Fofana & Ruchdane
-                $ventes = $ventes->where('statut', '<>', 'En attente de modification')->whereIn("users", [11, 7,43]);
+                $ventes = $ventes->where('statut', '<>', 'En attente de modification')
+                    ->whereIn("users", [11, 7, 43]);
+            } elseif (IS_MOULIZINE_ACCOUNT($user)) {
+                //Moulizine n'a accès qu'à ses ventes à lui!
+                $ventes = $ventes->where('statut', '<>', 'En attente de modification')
+                    ->where("users", $user->id);
+            } else {
+                //Les autres pourront voir toutes les ventes
+                $ventes = $ventes->where('statut', '<>', 'En attente de modification');
             }
         } elseif (in_array(3, $roles)) {
+            /** les vendeur n'auront acc */
             $ventes = $ventes->where('statut', '<>', 'Contrôller')
                 ->where('statut', '<>', 'En attente de modification')
-                ->where('users', Auth::user()->id);
+                ->where('users', $user->id);
         }
 
         return view('ventes.index', compact('ventes'));
