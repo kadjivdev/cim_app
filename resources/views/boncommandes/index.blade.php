@@ -255,9 +255,11 @@
                                                 @foreach($boncommande->detailboncommandes[0]->programmations as $programmation)
                                                 @if($programmation->qteprogrammer>$programmation->vendus->sum("qteVendu"))
                                                 @if($programmation->zone)
+                                                @if($programmation->bl_gest || $programmation->bl)
                                                 <span class="badge d-block bg-dark">{{$programmation->zone->_user?->name}} (blguest/bl : {{$programmation->bl_gest}}/{{$programmation->bl}} ; Reste : {{$programmation->qteprogrammer-$programmation->vendus->sum("qteVendu")}})</span>
                                                 <span class="badge d-block bg-dark">Qte Prog: {{$programmation->qteprogrammer}} ; QteVendue : {{$programmation->vendus->sum("qteVendu")}}</span>
                                                 <hr>
+                                                @endif
                                                 @endif
                                                 @endif
                                                 @endforeach
@@ -282,7 +284,7 @@
                                         @endif
                                         <td>{{ $boncommande->users }}</td>
 
-                                        @if(in_array('CONTROLEUR DE BON DE COMMANDE',$userRoles))
+                                        @if(array_intersect(['ADMINISTRATEUR','CONTROLEUR DE BON DE COMMANDE'],$userRoles))
                                         <td class="text-center">
                                             @if(count($boncommande->detailboncommandes) > 0)
                                             <a class="btn btn-primary btn-sm" href="{{ route('boncommandes.show', ['boncommande'=>$boncommande->id]) }}" title="Voir détail et imprimer"><i class="fa-regular fa-eye"></i></a>

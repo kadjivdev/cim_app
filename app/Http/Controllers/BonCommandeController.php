@@ -31,9 +31,6 @@ class BonCommandeController extends Controller
 
     public function __construct(TypeCommande $typecommandes, Fournisseur $fournisseurs, Produit $produits)
     {
-        // $this->middleware('superviseur')->only(['valider', 'invalider', 'retournerCommande']);
-        // $this->middleware('gest')->only(['create', 'delete', 'envoyerCommande']);
-
         $this->typecommandes = $typecommandes;
         $this->fournisseurs = $fournisseurs;
         $this->produits = $produits;
@@ -50,15 +47,20 @@ class BonCommandeController extends Controller
     public function index(Request $request)
     {
         $userRoles = $this->userRoles;
-        // bons en préparation
-        $pre_boncommandes = BonCommande::with(['typecommande', 'fournisseur', 'detailboncommandes.programmations.zone._user', 'accusedocuments', 'recus'])->orderBy('code', 'desc')
+        // Bons en préparation (on peut aussi paginer si besoin)
+
+        $pre_boncommandes = BonCommande::with(['typecommande', 'fournisseur'])
+            ->orderBy('code', 'desc')
             ->whereIn("statut", ['Préparation', 'En attente de validation', 'Envoyé'])
             ->get();
-        $query = BonCommande::with(['typecommande', 'fournisseur', 'detailboncommandes.programmations.zone._user', 'accusedocuments', 'recus'])->orderBy('code', 'desc')
+
+        $query = BonCommande::with(['typecommande', 'fournisseur'])
+            ->orderBy('code', 'desc')
             ->whereNotIn("statut", ['Préparation', 'En attente de validation', 'Envoyé']);
 
         if ($request->debut && $request->fin) {
-            $boncommandes = $query->whereBetween('dateBon', [$request->debut, $request->fin])->get();
+            $boncommandes = $query->whereBetween('dateBon', [$request->debut, $request->fin])
+                ->get();
             $req = $request->all();
         } else {
             $boncommandes = $query->get();
@@ -224,7 +226,7 @@ class BonCommandeController extends Controller
         $produits = $fournisseur->produits;
         $boncommandes = $boncommande;
 
-        return view('boncommandes.edit', compact('boncommandes', 'detailboncommande', 'produits','userRoles'));
+        return view('boncommandes.edit', compact('boncommandes', 'detailboncommande', 'produits', 'userRoles'));
     }
 
     public function update(Request $request, BonCommande $boncommande)

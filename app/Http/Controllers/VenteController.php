@@ -51,18 +51,20 @@ class VenteController extends Controller
         $commandeclients = CommandeClient::whereIn('statut', ['Préparation', 'Vendue', 'Validée', 'Livraison partielle', 'Livrée']);
 
         if ($request->debut && $request->fin) {
-            $commandeclients = $commandeclients->WhereBetween('dateBon', [$request->debut, $request->fin])->pluck('id');
+            $commandeclients = $commandeclients->WhereBetween('dateBon', [$request->debut, $request->fin])
+                ->pluck('id');
         } else {
             $commandeclients = $commandeclients->pluck('id');
         }
 
         $ventes = collect();
-        Vente::whereIn('commande_client_id', $commandeclients)->orderByDesc('code')->chunk(100, function ($chunk) use (&$ventes, $request) {
-            $ventes = $ventes->merge($chunk); //merge the chunk
-        });
+        Vente::whereIn('commande_client_id', $commandeclients)
+            ->orderByDesc('code')
+            ->chunk(100, function ($chunk) use (&$ventes) {
+                $ventes = $ventes->merge($chunk); //merge the chunk
+            });
 
         $user = Auth::user();
-
         if (array_intersect($roles, [1, 2, 5, 8, 9, 10, 11])) {
             if (
                 IS_FOFANA_ACCOUNT($user)
@@ -75,7 +77,7 @@ class VenteController extends Controller
                 //Moulizine n'a accès qu'à ses ventes à lui!
                 $ventes = $ventes->where('statut', '<>', 'En attente de modification')
                     ->where("users", $user->id);
-            }elseif (IS_HIPLYTE_ACCOUNT($user)) {
+            } elseif (IS_HIPLYTE_ACCOUNT($user)) {
                 //Moulizine n'a accès qu'à ses ventes à lui!
                 $ventes = $ventes->where('statut', '<>', 'En attente de modification')
                     ->where("users", $user->id);
@@ -90,6 +92,7 @@ class VenteController extends Controller
                 ->where('users', $user->id);
         }
 
+        // $ventes = $query;
         return view('ventes.index', compact('ventes'));
     }
 
@@ -98,9 +101,11 @@ class VenteController extends Controller
         $ventes = collect();
         if ($request->method() == 'GET') {
             $date = date('Y-m-d');
-            Vente::whereDate('created_at', $date)->orderBy('created_at', 'DESC')->chunk(100, function ($chunk) use (&$ventes) {
-                $ventes = $ventes->merge($chunk); //merge the chunk
-            });
+            Vente::whereDate('created_at', $date)
+                ->orderBy('created_at', 'DESC')
+                ->chunk(100, function ($chunk) use (&$ventes) {
+                    $ventes = $ventes->merge($chunk); //merge the chunk
+                });
         } else {
             ##___POST METHOD
             $debut = $request->debut;
@@ -201,7 +206,7 @@ class VenteController extends Controller
 
         return view('ventes.create', compact('vente', 'typecommandeclient', 'clients', 'commandeclients', 'zones', 'redirectto', 'req', 'typeVente'));
     }
-
+    
     public function store(Request $request)
     {
         $req = NULL;
