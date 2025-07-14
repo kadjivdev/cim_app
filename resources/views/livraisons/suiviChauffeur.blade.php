@@ -47,7 +47,7 @@
                                     </div>
                                 @endif
 
-                                <form id="statutsForm" action="{{route('livraisons.postSuivichauffeur')}}" method="post">
+                                <form id="statutsForm" action="{{route('livraisons.suivichauffeur')}}" method="get">
                                     @csrf
                                     <div class="row">
                                         <div class="col-sm-4">
@@ -129,63 +129,16 @@
                                     </div>
                                 </form>
                             </div>
+                            
+                            @if(isset($programmations) && $programmations)
+                                @if(isset($messageReq) && $messageReq)
+                                    <div class="alert alert-info m-1 text-center"><h4>{{$messageReq}}</h4></div>
+                                @endif
 
-                            @if($messageReq)
-                                <div class="alert alert-info m-1 text-center"><h4>{{$messageReq}}</h4></div>
-                            @endif
-
-                            <div class="card-body">
-                                <table id="example1" class="table table-bordered table-striped table-sm"
-                                        style="font-size: 11px">
-                                    <thead class="text-white text-center bg-gradient-gray-dark">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Code</th>
-                                        <th>Code Prog</th>
-                                        <th>Date Prog</th>
-                                        <th>Date Bon</th>
-                                        <th>Fournisseur</th>
-                                        <th>Produit</th>
-                                        <th>BL</th>
-                                        <th>Camion</th>
-                                        <th>Chauffeur</th>
-                                        <th>Zone</th>
-                                        <th>Qté</th>
-                                        <th>Client et Destination</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="table-body">
-                                    @forelse ($programmations as $programmation)
-                                        <tr class="">
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
-                                            <td>{{ $programmation->code }}</td>
-                                            <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->dateprogrammer), 'd/m/Y'):'' }}</td>
-                                            <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->detailboncommande->boncommande->dateBon), 'd/m/Y'):'' }}</td>
-                                            <td>{{ $programmation->detailboncommande->boncommande->fournisseur->sigle }}</td>
-                                            <td>{{ $programmation->detailboncommande->produit->libelle }}</td>
-                                            <td>{{ $programmation->bl_gest?$programmation->bl_gest:$programmation->bl }}</td>
-                                            <td>{{ $programmation->camion->immatriculationTracteur }}
-                                                ({{ $programmation->camion->marque->libelle }})
-                                            </td>
-                                            <td>{{ $programmation->chauffeur->nom }} {{ $programmation->chauffeur->prenom }}
-                                                ({{ $programmation->chauffeur->telephone }})
-                                            </td>
-                                            <td>{{ $programmation->zone->libelle }}
-                                                ({{ $programmation->zone->departement->libelle }})
-                                            </td>
-                                            <td class="text-right">{{ number_format($programmation->qteprogrammer,2,","," ") }}</td>                                                      
-                                            <td>
-                                                @foreach ($programmation->vendus  as $vendu )
-                                                    {{ $vendu->vente->commandeclient->client->raisonSociale }} - <b>({{$vendu->vente->destination}})</b> - <span style="color: green"><b> {{$vendu->vente->code}} ({{ $vendu->vente->valide?$vendu->vente->qteTotal:"pas encore validé" }})</b></span> <br>
-                                                @endforeach
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <p class="text-center">Aucun element trouvé</p>
-                                    @endforelse
-                                    </tbody>
-                                    <tfoot class="text-white text-center bg-gradient-gray-dark">
+                                <div class="card-body">
+                                    <table id="example1" class="table table-bordered table-striped table-sm"
+                                            style="font-size: 11px">
+                                        <thead class="text-white text-center bg-gradient-gray-dark">
                                         <tr>
                                             <th>#</th>
                                             <th>Code</th>
@@ -201,119 +154,170 @@
                                             <th>Qté</th>
                                             <th>Client et Destination</th>
                                         </tr>
-                                    </tfoot>
-                                </table>
+                                        </thead>
+                                        <tbody class="table-body">
+                                            @foreach($programmations as $programmation)
+                                                <tr class="">
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
+                                                    <td>{{ $programmation->code }}</td>
+                                                    <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->dateprogrammer), 'd/m/Y'):'' }}</td>
+                                                    <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->detailboncommande->boncommande->dateBon), 'd/m/Y'):'' }}</td>
+                                                    <td>{{ $programmation->detailboncommande->boncommande->fournisseur->sigle }}</td>
+                                                    <td>{{ $programmation->detailboncommande->produit->libelle }}</td>
+                                                    <td>{{ $programmation->bl_gest?$programmation->bl_gest:$programmation->bl }}</td>
+                                                    <td>{{ $programmation->camion->immatriculationTracteur }}
+                                                        ({{ $programmation->camion->marque->libelle }})
+                                                    </td>
+                                                    <td>{{ $programmation->chauffeur->nom }} {{ $programmation->chauffeur->prenom }}
+                                                        ({{ $programmation->chauffeur->telephone }})
+                                                    </td>
+                                                    <td>{{ $programmation->zone->libelle }}
+                                                        ({{ $programmation->zone->departement->libelle }})
+                                                    </td>
+                                                    <td class="text-right">{{ number_format($programmation->qteprogrammer,2,","," ") }}</td>                                                      
+                                                    <td>
+                                                        @foreach ($programmation->vendus  as $vendu )
+                                                            {{ $vendu->vente->commandeclient->client->raisonSociale }} - <b>({{$vendu->vente->destination}})</b> - <span style="color: green"><b> {{$vendu->vente->code}} ({{ $vendu->vente->valide?$vendu->vente->qteTotal:"pas encore validé" }})</b></span> <br>
+                                                        @endforeach
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot class="text-white text-center bg-gradient-gray-dark">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Code</th>
+                                                <th>Code Prog</th>
+                                                <th>Date Prog</th>
+                                                <th>Date Bon</th>
+                                                <th>Fournisseur</th>
+                                                <th>Produit</th>
+                                                <th>BL</th>
+                                                <th>Camion</th>
+                                                <th>Chauffeur</th>
+                                                <th>Zone</th>
+                                                <th>Qté</th>
+                                                <th>Client et Destination</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
 
-                                <!-- MODAL DE TRANSFERT DE LIVRAISON -->
-                                <div class="modal fade" id="modal-default" style="display: none;"
-                                        aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <form action="{{route('livraisons.transfert')}}" method="post">
-                                                @csrf
+                                    <p class="text-center">
+                                        {{ $programmations->links('pagination::bootstrap-4') }}
+                                    </p>
+
+                                    <!-- MODAL DE TRANSFERT DE LIVRAISON -->
+                                    <div class="modal fade" id="modal-default" style="display: none;"
+                                            aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <form action="{{route('livraisons.transfert')}}" method="post">
+                                                    @csrf
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title text-center">Transfert de livraison</h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row" id="loader">
+                                                            <div class="col-md-12 text-center">
+                                                                <i class="fa-spin spinner-border"></i><br>
+                                                                Chargement...
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12 alert alert-danger" id="error" hidden>
+                                                                <i class="fa fa-warning"></i> Une erreur interne est
+                                                                survenue lors du chargement des données. Merci de
+                                                                reprendre ou de contacter l'administrateur.
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2" id="form_modal" hidden>
+                                                            <div class="col-md-5">
+                                                                <label for="">Zone source</label>
+                                                                <input type="hidden" name="id" id="id">
+                                                                <input type="hidden" name="prog" id="prog">
+                                                                <input type="text" disabled id="zone_souce"
+                                                                        class="form-control">
+                                                            </div>
+                                                            <div class="col-md-2 text-center">
+                                                                <i class="fa fa-arrow-alt-circle-right fa-2x text-success"
+                                                                    style="margin-top: 0.2em"></i>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label for="">Zone destination.</label>
+                                                                <select name="zone_id" id="zone_dest"
+                                                                        class="form-control" required></select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2 mb-2" id="motif" hidden>
+                                                            <div class="col-md-12">
+                                                                <label for="">Motif de transfert</label>
+                                                                <textarea class="form-control" name="observation"
+                                                                            required></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="alert alert-warning" id="warming" hidden>
+                                                            <i class="fa fa-warning"></i> Le transfert de la livraison
+                                                            est irreversible. Si vous êtes un résentant, cette livraison
+                                                            quittera votre responsablité.
+                                                            êtes vous sur de vouloir transferer cette livraison vers la
+                                                            destination sélectionnée ?
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between" id="btn" hidden>
+                                                        <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Oui je confirme le
+                                                            transfert
+                                                        </button>
+                                                    </div>
+                                                </form>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- MODAL DE DETAIL DE TRANSFERT -->
+                                    <div class="modal fade" id="modal-detail" style="display: none;" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h4 class="modal-title text-center">Transfert de livraison</h4>
+                                                    <h4 class="modal-title text-center">Détail transfert</h4>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
                                                         <span aria-hidden="true">×</span>
                                                     </button>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <div class="row" id="loader">
-                                                        <div class="col-md-12 text-center">
-                                                            <i class="fa-spin spinner-border"></i><br>
-                                                            Chargement...
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-12 alert alert-danger" id="error" hidden>
-                                                            <i class="fa fa-warning"></i> Une erreur interne est
-                                                            survenue lors du chargement des données. Merci de
-                                                            reprendre ou de contacter l'administrateur.
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mb-2" id="form_modal" hidden>
-                                                        <div class="col-md-5">
-                                                            <label for="">Zone source</label>
-                                                            <input type="hidden" name="id" id="id">
-                                                            <input type="hidden" name="prog" id="prog">
-                                                            <input type="text" disabled id="zone_souce"
-                                                                    class="form-control">
-                                                        </div>
-                                                        <div class="col-md-2 text-center">
-                                                            <i class="fa fa-arrow-alt-circle-right fa-2x text-success"
-                                                                style="margin-top: 0.2em"></i>
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <label for="">Zone destination.</label>
-                                                            <select name="zone_id" id="zone_dest"
-                                                                    class="form-control" required></select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mt-2 mb-2" id="motif" hidden>
-                                                        <div class="col-md-12">
-                                                            <label for="">Motif de transfert</label>
-                                                            <textarea class="form-control" name="observation"
-                                                                        required></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="alert alert-warning" id="warming" hidden>
-                                                        <i class="fa fa-warning"></i> Le transfert de la livraison
-                                                        est irreversible. Si vous êtes un résentant, cette livraison
-                                                        quittera votre responsablité.
-                                                        êtes vous sur de vouloir transferer cette livraison vers la
-                                                        destination sélectionnée ?
+                                                <div class="row p-3">
+                                                    <div class="col-md-12">
+                                                        <table class="table table-bordered" id="detailTransfert">
+                                                            <tbody></tbody>
+
+                                                        </table>
                                                     </div>
                                                 </div>
-                                                <div class="modal-footer justify-content-between" id="btn" hidden>
-                                                    <button type="button" class="btn btn-default"
-                                                            data-dismiss="modal">Close
+                                                <div class="modal-footer justify-content-between" id="btn">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                        Close
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">Oui je confirme le
                                                         transfert
                                                     </button>
                                                 </div>
-                                            </form>
+                                            </div>
 
                                         </div>
 
                                     </div>
-
                                 </div>
-
-                                <!-- MODAL DE DETAIL DE TRANSFERT -->
-                                <div class="modal fade" id="modal-detail" style="display: none;" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title text-center">Détail transfert</h4>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <span aria-hidden="true">×</span>
-                                                </button>
-                                            </div>
-                                            <div class="row p-3">
-                                                <div class="col-md-12">
-                                                    <table class="table table-bordered" id="detailTransfert">
-                                                        <tbody></tbody>
-
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer justify-content-between" id="btn">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">
-                                                    Close
-                                                </button>
-                                                <button type="submit" class="btn btn-primary">Oui je confirme le
-                                                    transfert
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            </div>
+                            @endif
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
@@ -332,7 +336,6 @@
         function submitStatuts() {
             $('#statutsForm').submit();
         }
-
 
         function handleDateChange(id, inputElement) {
             const dateValue = inputElement.value;
@@ -430,6 +433,7 @@
                 }, 3000);
             }
         }
+        
         function loadProgrammation(id){
                 $('#zone_dest option').remove()
                 $('#zone_dest').removeAttr('selected');
@@ -513,6 +517,7 @@
 
         $(function () {
             $("#example1").DataTable({
+                "paging": false, // Désactive la pagination DataTables
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,

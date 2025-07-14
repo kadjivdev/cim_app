@@ -114,13 +114,11 @@
                                 </thead>
 
                                 <tbody>
-                                    @if ($programmations->count() > 0)
-                                    <?php $compteur = 1; ?>
                                     @foreach($programmations as $programmation)
                                     @if($programmation->bl)
                                     <tr>
                                         <td>
-                                            {{ $compteur++ }}
+                                            {{ $loop->iteration }}
                                         </td>
                                         <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
                                         <td>{{ $programmation->code }}</td>
@@ -136,7 +134,7 @@
                                         <td class="text-right">
                                             @foreach($programmation->vendus as $vendu)
                                             <strong>{{$vendu->qteVendu}}</strong> ;
-                                            @endforeach 
+                                            @endforeach
 
                                             <hr>
                                             {{ number_format($programmation->vendus->sum('qteVendu'),2,","," ") }}
@@ -215,7 +213,7 @@
                                     @else
                                     <tr>
                                         <td><span class="text-danger"></span>
-                                            {{ $compteur++ }}
+                                            {{ $loop->iteration }}
                                         </td>
                                         <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
                                         <td>{{ $programmation->code }}</td>
@@ -288,7 +286,6 @@
                                     </tr>
                                     @endif
                                     @endforeach
-                                    @endif
                                 </tbody>
 
                                 <tfoot class="text-white text-center bg-gradient-gray-dark">
@@ -316,6 +313,9 @@
                                 </tfoot>
                             </table>
 
+                            <!-- pagination -->
+                            <p class="text-center">{{ $programmations->links('pagination::bootstrap-4') }}</p>
+                            
                             <div class="modal fade" id="modal-default" style="display: none;" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
@@ -508,6 +508,7 @@
 
     $(function() {
         $("#example1").DataTable({
+            "paging":false,
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,

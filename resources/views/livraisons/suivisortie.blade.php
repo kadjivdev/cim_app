@@ -46,7 +46,7 @@
                                         </div>
                                     </div>
                                 @endif
-                                <form id="statutsForm" action="{{route('livraisons.postSuivicamion')}}" method="post">
+                                <form id="statutsForm" action="{{route('livraisons.suivicamion')}}" method="get">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-2">
@@ -94,11 +94,11 @@
                             </div>
 
                             <!-- /.card-header -->
+                            @if(isset($programmations) && $programmations)
+                                @if(isset($messageReq) && $messageReq)
+                                    <div class="alert alert-info m-1 text-center"><h4>{{$messageReq}}</h4></div>
+                                @endif
 
-                            @if(session('resultat'))
-                                <div class="alert alert-info m-1 text-center"><h4>{{session('messageReq')}}</h4></div>
-                                @php($programmations = session('resultat'))
-                                @php($request = session('request'))
                                 <div class="card-body">
                                     <table id="example1" class="table table-bordered table-striped table-sm"
                                            style="font-size: 11px">
@@ -121,155 +121,87 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @if (count($programmations) > 0)
-                                                <?php $compteur = 1; ?>
-                                            @if($request['fournisseur'] == 'tous')
-                                                @foreach($programmations as $programmation)
-                                                    @php($dateDebut = new DateTime($programmation->dateprogrammer))
-                                                    @php($dateFin = new DateTime(date('Y-m-d')))
-                                                    @php($difference = $dateDebut->diff($dateFin))
-                                                    <tr class="">
-                                                        <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
-                                                        <td>{{ $programmation->code }}</td>
-                                                        <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->dateprogrammer), 'd/m/Y'):'' }}</td>
-                                                        <td>{{ $programmation->detailboncommande->boncommande->fournisseur->sigle }}</td>
-                                                        <td>{{ $programmation->detailboncommande->produit->libelle }}</td>
-                                                        <td>{{ $programmation->camion->immatriculationTracteur }}
-                                                            ({{ $programmation->camion->marque->libelle }})
-                                                        </td>
-                                                        <td>{{ $programmation->chauffeur->nom }} {{ $programmation->chauffeur->prenom }}
-                                                            ({{ $programmation->chauffeur->telephone }})
-                                                        </td>
-                                                        <td>{{ $programmation->zone->libelle }}
-                                                            ({{ $programmation->zone->departement->libelle }})
-                                                        </td>
-                                                        <td class="text-right">{{ number_format($programmation->qteprogrammer,2,","," ") }}</td>
-                                                        <td class="">
+                                            @foreach($programmations as $programmation)
+                                                <tr class="">
+                                                    <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
+                                                    <td>{{ $programmation->code }}</td>
+                                                    <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->dateprogrammer), 'd/m/Y'):'' }}</td>
+                                                    <td>{{ $programmation->detailboncommande->boncommande->fournisseur->sigle }}</td>
+                                                    <td>{{ $programmation->detailboncommande->produit->libelle }}</td>
+                                                    <td>{{ $programmation->camion->immatriculationTracteur }}
+                                                        ({{ $programmation->camion->marque->libelle }})
+                                                    </td>
+                                                    <td>{{ $programmation->chauffeur->nom }} {{ $programmation->chauffeur->prenom }}
+                                                        ({{ $programmation->chauffeur->telephone }})
+                                                    </td>
+                                                    <td>{{ $programmation->zone->libelle }}
+                                                        ({{ $programmation->zone->departement->libelle }})
+                                                    </td>
+                                                    <td class="text-right">{{ number_format($programmation->qteprogrammer,2,","," ") }}</td>
+                                                    <td class="">
+                                                        <div class="form-group" style="font-size: 14px">
+                                                            <input type="date" class="form-control col-md-12" onchange="handleDateChange('{{ $programmation->id }}', this)" value="{{$programmation->dateSortie ?  : ''}}" @if ($programmation->dateSortie) readonly @endif>
+                                                            <div class="message-container d-none"></div> <!-- Conteneur pour le message -->
+                                                        </div>
+                                                    </td>
+                                                    <td class="">
+                                                        <div class="form-group" style="font-size: 14px">
+                                                            <input type="text" class="form-control col-md-12" onchange="handleBordLivChange('{{ $programmation->id }}', this)" value="{{$programmation->bl_gest ?  : ''}}"@if ($programmation->bl_gest && $programmation->detailboncommande->boncommande->statut=="Livrer") readonly @endif >
+                                                            <div class="message-container-bl d-none"></div> <!-- Conteneur pour le message -->
+                                                            <small class="text-primary text-center d-block"> {{$programmation->detailboncommande->boncommande->statut}} </small>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        {{ $programmation->bl_gest }}/{{ $programmation->bl }}
+                                                    </td>
+
+                                                    <td class="text-danger text-center">
+                                                        @if($programmation->bl_gest && $programmation->bl)
+                                                            @if($programmation->bl_gest!=$programmation->bl)
+                                                            <span>diff</span>
+                                                            <i class="bi bi-x-circle"></i>
                                                             <div class="form-group" style="font-size: 14px">
-                                                                <input type="date" class="form-control col-md-12" onchange="handleDateChange('{{ $programmation->id }}', this)" value="{{$programmation->dateSortie ?  : ''}}" @if ($programmation->dateSortie) readonly @endif>
-                                                                <div class="message-container d-none"></div> <!-- Conteneur pour le message -->
-                                                            </div>
-                                                        </td>
-                                                        <td class="">
-                                                            <div class="form-group" style="font-size: 14px">
-                                                                <input type="text" class="form-control col-md-12" onchange="handleBordLivChange('{{ $programmation->id }}', this)" value="{{$programmation->bl_gest ?  : ''}}"@if ($programmation->bl_gest && $programmation->detailboncommande->boncommande->statut=="Livrer") readonly @endif >
+                                                                <input type="text" class="form-control col-md-12" onchange="handleBordLivChange('{{ $programmation->id }}', this)" value="{{$programmation->bl_gest ?  : ''}}">
                                                                 <div class="message-container-bl d-none"></div> <!-- Conteneur pour le message -->
-                                                                <small class="text-primary text-center d-block"> {{$programmation->detailboncommande->boncommande->statut}} </small>
                                                             </div>
-                                                        </td>
-
-                                                        <td class="text-center">
-                                                            {{ $programmation->bl_gest }}/{{ $programmation->bl }}
-                                                        </td>
-
-                                                        <td class="text-danger text-center">
-                                                            @if($programmation->bl_gest && $programmation->bl)
-                                                                @if($programmation->bl_gest!=$programmation->bl)
-                                                                <span>diff</span>
-                                                                <i class="bi bi-x-circle"></i>
-                                                                <div class="form-group" style="font-size: 14px">
-                                                                    <input type="text" class="form-control col-md-12" onchange="handleBordLivChange('{{ $programmation->id }}', this)" value="{{$programmation->bl_gest ?  : ''}}">
-                                                                    <div class="message-container-bl d-none"></div> <!-- Conteneur pour le message -->
-                                                                </div>
-                                                                @endif
                                                             @endif
-                                                        </td>
+                                                        @endif
+                                                    </td>
 
-                                                        <td >
-                                                            <!-- <a href="#" data-toggle="modal" data-target="#modal-default" title="Transfert la livraison" class="btn  btn-warning  btn-xs"><i class="fa-solid fa-long-arrow-right" onclick="loadProgrammation({{$programmation->id}})"></i></a> -->
-                                                            <a target="_blank" href="{{route('livraisons.getTransfert',$programmation->id)}} "title="Transfert la livraison" class="btn  btn-warning  btn-xs"><i class="fa-solid fa-long-arrow-right"></i></a>
-                                                            <a href="#" data-toggle="modal" data-target="#modal-detail" title="Détail transfert" class="btn  btn-success  btn-xs"><i class="fa-solid fa-list" onclick="loadDetailTransfert({{$programmation->id}})"></i></a>
+                                                    <td >
+                                                        <!-- <a href="#" data-toggle="modal" data-target="#modal-default" title="Transfert la livraison" class="btn  btn-warning  btn-xs"><i class="fa-solid fa-long-arrow-right" onclick="loadProgrammation({{$programmation->id}})"></i></a> -->
+                                                        <a target="_blank" href="{{route('livraisons.getTransfert',$programmation->id)}} "title="Transfert la livraison" class="btn  btn-warning  btn-xs"><i class="fa-solid fa-long-arrow-right"></i></a>
+                                                        <a href="#" data-toggle="modal" data-target="#modal-detail" title="Détail transfert" class="btn  btn-success  btn-xs"><i class="fa-solid fa-list" onclick="loadDetailTransfert({{$programmation->id}})"></i></a>
 
-                                                            <a href="{{route('programmations.create', ['detailboncommande'=>$programmation->detail_bon_commande_id]) }}" target="_blank" class="btn btn-sm btn-primary mt-1">Gérer</a>
-                                                        </td>
-                                                    
-                                                    </tr>
-                                                @endforeach
-                                            @else
-
-                                                @foreach($programmations as $programmation)
-                                                    @php($dateDebut = new DateTime($programmation->dateprogrammer))
-                                                    @php($dateFin = new DateTime(date('Y-m-d')))
-                                                    @php($difference = $dateDebut->diff($dateFin))
-
-                                                    @if($request['fournisseur'] == $programmation->detailboncommande->boncommande->fournisseur->id)
-                                                        <tr class="">
-                                                            <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
-                                                            <td>{{ $programmation->code }}</td>
-                                                            <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->dateprogrammer), 'd/m/Y'):'' }}</td>
-                                                            <td>{{ $programmation->detailboncommande->boncommande->fournisseur->sigle }}</td>
-                                                            <td>{{ $programmation->detailboncommande->produit->libelle }}</td>
-                                                            <td>{{ $programmation->camion->immatriculationTracteur }}
-                                                                ({{ $programmation->camion->marque->libelle }})
-                                                            </td>
-                                                            <td>{{ $programmation->chauffeur->nom }} {{ $programmation->chauffeur->prenom }}
-                                                                ({{ $programmation->chauffeur->telephone }})
-                                                            </td>
-                                                            <td>{{ $programmation->zone->libelle }}
-                                                                ({{ $programmation->zone->departement->libelle }})
-                                                            </td>
-                                                            <td class="text-right">{{ number_format($programmation->qteprogrammer,2,","," ") }}</td>
-                                                            <td class="">
-                                                                <div class="form-group" style="font-size: 14px">
-                                                                    <input type="date" class="form-control col-md-12" onchange="handleDateChange('{{ $programmation->id }}', this)" value="{{$programmation->dateSortie ?  : ''}}"  @if ($programmation->dateSortie) readonly @endif >
-                                                                    <div class="message-container d-none"></div> <!-- Conteneur pour le message -->
-                                                                </div>
-                                                            </td>
-                                                            <td class="">
-                                                                <div class="form-group" style="font-size: 14px">
-                                                                    <input type="text" class="form-control col-md-12" onchange="handleBordLivChange('{{ $programmation->id }}', this)" value="{{$programmation->bl_gest ?  : ''}}" @if ($programmation->bl_gest) readonly @endif>
-                                                                    <div class="message-container-bl d-none"></div> <!-- Conteneur pour le message -->
-                                                                </div>
-                                                            </td>
-
-                                                            <td class="text-center">
-                                                                {{ $programmation->bl_gest }}/{{ $programmation->bl }}
-                                                            </td>
-                                                            <td class="text-danger text-center">
-                                                                @if($programmation->bl_gest && $programmation->bl)
-                                                                    @if($programmation->bl_gest!=$programmation->bl)
-                                                                    <span>diff</span>
-                                                                    <i class="bi bi-x-circle"></i>
-                                                                    <div class="form-group" style="font-size: 14px">
-                                                                        <input type="text" class="form-control col-md-12" onchange="handleBordLivChange('{{ $programmation->id }}', this)" value="{{$programmation->bl_gest ?  : ''}}">
-                                                                        <div class="message-container-bl d-none"></div> <!-- Conteneur pour le message -->
-                                                                    </div>
-                                                                    @endif
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                <!-- <a href="#" data-toggle="modal" data-target="#modal-default" title="Transfert la livraison" class="btn  btn-warning  btn-xs"><i class="fa-solid fa-long-arrow-right" onclick="loadProgrammation({{$programmation->id}})"></i></a> -->
-                                                                <a target="_blank" href="{{route('livraisons.getTransfert',$programmation->id)}} "title="Transfert la livraison" class="btn  btn-warning  btn-xs"><i class="fa-solid fa-long-arrow-right"></i></a>
-                                                                <a href="#" data-toggle="modal" data-target="#modal-detail" title="Détail transfert" class="btn  btn-success  btn-xs" onclick="loadDetailTransfert({{$programmation->id}})"><i class="fa-solid fa-list" onclick="loadDetailTransfert({{$programmation->id}})"></i></a>
-                                                                <a href="{{route('programmations.create', ['detailboncommande'=>$programmation->detail_bon_commande_id]) }}" target="_blank" class="btn btn-sm btn-primary">Gérer</a>
-                                                            
-                                                            
-                                                            </td>
-                                                        </tr>
-                                                    @endif
-                                                @endforeach
-                                            @endif
-                                        @endif
+                                                        <a href="{{route('programmations.create', ['detailboncommande'=>$programmation->detail_bon_commande_id]) }}" target="_blank" class="btn btn-sm btn-primary mt-1">Gérer</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                         <tfoot class="text-white text-center bg-gradient-gray-dark">
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Code Prog</th>
-                                            <th>Date</th>
-                                            <th>Fournisseur</th>
-                                            <th>Produit</th>
-                                            <th>Camion</th>
-                                            <th>Chauffeur</th>
-                                            <th>Zone</th>
-                                            <th>Qté</th>
-                                            <th>Date sortie</th>
-                                            <th>Bord Liv </th>
-                                            <th>BLs</th>
-                                            <th>##DIF##</th>
-                                            <th>Action</th>
-                                        </tr>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Code Prog</th>
+                                                <th>Date</th>
+                                                <th>Fournisseur</th>
+                                                <th>Produit</th>
+                                                <th>Camion</th>
+                                                <th>Chauffeur</th>
+                                                <th>Zone</th>
+                                                <th>Qté</th>
+                                                <th>Date sortie</th>
+                                                <th>Bord Liv </th>
+                                                <th>BLs</th>
+                                                <th>##DIF##</th>
+                                                <th>Action</th>
+                                            </tr>
                                         </tfoot>
                                     </table>
+
+                                    <p class="text-center">{{$programmations->links('pagination::bootstrap-4')}}</p>
+
+                                    <!-- les modals -->
                                     <div class="modal fade" id="modal-default" style="display: none;"
                                          aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
@@ -396,7 +328,6 @@
         function submitStatuts() {
             $('#statutsForm').submit();
         }
-
 
         function handleDateChange(id, inputElement) {
             const dateValue = inputElement.value;
@@ -594,9 +525,9 @@
         }
             
 
-
         $(function () {
             $("#example1").DataTable({
+                "paging":false,
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,

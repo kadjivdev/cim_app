@@ -59,13 +59,14 @@ class BonCommandeController extends Controller
             ->whereNotIn("statut", ['Préparation', 'En attente de validation', 'Envoyé']);
 
         if ($request->debut && $request->fin) {
-            $boncommandes = $query->whereBetween('dateBon', [$request->debut, $request->fin])
-                ->get();
+            $boncommandes = $query->whereBetween('dateBon', [$request->debut, $request->fin]);
             $req = $request->all();
         } else {
-            $boncommandes = $query->get();
+            $boncommandes = $query;
             $req = null;
         }
+
+        $boncommandes = $boncommandes->paginate(20);
 
         return view('boncommandes.index', compact('boncommandes', 'req', 'pre_boncommandes', 'userRoles'));
     }

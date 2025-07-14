@@ -358,6 +358,7 @@
                                     </tr>
                                 </tfoot>
                             </table>
+
                             <div class="row">
                                 <div class="col-12">
                                     <table class="table table-bordered table-sm">
@@ -374,6 +375,10 @@
                                     </table>
                                 </div>
                             </div>
+
+                            <p class="text-center">
+                                {{$boncommandes->links('pagination::bootstrap-4')}}
+                            </p>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -393,6 +398,7 @@
 <script>
     $(function() {
         $("#example1").DataTable({
+            "paging":false,
             "responsive": true,
             "lengthChange": false,
             "autoWidth": true,
