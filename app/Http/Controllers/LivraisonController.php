@@ -743,142 +743,130 @@ class LivraisonController extends Controller
 
     public function suiviChauffeur(Request $request)
     {
-        $user = User::find(Auth::user()->id);
-        $repre = $user->representant;
-        $zones = $repre->zones;
-
         $query = Programmation::query()
-            ->with("vendus")
-            ->whereHas("detailboncommande.boncommande", function ($query) use ($request) {
-                /**Filtre du bon de commande */
+            ->with(['vendus','detailboncommande.boncommande','camion','chauffeur','zone'])
+            ->whereHas('detailboncommande.boncommande', function ($q) use ($request) {
                 if ($request->bon) {
-                    $query->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler'])
-                        ->whereBetween('dateBon', [$request->debut, $request->fin]);
+                    $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                    if ($request->debut && $request->fin) {
+                        $q->whereBetween('dateBon', [$request->debut, $request->fin]);
+                    }
                 } else {
-                    $query->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                    $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
                 }
             })
             ->whereIn('statut', ['Valider', 'Livrer'])
-            ->where('imprimer', '1')
-            ->orderByDesc('code');
+            ->where('imprimer', '1');
 
+        // Filtre par chauffeur
+        if ($request->chauffeur && $request->chauffeur != "tous") {
+            $query->where('chauffeur_id', $request->chauffeur);
+        }
+
+        // Filtre par fournisseur (si la relation existe)
+        if ($request->fournisseur && $request->fournisseur != "tous") {
+            $query->whereHas('detailboncommande.boncommande', function ($q) use ($request) {
+                $q->where('fournisseur_id', $request->fournisseur);
+            });
+        }
+
+        // Filtre par date de programmation
+        if ($request->prog && $request->debut && $request->fin) {
+            $query->whereBetween('dateprogrammer', [$request->debut, $request->fin]);
+        }
+
+        // Filtre par date de sortie
+        if ($request->option == 'OUI') {
+            $query->whereNotNull('dateSortie');
+        } elseif ($request->option == 'NON') {
+            $query->whereNull('dateSortie');
+        }
+
+        // Pagination (20 résultats par page)
+        $programmations = $query->orderByDesc('code')
+            ->get();
+
+        // Construction du messageReq (reprend la logique existante)
+        $chauffeurs = Chauffeur::all();
+        $fournisseurs = Fournisseur::all();
         $fournisseur = Fournisseur::find($request->fournisseur);
         $chauffeur = Chauffeur::find($request->chauffeur);
+        $messageReq = '';
 
         if ($request->debut && $request->fin) {
-            if ($request->bon == $request->prog) {
-                return back()->with("error", "Choisissez soit un filtrage par date de programmation ou par date de bon de commande");
-            }
-
-            session(['debut' => $request->debut]);
-            session(['fin' => $request->fin]);
-            session(['option' => $request->option]);
-            session(['fournisseur' => $request->fournisseur]);
-            session(['chauffeur' => $request->chauffeur]);
-
             if ($chauffeur) {
                 switch ($request->option) {
                     case 'Tous':
-                        $query
-                            ->where('chauffeur_id', $chauffeur->id);
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des programmations de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des programmations de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                     case 'OUI':
-                        $query
-                            ->where('chauffeur_id', $chauffeur->id)
-                            ->whereNotNull('dateSortie');
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des camions chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                     case 'NON':
-                        $query
-                            ->where('chauffeur_id', $chauffeur->id)
-                            ->whereNull('dateSortie');
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions non chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des camions non chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                 }
             } else {
                 switch ($request->option) {
                     case 'Tous':
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des programmations de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des programmations de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                     case 'OUI':
-                        $query
-                            ->whereNotNull('dateSortie');
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des camions chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                     case 'NON':
-                        $query
-                            ->whereNull('dateSortie');
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions non chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des camions non chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                 }
-            }
-
-            if ($request->prog) {
-                $query->whereBetween('dateprogrammer', [$request->debut, $request->fin]);
             }
         } else {
             if ($chauffeur) {
                 switch ($request->option) {
                     case 'Tous':
-                        $query
-                            ->where('chauffeur_id', $chauffeur->id)
-                            ->whereBetween('dateprogrammer', [$request->debut, $request->fin]);
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des programmations de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des programmations " . $fournisseurTxt;
                         break;
                     case 'OUI':
-                        $query
-                            ->where('chauffeur_id', $chauffeur->id)
-                            ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
-                            ->whereNotNull('dateSortie');
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des camions chargés " . $fournisseurTxt;
                         break;
                     case 'NON':
-                        $query
-                            ->where('chauffeur_id', $chauffeur->id)
-                            ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
-                            ->whereNull('dateSortie');
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions non chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des camions non chargés " . $fournisseurTxt;
                         break;
                 }
             } else {
                 switch ($request->option) {
                     case 'Tous':
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des programmations " . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des programmations " . $fournisseurTxt;
                         break;
                     case 'OUI':
-                        $query
-                            ->whereNotNull('dateSortie');
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions chargés " . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des camions chargés " . $fournisseurTxt;
                         break;
                     case 'NON':
-                        $query
-                            ->whereNull('dateSortie');
-                        $fournisseur = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions non chargés " . $fournisseur;
+                        $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
+                        $messageReq = "Liste des camions non chargés " . $fournisseurTxt;
                         break;
                 }
             }
         }
 
-        $programmations = $query->get();
-
-        return redirect()->route('livraisons.suivichauffeur')->with([
-            'resultat' => $programmations,
+        // On passe les données à la vue (ou redirection selon votre logique)
+        return view('livraisons.suiviChauffeur', [
+            'programmations' => $programmations,
             'request' => $request->all(),
-            'messageReq' => $messageReq
-        ])->withInput();
+            'messageReq' => $messageReq,
+            'chauffeurs' => $chauffeurs,
+            'fournisseurs' => $fournisseurs,
+        ]);
     }
 
     public function dateSortie(DetailBonCommande $detailboncommande, Programmation $programmation)
