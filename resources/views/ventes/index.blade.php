@@ -23,7 +23,6 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-
                         @if($message = session('message'))
                         <div class="alert alert-success alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -107,12 +106,10 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-body">
-                                    @if ($ventes->count() > 0)
-                                    <?php $compteur = 1; ?>
                                     <?php $TotalMontant = 0; ?>
                                     <?php $TotalQuantite = 0; ?>
+
                                     @foreach($ventes as $vente)
-                                    
                                     <?php $TotalQuantite = $TotalQuantite + $vente->qteTotal; ?>
                                     <?php $TotalMontant = $TotalMontant + $vente->montant; ?>
 
@@ -234,7 +231,6 @@
                                         @endif
                                     </tr>
                                     @endforeach
-                                    @endif
                                 </tbody>
                                 <tfoot class="text-white text-center bg-gradient-gray-dark">
                                     <tr>
@@ -279,6 +275,10 @@
                                     </table>
                                 </div>
                             </div>
+
+                            <p class="text-center">
+                                {{$ventes->links('pagination::bootstrap-4')}}
+                            </p>
                         </div>
 
                         @if(!(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists()))
@@ -391,6 +391,7 @@
 
     $(function() {
         $("#example1").DataTable({
+            "paging":false,
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
@@ -398,7 +399,7 @@
             "order": [
                 [0, 'desc']
             ],
-            "pageLength": 15,
+            // "pageLength": 15,
             "columnDefs": [{
                     "targets": 8,
                     "orderable": false

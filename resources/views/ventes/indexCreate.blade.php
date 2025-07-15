@@ -92,12 +92,10 @@
                                             </tr>
                                         </thead>
                                         <tbody class="table-body">
-                                        @if ($ventes->count() > 0)
-                                            <?php $compteur=1; ?>
                                             @foreach($ventes as $vente)
                                                 <tr>
                                                     <td>{{ $vente->code }}</td>
-                                                    <td>{{!$vente->commandeclient->byvente ?  $vente->commandeclient->code : '' }}</td>
+                                                    <td>{{!$vente->commandeclient ?  $vente->commandeclient->code : '' }}</td>
                                                     <td  class="text-center">{{ date('d/m/Y', strtotime($vente->created_at)) }}</td>
                                                     <td class="pl-2">
                                                         {{ $vente->commandeclient->client->raisonSociale }}
@@ -164,7 +162,6 @@
                                                     @endif
                                                 </tr>
                                             @endforeach
-                                        @endif
                                         </tbody>
                                         <tfoot  class="text-white text-center bg-gradient-gray-dark">
                                             <tr>
@@ -184,7 +181,6 @@
                                                 @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                                 <th>Action</th>
                                                 @endif
-
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -205,10 +201,10 @@
                                             </table>
                                         </div>
                                     </div>
+
+                                    <p class="text-center">{{$ventes->links('pagination::bootstrap-4')}}</p>
                                 </div>
                                 <!-- /.card-body -->
-                                
-                            
                             </div>
                             <!-- /.card -->
                         </div>
@@ -319,10 +315,9 @@
 
             });
 
-            
-
             $(function () {
                 $("#example1").DataTable({
+                    "paging":false,
                     "responsive": true, "lengthChange": false, "autoWidth": false,
                     "buttons": ["excel", "pdf", "print"],
                     "order": [[0, 'desc']],

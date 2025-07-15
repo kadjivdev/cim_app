@@ -57,12 +57,8 @@ class VenteController extends Controller
             $commandeclients = $commandeclients->pluck('id');
         }
 
-        $ventes = collect();
-        Vente::whereIn('commande_client_id', $commandeclients)
-            ->orderByDesc('code')
-            ->chunk(100, function ($chunk) use (&$ventes) {
-                $ventes = $ventes->merge($chunk); //merge the chunk
-            });
+        $query = Vente::whereIn('commande_client_id', $commandeclients)
+            ->orderByDesc('code');
 
         $user = Auth::user();
         if (array_intersect($roles, [1, 2, 5, 8, 9, 10, 11])) {
@@ -71,50 +67,47 @@ class VenteController extends Controller
                 || IS_RUCHDANE_ACCOUNT($user)
             ) {
                 //les ventes passées par hypolite & Fofana & Ruchdane
-                $ventes = $ventes->where('statut', '<>', 'En attente de modification')
+                $query->where('statut', '<>', 'En attente de modification')
                     ->whereIn("users", [11, 7, 43]);
             } elseif (IS_MOULIZINE_ACCOUNT($user)) {
                 //Moulizine n'a accès qu'à ses ventes à lui!
-                $ventes = $ventes->where('statut', '<>', 'En attente de modification')
+                $query->where('statut', '<>', 'En attente de modification')
                     ->where("users", $user->id);
             } elseif (IS_HIPLYTE_ACCOUNT($user)) {
                 //Moulizine n'a accès qu'à ses ventes à lui!
-                $ventes = $ventes->where('statut', '<>', 'En attente de modification')
+                $query->where('statut', '<>', 'En attente de modification')
                     ->where("users", $user->id);
             } else {
                 //Les autres pourront voir toutes les ventes
-                $ventes = $ventes->where('statut', '<>', 'En attente de modification');
+                $query->where('statut', '<>', 'En attente de modification');
             }
         } elseif (in_array(3, $roles)) {
             /** les vendeur n'auront acc */
-            $ventes = $ventes->where('statut', '<>', 'Contrôller')
+            $query->where('statut', '<>', 'Contrôller')
                 ->where('statut', '<>', 'En attente de modification')
                 ->where('users', $user->id);
         }
 
-        // $ventes = $query;
+        $ventes = $query->paginate(20);
         return view('ventes.index', compact('ventes'));
     }
 
     public function indexCreate(Request $request)
     {
-        $ventes = collect();
         if ($request->method() == 'GET') {
             $date = date('Y-m-d');
-            Vente::whereDate('created_at', $date)
-                ->orderBy('created_at', 'DESC')
-                ->chunk(100, function ($chunk) use (&$ventes) {
-                    $ventes = $ventes->merge($chunk); //merge the chunk
-                });
+            $query = Vente::whereDate('created_at', $date)
+                ->orderBy('created_at', 'DESC');
         } else {
             ##___POST METHOD
             $debut = $request->debut;
             $fin = $request->fin;
-            Vente::whereBetween("created_at", [$debut, $fin])->orderBy('created_at', 'DESC')->chunk(100, function ($chunk) use (&$ventes) {
-                $ventes = $ventes->merge($chunk); //merge the chunk
-            });
+            $query = Vente::whereBetween("created_at", [$debut, $fin])
+                ->orderBy('created_at', 'DESC');
         }
         // 
+
+        $ventes = $query->paginate(20);
         return view('ventes.indexCreate', compact('ventes'));
     }
 
@@ -206,7 +199,7 @@ class VenteController extends Controller
 
         return view('ventes.create', compact('vente', 'typecommandeclient', 'clients', 'commandeclients', 'zones', 'redirectto', 'req', 'typeVente'));
     }
-    
+
     public function store(Request $request)
     {
         $req = NULL;

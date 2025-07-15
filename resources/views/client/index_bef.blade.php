@@ -62,7 +62,7 @@
                                     <tr>
                                         <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
-                                        @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true)
+                                        @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true || Auth::user()->roles()->where('libelle', 'RECOUVREUR')->exists() == true)
                                         <th>Reste Vente</th>
                                         <th>Dette Ancienne</th>
                                         <th>Solde</th>
@@ -83,7 +83,7 @@
                                     @foreach ($clients as $client)
                                     <tr>
                                         <td class="ml-5 pr-5">{{ $client->raisonSociale ? $client->raisonSociale : $client->nom }} ({{$client->id}})</td>
-                                        @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true)
+                                        @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true || Auth::user()->roles()->where('libelle', 'RECOUVREUR')->exists() == true)
                                         <td><span class="badge bg-danger">{{number_format($client->resteVenteAmount,0,'',' ')}} Fcfa</span></td>
                                         <td class="text-center"> <span class="badge bg-danger">{{number_format(-$client->debit_old,0," "," ") }} </span> </td>
                                         <td class="text-center"><span class="badge bg-success">{{number_format($client->solde,0," "," ")}} fcfa</span> <small>{{$client->solde>0?"SOLD_EXIST":''}}</small></td>
@@ -148,7 +148,7 @@
                                     <tr>
                                         <!-- <th>#</th> -->
                                         <th>Nom/Raison Sociale</th>
-                                        @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true)
+                                        @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'CONTROLEUR')->exists() == true || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists() == true || Auth::user()->roles()->where('libelle', 'RECOUVREUR')->exists() == true)
                                         <th>Reste Vente</th>
                                         <th>Dette Ancienne</th>
                                         <th>Solde</th>
