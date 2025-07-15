@@ -104,19 +104,23 @@ class LivraisonController extends Controller
         $req = $request->all();
 
         /** ON AFFICHE TOUTES LES LIVRAISONS POUR LES COMPTES *AIME & CHRISTIAN* */
-        if (!IS_AIME_ACCOUNT($user) && !IS_CHRISTIAN_ACCOUNT($user)) {
-            if (Auth::user()->roles()->where('libelle', 'VENDEUR')->exists()) {
-                /** LE VENDEUR NE VERRA DESORMAIS QUE LES LIVRAISONS DE SA ZONE */
-                $query->where('zone_id', $user->zone_id);
-            }
-        }
+        // if (!IS_AIME_ACCOUNT($user) && !IS_CHRISTIAN_ACCOUNT($user)) {
+        //     if (Auth::user()->roles()->where('libelle', 'VENDEUR')->exists()) {
+        //         /** LE VENDEUR NE VERRA DESORMAIS QUE LES LIVRAISONS DE SA ZONE */
+        //         $query->where('zone_id', $user->zone_id);
+        //     }
+        // }
 
         /** */
 
-        $programmations = $query->get()->filter(function (Programmation $programmation) {
-            $stockExiste = $programmation->qteprogrammer > $programmation->vendus->sum('qteVendu');
-            return $stockExiste;
-        });
+        $query->whereRaw(
+            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+        );
+
+        // $programmations = $query->get()->filter(function (Programmation $programmation) {
+        //     $stockExiste = $programmation->qteprogrammer > $programmation->vendus->sum('qteVendu');
+        //     return $stockExiste;
+        // });
 
         $programmations = $query->paginate(20);
 

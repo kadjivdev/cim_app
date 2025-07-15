@@ -5,6 +5,23 @@ use App\Models\TypeCommande;
 use App\Models\User;
 use App\Models\Vente;
 
+function IS_SANDRINE_ACCOUNT($user)
+{
+    if ($user->id == 42) {
+        return true;
+    }
+
+    return false;
+}
+function IS_ADANDE_ACCOUNT($user)
+{
+    if ($user->id == 40) {
+        return true;
+    }
+
+    return false;
+}
+
 function IS_FOFANA_ACCOUNT($user)
 {
     if ($user->id == 7) {
