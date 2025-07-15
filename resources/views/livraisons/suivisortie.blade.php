@@ -52,13 +52,13 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="">Début</label>
-                                                <input type="date" class="form-control" name="debut" value="{{old('debut')}}">
+                                                <input type="date" required class="form-control" name="debut" value="{{old('debut')}}">
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="">Fin</label>
-                                                <input type="date" class="form-control" name="fin" value="{{old('fin')}}">
+                                                <input type="date" required class="form-control" name="fin" value="{{old('fin')}}">
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
@@ -106,7 +106,7 @@
                                         <tr>
                                             <th>Code</th>
                                             <th>Code Prog</th>
-                                            <th>Date</th>
+                                            <th>Date sortie</th>
                                             <th>Fournisseur</th>
                                             <th>Produit</th>
                                             <th>Camion</th>
@@ -125,7 +125,7 @@
                                                 <tr class="">
                                                     <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
                                                     <td>{{ $programmation->code }}</td>
-                                                    <td class="text-center">{{ $programmation->dateprogrammer?date_format(date_create($programmation->dateprogrammer), 'd/m/Y'):'' }}</td>
+                                                    <td class="text-center">{{ $programmation->dateSortie?date_format(date_create($programmation->dateSortie), 'd/m/Y'):'' }}</td>
                                                     <td>{{ $programmation->detailboncommande->boncommande->fournisseur->sigle }}</td>
                                                     <td>{{ $programmation->detailboncommande->produit->libelle }}</td>
                                                     <td>{{ $programmation->camion->immatriculationTracteur }}

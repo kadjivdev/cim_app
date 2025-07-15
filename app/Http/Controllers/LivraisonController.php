@@ -731,9 +731,20 @@ class LivraisonController extends Controller
             });
         }
 
+        $debut = null;
+        $fin = null;
+
+        if ($request->debut) {
+            $debut = date_format(date_create($request->debut), "Y-m-d");
+        }
+
+        if ($request->fin) {
+            $fin = date_format(date_create($request->fin), "Y-m-d");
+        }
+
         // Filtre par date de programmation
-        if ($request->prog && $request->debut && $request->fin) {
-            $query->whereBetween('dateprogrammer', [$request->debut, $request->fin]);
+        if ($debut && $fin) {
+            $query->whereBetween('dateSortie', [$debut, $fin]);
         }
 
         // Filtre par date de sortie
@@ -753,9 +764,6 @@ class LivraisonController extends Controller
         $messageReq = '';
 
         if ($request->debut && $request->fin) {
-            $debut = date_format(date_create($request->debut), "Y-m-d");
-            $fin = date_format(date_create($request->fin), "Y-m-d");
-
             if ($fournisseur) {
                 switch ($request->option) {
                     case 'Tous':
@@ -833,7 +841,7 @@ class LivraisonController extends Controller
     {
         $fournisseurs = Fournisseur::all();
         $chauffeurs = Chauffeur::all();
-        return view('livraisons.suiviChauffeur', compact('fournisseurs','chauffeurs'));
+        return view('livraisons.suiviChauffeur', compact('fournisseurs', 'chauffeurs'));
     }
 
     public function suiviChauffeur(Request $request)
