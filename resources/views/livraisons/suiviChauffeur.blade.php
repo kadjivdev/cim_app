@@ -47,7 +47,7 @@
                                     </div>
                                 @endif
 
-                                <form id="statutsForm" action="{{route('livraisons.suivichauffeur')}}" method="get">
+                                <form action="{{route('livraisons.postSuivichauffeur')}}" method="POST">
                                     @csrf
                                     <div class="row">
                                         <div class="col-sm-4">

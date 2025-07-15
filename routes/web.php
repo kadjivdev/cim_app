@@ -392,11 +392,11 @@ Route::middleware(['auth', 'pwd'])->group(function () {
             Route::get('/index', 'index')->name('livraisons.index');
             Route::get('/indexpartielle', 'indexpartielle')->name('livraisons.indexpartielle');
             Route::get('/suivi-camion', 'suiviSortieForm')->name('livraisons.suivicamion');
-            // Route::post('/suivi-camion', 'suiviSortie')->name('livraisons.postSuivicamion');
+            Route::post('/suivi-camion', 'suiviSortie')->name('livraisons.postSuivicamion');
             Route::get('/suivi-camions', 'suiviSortie')->name('livraisons.getSuivicamion');
 
             Route::get('/suivi-chauffeur', 'suivichauffeurForm')->name('livraisons.suivichauffeur');
-            // Route::post('/suivi-chauffeur', 'suiviChauffeur')->name('livraisons.postSuivichauffeur');
+            Route::post('/suivi-chauffeur', 'suiviChauffeur')->name('livraisons.postSuivichauffeur');
             Route::get('/suivi-chauffeurs', 'suiviChauffeur')->name('livraisons.getSuivichauffeur');
 
             Route::get('/show/{programmation?}/{total}', 'show')->name('livraisons.show');
