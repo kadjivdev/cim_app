@@ -44,60 +44,108 @@ class LivraisonController extends Controller
         if ($request->statuts) {
             if ($request->statuts == 1) {
                 if ($request->debut && $request->fin) {
-                    $query
+                    $programmations = $query
                         ->where('statut', 'Valider')->orWhere('statut', 'Livrer')
-                        ->whereBetween('dateprogrammer', [$request->debut, $request->fin]);
+                        ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
+                        ->whereRaw(
+                            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                        )
+                        ->where("zone_id", $user->zone_id)->get();
                 } else {
-                    $query->where('statut', 'Valider')
-                        ->orWhere('statut', 'Livrer');
+                    $programmations = $query->where('statut', 'Valider')
+                        ->orWhere('statut', 'Livrer')
+                        ->whereRaw(
+                            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                        )
+                        ->where("zone_id", $user->zone_id)->get();
                 }
             } elseif ($request->statuts == 2) {
                 if ($request->debut && $request->fin) {
-                    $query
+                    $programmations = $query
                         ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
-                        ->where('statut', 'Livrer')->where('transfert', NULL);
+                        ->where('statut', 'Livrer')->where('transfert', NULL)
+                        ->whereRaw(
+                            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                        )
+                        ->where("zone_id", $user->zone_id)->get();
                 } else {
-                    $query
-                        ->where('statut', 'Livrer')->where('transfert', NULL);
+                    $programmations = $query
+                        ->where('statut', 'Livrer')->where('transfert', NULL)
+                        ->whereRaw(
+                            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                        )
+                        ->where("zone_id", $user->zone_id)->get();
                 }
             } elseif ($request->statuts == 3) {
                 if ($request->debut && $request->fin) {
-                    $query
+                    $programmations = $query
                         ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
-                        ->where('statut', 'Valider');
+                        ->where('statut', 'Valider')
+                        ->whereRaw(
+                            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                        )
+                        ->where("zone_id", $user->zone_id)->get();
                 } else {
-                    $query
-                        ->where('statut', 'Valider');
+                    $programmations = $query
+                        ->where('statut', 'Valider')
+                        ->whereRaw(
+                            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                        )
+                        ->where("zone_id", $user->zone_id)->get();
                 }
             } elseif ($request->statuts == 4) {
                 if ($request->debut && $request->fin) {
-                    $query
+                    $programmations = $query
                         ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
                         ->where('statut', 'Livrer')->orWhere('statut', 'Livrer')
-                        ->where('transfert', '<>', NULL);
+                        ->where('transfert', '<>', NULL)
+                        ->whereRaw(
+                            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                        )
+                        ->where("zone_id", $user->zone_id)->get();
                 } else {
-                    $query
-                        ->where('statut', 'Livrer')->where('transfert', '<>', NULL);
+                    $programmations = $query
+                        ->where('statut', 'Livrer')->where('transfert', '<>', NULL)
+                        ->whereRaw(
+                            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                        )
+                        ->where("zone_id", $user->zone_id)->get();
                 }
             } elseif ($request->statuts == 5) {
                 if ($request->debut && $request->fin) {
-                    $query
+                    $programmations = $query
                         ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
-                        ->where('statut', 'Annuler');
+                        ->where('statut', 'Annuler')
+                        ->whereRaw(
+                            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                        )
+                        ->where("zone_id", $user->zone_id)->get();
                 } else {
-                    $query
-                        ->where('statut', 'Annuler');
+                    $programmations = $query
+                        ->where('statut', 'Annuler')
+                        ->whereRaw(
+                            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                        )
+                        ->where("zone_id", $user->zone_id)->get();
                 }
             }
         } else {
             if ($request->debut && $request->fin) {
-                $query
+                $programmations = $query
                     ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
-                    ->where('statut', 'Valider')->orWhere('statut', 'Livrer');
+                    ->where('statut', 'Valider')->orWhere('statut', 'Livrer')
+                    ->whereRaw(
+                        '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                    )
+                    ->where("zone_id", $user->zone_id)->get();
             } else {
-                $query
+                $programmations = $query
                     ->where('statut', 'Valider')
-                    ->orWhere('statut', 'Livrer');
+                    ->orWhere('statut', 'Livrer')
+                    ->whereRaw(
+                        '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                    )
+                    ->where("zone_id", $user->zone_id)->get();
             }
         }
 
@@ -113,17 +161,23 @@ class LivraisonController extends Controller
 
         /** */
 
-        $query->whereRaw(
-            '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
-        );
+        // $query->whereRaw(
+        //     '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+        // );
 
-        // $programmations = $query->get()->filter(function (Programmation $programmation) {
-        //     $stockExiste = $programmation->qteprogrammer > $programmation->vendus->sum('qteVendu');
-        //     return $stockExiste;
+        // $programmations = $query->where(function ($q) use ($user) {
+        //     // $stockExiste = $programmation->qteprogrammer > $programmation->vendus->sum('qteVendu');
+        //     $q->programmation->zone_id == $user->zone_id;
+        // });
+
+        // $programmations = $query->where("zone_id", $user->zone_id)->get();
+
+        // ->filter(function ($q) use ($user) {
+        //     return $q->zone_id == $user->zone_id;
         // });
 
         // $programmations = $query->paginate(20);
-        $programmations = $query->get();
+        // $programmations = $query->get();
 
         return view('livraisons.index', compact('programmations', 'req'));
     }
