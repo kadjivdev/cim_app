@@ -744,7 +744,7 @@ class LivraisonController extends Controller
 
         // Filtre par date de programmation
         if ($debut && $fin) {
-            $query->whereBetween('dateSortie', [$debut, $fin]);
+            $query->whereBetween('created_at', [$debut, $fin]);
         }
 
         // Filtre par date de sortie
