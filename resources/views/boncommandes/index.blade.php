@@ -232,8 +232,8 @@
 
                                     // Qte programmée
                                     $QteProgrammee = isset($boncommande->detailboncommandes[0]) ? $boncommande->detailboncommandes[0]->programmations->whereIn('statut', ['Valider', 'Livrer'])->sum("qteprogrammer") : 0;
-                                    // Qte vendus
-                                    $QteVendue =  isset($boncommande->detailboncommandes[0]) ? $boncommande->detailboncommandes[0]->programmations->sum(function ($programmation) {
+                                    // Qte vendus ->whereIn('statut', ['Valider', 'Livrer'])
+                                    $QteVendue =  isset($boncommande->detailboncommandes[0]) ? $boncommande->detailboncommandes[0]->programmations->whereIn('statut', ['Valider', 'Livrer'])->sum(function ($programmation) {
                                         return $programmation->vendus->sum("qteVendu");
                                     }) : 0;
                                     ?>
@@ -252,7 +252,7 @@
                                         <td class="" style="width:auto;">
                                             <div style="height:100px!important;overflow-y: scroll">
                                                 @if(isset($boncommande->detailboncommandes[0]))
-                                                @foreach($boncommande->detailboncommandes[0]->programmations as $programmation)
+                                                @foreach($boncommande->detailboncommandes[0]->programmations->whereIn('statut', ['Valider', 'Livrer']) as $programmation)
                                                 @if($programmation->qteprogrammer>$programmation->vendus->sum("qteVendu"))
                                                 @if($programmation->zone)
                                                 @if($programmation->bl_gest || $programmation->bl)
