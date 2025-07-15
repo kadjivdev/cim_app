@@ -41,7 +41,7 @@ class ProgrammationController extends Controller
                 }
             })
             ->latest()
-            ->paginate(20);
+            ->get();
 
         $userRoles = auth()->user()
             ->roles()->pluck('libelle')

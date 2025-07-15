@@ -88,7 +88,7 @@ class VenteController extends Controller
                 ->where('users', $user->id);
         }
 
-        $ventes = $query->paginate(20);
+        $ventes = $query->get();
         return view('ventes.index', compact('ventes'));
     }
 

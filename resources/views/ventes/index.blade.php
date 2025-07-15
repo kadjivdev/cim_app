@@ -276,9 +276,6 @@
                                 </div>
                             </div>
 
-                            <p class="text-center">
-                                {{$ventes->links('pagination::bootstrap-4')}}
-                            </p>
                         </div>
 
                         @if(!(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists()))
@@ -391,7 +388,7 @@
 
     $(function() {
         $("#example1").DataTable({
-            "paging":false,
+            // "paging":false,
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,

@@ -739,7 +739,7 @@ class LivraisonController extends Controller
 
         // Pagination (20 résultats par page)
         $programmations = $query->orderByDesc('code')
-            ->paginate(20);
+            ->get();
 
         // Construction du messageReq (reprend la logique existante)
         $chauffeurs = Chauffeur::all();
@@ -817,8 +817,6 @@ class LivraisonController extends Controller
             }
         }
 
-        $programmations = $query->paginate(20);
-
         return view('livraisons.suivisortie', [
             'programmations' => $programmations,
             'request' => $request->all(),
@@ -871,7 +869,7 @@ class LivraisonController extends Controller
 
         // Pagination (20 résultats par page)
         $programmations = $query->orderByDesc('code')
-            ->paginate(20);
+            ->get();
 
         // Construction du messageReq (reprend la logique existante)
         $chauffeurs = Chauffeur::all();

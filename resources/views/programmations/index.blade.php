@@ -157,7 +157,6 @@
                                 </div>
                             </div>
 
-                            <p class="text-center">{{$detailboncommandes->links('pagination::bootstrap-4')}}</p>
                         </div>
                     </div>
                 </div>
@@ -208,7 +207,7 @@
 
     $(function() {
         $("#example1").DataTable({
-            "paging":false,
+            // "paging":false,
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,

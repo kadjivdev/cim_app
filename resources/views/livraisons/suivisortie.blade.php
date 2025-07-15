@@ -199,8 +199,6 @@
                                         </tfoot>
                                     </table>
 
-                                    <p class="text-center">{{$programmations->links('pagination::bootstrap-4')}}</p>
-
                                     <!-- les modals -->
                                     <div class="modal fade" id="modal-default" style="display: none;"
                                          aria-hidden="true">
@@ -527,7 +525,7 @@
 
         $(function () {
             $("#example1").DataTable({
-                "paging":false,
+                // "paging":false,
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,

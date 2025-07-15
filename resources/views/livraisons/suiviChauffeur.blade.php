@@ -203,10 +203,6 @@
                                         </tfoot>
                                     </table>
 
-                                    <p class="text-center">
-                                        {{ $programmations->links('pagination::bootstrap-4') }}
-                                    </p>
-
                                     <!-- MODAL DE TRANSFERT DE LIVRAISON -->
                                     <div class="modal fade" id="modal-default" style="display: none;"
                                             aria-hidden="true">
@@ -517,7 +513,7 @@
 
         $(function () {
             $("#example1").DataTable({
-                "paging": false, // Désactive la pagination DataTables
+                // "paging": false, // Désactive la pagination DataTables
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
