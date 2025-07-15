@@ -122,7 +122,8 @@ class LivraisonController extends Controller
         //     return $stockExiste;
         // });
 
-        $programmations = $query->paginate(20);
+        // $programmations = $query->paginate(20);
+        $programmations = $query->get();
 
         return view('livraisons.index', compact('programmations', 'req'));
     }

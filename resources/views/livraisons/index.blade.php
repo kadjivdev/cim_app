@@ -314,7 +314,6 @@
                             </table>
 
                             <!-- pagination -->
-                            <p class="text-center">{{ $programmations->links('pagination::bootstrap-4') }}</p>
                             
                             <div class="modal fade" id="modal-default" style="display: none;" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
@@ -508,7 +507,7 @@
 
     $(function() {
         $("#example1").DataTable({
-            "paging":false,
+            // "paging":false,
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
