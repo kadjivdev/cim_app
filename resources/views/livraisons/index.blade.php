@@ -507,7 +507,6 @@
 
     $(function() {
         $("#example1").DataTable({
-            // "paging":false,
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
