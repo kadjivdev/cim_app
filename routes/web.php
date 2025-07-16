@@ -99,6 +99,7 @@ Route::get("/find", function () {
     return response()->json(
         [
             "res" => $res,
+            "programmations" => $res->detailboncommandes[0]->programmations,
         ]
     );
 });
