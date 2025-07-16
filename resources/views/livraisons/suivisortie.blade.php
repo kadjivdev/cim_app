@@ -106,7 +106,7 @@
                                         <tr>
                                             <th>Code</th>
                                             <th>Code Prog</th>
-                                            <th>Inseré le/sortie le</th>
+                                            <th>Inseré le/Prog le/Sortie le</th>
                                             <th>Fournisseur</th>
                                             <th>Produit</th>
                                             <th>Camion</th>
@@ -125,7 +125,7 @@
                                                 <tr class="">
                                                     <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
                                                     <td>{{ $programmation->code }}</td>
-                                                    <td class="text-center">{{date_format(date_create($programmation->created_at), 'd/m/Y')}} | {{ $programmation->dateSortie?date_format(date_create($programmation->dateSortie), 'd/m/Y'):'' }}</td>
+                                                    <td class="text-center">{{date_format(date_create($programmation->created_at), 'd/m/Y')}} | {{date_format(date_create($programmation->dateprogrammer), 'd/m/Y')}} | {{ $programmation->dateSortie?date_format(date_create($programmation->dateSortie), 'd/m/Y'):'' }}</td>
                                                     <td>{{ $programmation->detailboncommande->boncommande->fournisseur->sigle }}</td>
                                                     <td>{{ $programmation->detailboncommande->produit->libelle }}</td>
                                                     <td>{{ $programmation->camion->immatriculationTracteur }}
