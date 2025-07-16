@@ -216,6 +216,8 @@
                                                     <th>Qte Vendu</th>
                                                     <th>Zone</th>
                                                     <th>BL</th>
+                                                    <th>BLs</th>
+                                                    <th>##DIF##</th>
                                                     <th>Statut</th>
                                                     <th>Observation</th>
                                                     <th>Action</th>
@@ -260,6 +262,23 @@
                                                     <td>{{ $programmation->bl_gest ? $programmation->bl_gest:$programmation->bl}}</td>
 
                                                     <td class="text-center">
+                                                        {{ $programmation->bl_gest }}/{{ $programmation->bl }}
+                                                    </td>
+
+                                                    <td class="text-danger text-center">
+                                                        @if($programmation->bl_gest && $programmation->bl)
+                                                            @if($programmation->bl_gest!=$programmation->bl)
+                                                            <span>diff</span>
+                                                            <i class="bi bi-x-circle"></i>
+                                                            <div class="form-group" style="font-size: 14px">
+                                                                <input type="text" class="form-control col-md-12" onchange="handleBordLivChange('{{ $programmation->id }}', this)" value="{{$programmation->bl_gest ?  : ''}}">
+                                                                <div class="message-container-bl d-none"></div> <!-- Conteneur pour le message -->
+                                                            </div>
+                                                            @endif
+                                                        @endif
+                                                    </td>
+                                                    
+                                                    <td class="text-center">
                                                         @if ($programmation->statut == 'Annuler')
                                                         <span class="badge badge-danger">{{ $programmation->statut }}</span>
                                                         @elseif($programmation->statut == 'Valider')
@@ -272,7 +291,7 @@
                                                         <span class="badge badge-primary">Imprimée</span>
                                                         @endif
                                                     </td>
-                                                    
+
                                                     <td class="text-center">
                                                         <textarea name="" rows="1" class="form-control" id="" disabled>{{ $programmation->observation?$programmation->observation:"---" }}</textarea>
                                                     </td>
@@ -360,6 +379,122 @@
 @endsection
 
 @section('script')
+
+<script>
+    function handleDateChange(id, inputElement) {
+        const dateValue = inputElement.value;
+
+        // Récupérer le conteneur du message
+        const messageContainer = inputElement.parentNode.querySelector('.message-container');
+
+        // Vérifier si la date est renseignée
+        if (dateValue) {
+            showLoader(messageContainer);
+            // Appeler l'API via Axios
+            axios.post('{{env('
+                    APP_BASE_URL ')}}update-date-sortie/' + id, {
+                        userName: '{{Auth::user()->name}}',
+                        dateSortie: dateValue
+                    })
+                .then(function(response) {
+                    // Afficher un message de succès
+                    const successMessage = response.data
+                    showMessage(messageContainer, '<i class="fas fa-check-circle"></i>', successMessage, 'text-success');
+                })
+                .catch(function(error) {
+                    // Afficher un message d'erreur
+                    const errorMessage = error.response.data;
+                    showMessage(messageContainer, '<i class="fas fa-times-circle"></i>', errorMessage, 'text-danger', false);
+                });
+        } else {
+            // Si la date n'est pas renseignée, effacer le message
+            messageContainer.innerHTML = '';
+        }
+    }
+
+    function handleBordLivChange(id, inputElement) {
+        const _BLValue = inputElement.value;
+
+        const BLValue = _BLValue ? _BLValue : "_@_";
+
+        // Récupérer le conteneur du message
+        const messageContainer = inputElement.parentNode.querySelector('.message-container-bl');
+
+        // Vérifier si la date est renseignée
+        // if (BLValue) {
+        showLoader(messageContainer);
+        // Appeler l'API via Axios
+        axios.get(`{{env('APP_BASE_URL')}}programmation/livraison/bl/${id}/${BLValue}/` + "{{Auth::user()->name }}")
+            .then(function(response) {
+                // Afficher un message de succès
+                const successMessage = response.data
+
+                if (successMessage == 'Bordereau de Livraison mise à jour') {
+                    showMessage(messageContainer, '<i class="fas fa-check-circle"></i>', successMessage, 'text-success');
+                }
+
+                if (successMessage == "Le Bordereau de Livraison existe déjà") {
+                    showMessage(messageContainer, '<i class="fas fa-times-circle"></i>', successMessage, 'text-danger', false);
+                }
+
+                if (successMessage == "La mise à jour à echouée. Merci de reprendre ou contacter l'admin") {
+                    showMessage(messageContainer, '<i class="fas fa-times-circle"></i>', successMessage, 'text-danger', false);
+                }
+
+                if (successMessage == "Le format du Bordereau de Livraison est invalide") {
+                    showMessage(messageContainer, '<i class="fas fa-times-circle"></i>', successMessage, 'text-danger', false);
+                }
+
+            })
+            .catch(function(error) {
+                // Afficher un message d'erreur
+                console.log(error);
+                const errorMessage = error.data;
+                showMessage(messageContainer, '<i class="fas fa-times-circle"></i>', errorMessage, 'text-danger', false);
+            });
+        // } else {
+        //     // Si la date n'est pas renseignée, effacer le message
+        //     messageContainer.innerHTML = '';
+        // }
+    }
+
+    function showLoader(container) {
+        // Créer un élément pour le loader
+        const loaderElement = document.createElement('div');
+        loaderElement.innerHTML = '<i class="fas fa-spinner fa-spin fa-2x font-weight-bold"></i>';
+        loaderElement.classList.add('loader');
+
+        // Ajouter le loader au conteneur
+        container.innerHTML = '';
+        container.appendChild(loaderElement);
+
+        // Afficher le conteneur
+        container.classList.remove('d-none');
+    }
+
+    function showMessage(container, iconHtml, message, textStyle, shouldDisappear = true) {
+        // Créer un élément pour le message
+        const messageElement = document.createElement('div');
+        messageElement.innerHTML = `${iconHtml} ${message}`;
+        messageElement.classList.add('message', textStyle);
+
+        // Ajouter le message au conteneur
+        container.innerHTML = '';
+        container.appendChild(messageElement);
+
+        // Afficher le conteneur
+        container.classList.remove('d-none');
+
+        // Si le message ne devrait pas disparaître, ne pas définir de minuteur
+        if (shouldDisappear) {
+            // Supprimer le message après quelques secondes
+            setTimeout(function() {
+                container.innerHTML = '';
+                container.classList.add('d-none'); // Cacher le conteneur après avoir supprimé le message
+            }, 3000);
+        }
+    }
+</script>
 <script>
     $('#success ').attr('hidden', 'hidden');
     $('#danger').attr('hidden', 'hidden');
