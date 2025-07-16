@@ -752,30 +752,30 @@ class LivraisonController extends Controller
                 switch ($request->option) {
                     case 'Tous':
                         $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des programmations de la période du " . date_format(date_create($debut), 'd/m/y') . " au " . date_format(date_create($fin), 'd/m/Y') . $fournisseurTxt;
+                        $messageReq = "Liste des programmations de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                     case 'OUI':
                         $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions chargés de la période du " . date_format(date_create($debut), 'd/m/y') . " au " . date_format(date_create($fin), 'd/m/Y') . $fournisseurTxt;
+                        $messageReq = "Liste des camions chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                     case 'NON':
                         $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions non chargés de la période du " . date_format(date_create($debut), 'd/m/y') . " au " . date_format(date_create($fin), 'd/m/Y') . $fournisseurTxt;
+                        $messageReq = "Liste des camions non chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                 }
             } else {
                 switch ($request->option) {
                     case 'Tous':
                         $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des programmations de la période du " . date_format(date_create($debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
+                        $messageReq = "Liste des programmations de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                     case 'OUI':
                         $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions chargés de la période du " . date_format(date_create($debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
+                        $messageReq = "Liste des camions chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                     case 'NON':
                         $fournisseurTxt = $fournisseur ? " du fournisseur " . $fournisseur->raisonSociale : '';
-                        $messageReq = "Liste des camions non chargés de la période du " . date_format(date_create($debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
+                        $messageReq = "Liste des camions non chargés de la période du " . date_format(date_create($request->debut), 'd/m/y') . " au " . date_format(date_create($request->fin), 'd/m/Y') . $fournisseurTxt;
                         break;
                 }
             }
