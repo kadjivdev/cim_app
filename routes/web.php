@@ -109,7 +109,6 @@ Route::get("/bl-verification/{bl}", function ($bl) {
     $bls = Programmation::with("detailboncommande.boncommande")->where("bl", $bl)
         ->orWhere("bl_gest", $bl)
         ->get();
-
     return response()->json(
         [
             "bls" => $bls,

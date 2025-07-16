@@ -738,7 +738,6 @@ class LivraisonController extends Controller
             $query->whereNull('dateSortie');
         }
 
-        // Pagination (20 résultats par page)
         $programmations = $query->orderByDesc('code')
             ->get();
 
