@@ -106,14 +106,14 @@
                                         <tr>
                                             <th>Code</th>
                                             <th>Code Prog</th>
-                                            <th>Date sortie</th>
+                                            <th>Inseré le/sortie le</th>
                                             <th>Fournisseur</th>
                                             <th>Produit</th>
                                             <th>Camion</th>
                                             <th>Chauffeur</th>
                                             <th>Zone</th>
                                             <th>Qté</th>
-                                            <th>Inseré/Sortie</th>
+                                            <th>Sortie</th>
                                             <th>Bord Liv </th>
                                             <th>BLs</th>
                                             <th>##DIF##</th>
