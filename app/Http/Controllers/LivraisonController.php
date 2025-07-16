@@ -717,18 +717,50 @@ class LivraisonController extends Controller
                 }
             })
             ->whereIn('statut', ['Valider', 'Livrer'])
-            ->where('imprimer', '1');
+            ->where('imprimer', '1')
+            ->orderByDesc('code');
 
         // Filtre par chauffeur
+        
         if ($request->chauffeur && $request->chauffeur != "tous") {
-            $query->where('chauffeur_id', $request->chauffeur);
+            $programmations = Programmation::query()
+                ->with(['vendus', 'detailboncommande.boncommande', 'camion', 'chauffeur', 'zone'])
+                ->whereHas('detailboncommande.boncommande', function ($q) use ($request) {
+                    if ($request->bon) {
+                        $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                        if ($request->debut && $request->fin) {
+                            $q->whereBetween('dateBon', [$request->debut, $request->fin]);
+                        }
+                    } else {
+                        $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                    }
+                })
+                ->whereIn('statut', ['Valider', 'Livrer'])
+                ->where('imprimer', '1')
+                ->where('chauffeur_id', $request->chauffeur)
+                ->orderByDesc('code')->get();
         }
 
         // Filtre par fournisseur (si la relation existe)
         if ($request->fournisseur && $request->fournisseur != "tous") {
-            $query->whereHas('detailboncommande.boncommande', function ($q) use ($request) {
-                $q->where('fournisseur_id', $request->fournisseur);
-            });
+            $programmations = Programmation::query()
+                ->with(['vendus', 'detailboncommande.boncommande', 'camion', 'chauffeur', 'zone'])
+                ->whereHas('detailboncommande.boncommande', function ($q) use ($request) {
+                    if ($request->bon) {
+                        $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                        if ($request->debut && $request->fin) {
+                            $q->whereBetween('dateBon', [$request->debut, $request->fin]);
+                        }
+                    } else {
+                        $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                    }
+                })
+                ->whereIn('statut', ['Valider', 'Livrer'])
+                ->where('imprimer', '1')
+                ->whereHas('detailboncommande.boncommande', function ($q) use ($request) {
+                    $q->where('fournisseur_id', $request->fournisseur);
+                })
+                ->orderByDesc('code')->get();
         }
 
         $debut = null;
@@ -744,19 +776,64 @@ class LivraisonController extends Controller
 
         // Filtre par date de programmation
         if ($debut && $fin) {
-            $query->whereBetween('created_at', [$debut, $fin]);
+            $programmations = Programmation::with(['vendus', 'detailboncommande.boncommande', 'camion', 'chauffeur', 'zone'])
+                ->whereHas('detailboncommande.boncommande', function ($q) use ($request) {
+                    if ($request->bon) {
+                        $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                        if ($request->debut && $request->fin) {
+                            $q->whereBetween('dateBon', [$request->debut, $request->fin]);
+                        }
+                    } else {
+                        $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                    }
+                })
+                ->whereIn('statut', ['Valider', 'Livrer'])
+                ->where('imprimer', '1')
+                ->whereBetween('created_at', [$debut, $fin])
+                ->orderByDesc('code')->get();
         }
 
         // Filtre par date de sortie
         if ($request->option == 'OUI') {
-            $query->whereNotNull('dateSortie');
+            $programmations = Programmation::with(['vendus', 'detailboncommande.boncommande', 'camion', 'chauffeur', 'zone'])
+                ->whereHas('detailboncommande.boncommande', function ($q) use ($request) {
+                    if ($request->bon) {
+                        $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                        if ($request->debut && $request->fin) {
+                            $q->whereBetween('dateBon', [$request->debut, $request->fin]);
+                        }
+                    } else {
+                        $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                    }
+                })
+                ->whereIn('statut', ['Valider', 'Livrer'])
+                ->where('imprimer', '1')
+                ->orderByDesc('code')
+                ->whereNotNull('dateSortie')
+                ->get();
         } elseif ($request->option == 'NON') {
-            $query->whereNull('dateSortie');
+            $programmations = Programmation::with(['vendus', 'detailboncommande.boncommande', 'camion', 'chauffeur', 'zone'])
+                ->whereHas('detailboncommande.boncommande', function ($q) use ($request) {
+                    if ($request->bon) {
+                        $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                        if ($request->debut && $request->fin) {
+                            $q->whereBetween('dateBon', [$request->debut, $request->fin]);
+                        }
+                    } else {
+                        $q->whereIn('statut', ['Valider', 'Programmer', 'Livrer', 'Annuler']);
+                    }
+                })
+                ->whereIn('statut', ['Valider', 'Livrer'])
+                ->where('imprimer', '1')
+                ->orderByDesc('code')
+                ->whereNull('dateSortie')
+                ->get();
         }
 
         // Pagination (20 résultats par page)
-        $programmations = $query->orderByDesc('code')
-            ->get();
+        // $programmations = $query
+        //     ->orderByDesc('code')
+        //     ->get();
 
         // Construction du messageReq (reprend la logique existante)
         $fournisseurs = Fournisseur::all();

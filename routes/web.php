@@ -50,6 +50,7 @@ use App\Http\Controllers\CommanderController;
 use App\Http\Controllers\MarqueController;
 use App\Http\Controllers\RecouvrementController;
 use App\Http\Controllers\VenduController;
+use App\Models\BonCommande;
 use App\Models\Client;
 use App\Models\LogUser;
 use App\Models\Programmation;
@@ -94,7 +95,7 @@ Route::get("/regulation", function () {
 });
 
 Route::get("/find", function () {
-    $res = LogUser::where(["table_name" => "reglement", "user_id" => 6])->get();
+    $res = BonCommande::with("detailboncommandes")->firstWhere("code", "BCI-0728");
     return response()->json(
         [
             "res" => $res,
