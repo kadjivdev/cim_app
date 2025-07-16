@@ -207,7 +207,7 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Code</th>
-                                                    <th>Pro(m/d/Y)/Sortie</th>
+                                                    <th>Inseré le/Pro(m/d/Y)/Sortie</th>
                                                     <th>Camion</th>
                                                     <th>Chauffeur</th>
                                                     <th>Avaliseur</th>
@@ -229,7 +229,7 @@
                                                     <td>{{ $compteur++ }}</td>
                                                     <td class="text-center">{{ $programmation->code }}</td>
                                                     <td class="text-center">
-                                                        {{ date_format(date_create($programmation->dateprogrammer), 'm/d/Y') }} | {{ $programmation->dateSortie?date_format(date_create($programmation->dateSortie), 'm/d/Y'):'' }}
+                                                        {{ date_format(date_create($programmation->created_at), 'm/d/Y') }} | {{ date_format(date_create($programmation->dateprogrammer), 'm/d/Y') }} | {{ $programmation->dateSortie?date_format(date_create($programmation->dateSortie), 'm/d/Y'):'' }}
                                                     </td>
                                                     <td>{{ $programmation->camion->immatriculationTracteur }}
                                                         ({{ $programmation->camion->marque->libelle }})
