@@ -113,7 +113,7 @@
                                             <th>Chauffeur</th>
                                             <th>Zone</th>
                                             <th>Qté</th>
-                                            <th>Date sortie</th>
+                                            <th>Inseré/Sortie</th>
                                             <th>Bord Liv </th>
                                             <th>BLs</th>
                                             <th>##DIF##</th>
@@ -125,7 +125,7 @@
                                                 <tr class="">
                                                     <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
                                                     <td>{{ $programmation->code }}</td>
-                                                    <td class="text-center">{{ $programmation->dateSortie?date_format(date_create($programmation->dateSortie), 'd/m/Y'):'' }}</td>
+                                                    <td class="text-center">{{date_format(date_create($programmation->created_at), 'd/m/Y')}} | {{ $programmation->dateSortie?date_format(date_create($programmation->dateSortie), 'd/m/Y'):'' }}</td>
                                                     <td>{{ $programmation->detailboncommande->boncommande->fournisseur->sigle }}</td>
                                                     <td>{{ $programmation->detailboncommande->produit->libelle }}</td>
                                                     <td>{{ $programmation->camion->immatriculationTracteur }}
