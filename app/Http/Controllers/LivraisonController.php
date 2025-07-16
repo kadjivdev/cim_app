@@ -33,6 +33,123 @@ class LivraisonController extends Controller
         $repre = $user->representant;
         $zones = $repre->zones;
 
+        if ($request->statuts) {
+            if ($request->statuts == 1) {
+                if ($request->debut && $request->fin) {
+                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                    $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
+                        ->where('statut', 'Valider')->where('imprimer', '1')->orWhere('statut', 'Livrer')
+                        ->whereBetween('dateprogrammer', [$request->debut, $request->fin])->orderByDesc('code')->get();
+                } else {
+                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                    $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)->where('statut', 'Valider')->where('imprimer', '1')->orWhere('statut', 'Livrer')->orderByDesc('code')->get();
+                }
+            } elseif ($request->statuts == 2) {
+                if ($request->debut && $request->fin) {
+                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                    $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
+                        ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
+                        ->where('statut', 'Livrer')->where('imprimer', '1')->where('transfert', NULL)->orderByDesc('code')->get();
+                } else {
+                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                    $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)->where('statut', 'Livrer')->where('imprimer', '1')->where('transfert', NULL)->orderByDesc('code')->get();
+                }
+            } elseif ($request->statuts == 3) {
+                if ($request->debut && $request->fin) {
+                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                    $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
+                        ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
+                        ->where('statut', 'Valider')->where('imprimer', '1')->orderByDesc('code')->get();
+                } else {
+                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                    $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)->where('statut', 'Valider')->where('imprimer', '1')->orderByDesc('code')->get();
+                }
+            } elseif ($request->statuts == 4) {
+                if ($request->debut && $request->fin) {
+                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                    $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
+                        ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
+                        ->where('statut', 'Livrer')->where('imprimer', '1')->orWhere('statut', 'Livrer')
+                        ->where('transfert', '<>', NULL)->orderByDesc('code')->get();
+                } else {
+                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                    $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
+                        ->where('statut', 'Livrer')->where('imprimer', '1')->where('transfert', '<>', NULL)->orderByDesc('code')->get();
+                }
+            } elseif ($request->statuts == 5) {
+                if ($request->debut && $request->fin) {
+                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                    $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
+                        ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
+                        ->where('statut', 'Annuler')->where('imprimer', '1')->orderByDesc('code')->get();
+                } else {
+                    $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                    $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
+                        ->where('statut', 'Annuler')->where('imprimer', '1')->orderByDesc('code')->get();
+                }
+            }
+        } else {
+            if ($request->debut && $request->fin) {
+                $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
+                    ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
+                    ->where('statut', 'Valider')->where('imprimer', '1')->orWhere('statut', 'Livrer')->orderByDesc('code')->get();
+            } else {
+                $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
+                $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
+                $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
+                    ->where('statut', 'Valider')
+                    ->where('imprimer', '1')
+                    ->orWhere('statut', 'Livrer')
+                    ->orderByDesc('code')->get();
+            }
+        }
+
+        $req = $request->all();
+
+        // ON AFFICHE TOUTES LES LIVRAISONS POUR LES COMPTES *AIME & CHRISTIAN*
+        if (!IS_AIME_ACCOUNT($user) && !IS_CHRISTIAN_ACCOUNT($user)) {
+            if (Auth::user()->roles()->where('libelle', 'SUPERVISEUR')->exists() || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists()) {
+                if ($request->debut && $request->fin)
+                    $programmations = $programmations->whereBetween('dateprogrammer', [$request->debut, $request->fin]);
+                else
+                    $programmations = $programmations;
+            }
+
+            if (Auth::user()->roles()->where('libelle', 'VENDEUR')->exists()) {
+                // LE VENDEUR NE VERRA DESORMAIS QUE LES LIVRAISONS DE SA ZONE
+                if ($request->debut && $request->fin)
+                    $programmations = $programmations->where('zone_id', $user->zone_id)->whereBetween('dateprogrammer', [$request->debut, $request->fin]);
+                else
+                    $programmations = $programmations->where('zone_id', $user->zone_id);
+            }
+        }
+
+        $programmations = $programmations->filter(function (Programmation $programmation) {
+            $stockExiste = $programmation->qteprogrammer > $programmation->vendus()->sum('qteVendu');
+            return $stockExiste;
+        });
+
+        return view('livraisons.index', compact('programmations', 'req'));
+    }
+
+    public function _index(Request $request)
+    {
+        $user = Auth::user();
+        $repre = $user->representant;
+        $zones = $repre->zones;
+
         $query = Programmation::query()
             ->with("vendus")
             ->whereHas("detailboncommande.boncommande", function ($query) {
@@ -142,9 +259,9 @@ class LivraisonController extends Controller
                 $programmations = $query
                     ->where('statut', 'Valider')
                     ->orWhere('statut', 'Livrer')
-                    ->whereRaw(
-                        '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
-                    )
+                    // ->whereRaw(
+                    //     '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
+                    // )
                     ->where("zone_id", $user->zone_id)->get();
             }
         }
@@ -165,10 +282,9 @@ class LivraisonController extends Controller
         //     '(qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id))'
         // );
 
-        // $programmations = $query->where(function ($q) use ($user) {
-        //     // $stockExiste = $programmation->qteprogrammer > $programmation->vendus->sum('qteVendu');
-        //     $q->programmation->zone_id == $user->zone_id;
-        // });
+        $programmations = $programmations->filter(function ($programmation) use ($user) {
+            return $programmation->qteprogrammer > $programmation->vendus->sum('qteVendu');
+        });
 
         // $programmations = $query->where("zone_id", $user->zone_id)->get();
 
