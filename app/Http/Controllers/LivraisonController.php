@@ -21,10 +21,14 @@ use Illuminate\Support\Facades\Validator;
 
 class LivraisonController extends Controller
 {
+    public $paginateNumber;
+
     public function __construct()
     {
         $this->middleware('vendeur')->only(['create', 'store', 'delete', 'cloturer']);
         ini_set("max_execution_time", 3600);
+
+        $this->paginateNumber = 50;
     }
 
     public function index(Request $request)
@@ -40,11 +44,14 @@ class LivraisonController extends Controller
                     $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
                     $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
                         ->where('statut', 'Valider')->where('imprimer', '1')->orWhere('statut', 'Livrer')
-                        ->whereBetween('dateprogrammer', [$request->debut, $request->fin])->orderByDesc('code')->get();
+                        ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
+                        ->orderByDesc('code');
                 } else {
                     $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
                     $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
-                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)->where('statut', 'Valider')->where('imprimer', '1')->orWhere('statut', 'Livrer')->orderByDesc('code')->get();
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)->where('statut', 'Valider')
+                        ->where('imprimer', '1')->orWhere('statut', 'Livrer')
+                        ->orderByDesc('code');
                 }
             } elseif ($request->statuts == 2) {
                 if ($request->debut && $request->fin) {
@@ -52,11 +59,14 @@ class LivraisonController extends Controller
                     $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
                     $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
                         ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
-                        ->where('statut', 'Livrer')->where('imprimer', '1')->where('transfert', NULL)->orderByDesc('code')->get();
+                        ->where('statut', 'Livrer')->where('imprimer', '1')->where('transfert', NULL)
+                        ->orderByDesc('code');
                 } else {
                     $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
                     $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
-                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)->where('statut', 'Livrer')->where('imprimer', '1')->where('transfert', NULL)->orderByDesc('code')->get();
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)->where('statut', 'Livrer')
+                        ->where('imprimer', '1')->where('transfert', NULL)
+                        ->orderByDesc('code');
                 }
             } elseif ($request->statuts == 3) {
                 if ($request->debut && $request->fin) {
@@ -64,11 +74,13 @@ class LivraisonController extends Controller
                     $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
                     $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
                         ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
-                        ->where('statut', 'Valider')->where('imprimer', '1')->orderByDesc('code')->get();
+                        ->where('statut', 'Valider')->where('imprimer', '1')
+                        ->orderByDesc('code');
                 } else {
                     $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
                     $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
-                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)->where('statut', 'Valider')->where('imprimer', '1')->orderByDesc('code')->get();
+                    $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)->where('statut', 'Valider')
+                        ->where('imprimer', '1')->orderByDesc('code');
                 }
             } elseif ($request->statuts == 4) {
                 if ($request->debut && $request->fin) {
@@ -77,12 +89,13 @@ class LivraisonController extends Controller
                     $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
                         ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
                         ->where('statut', 'Livrer')->where('imprimer', '1')->orWhere('statut', 'Livrer')
-                        ->where('transfert', '<>', NULL)->orderByDesc('code')->get();
+                        ->where('transfert', '<>', NULL)->orderByDesc('code');
                 } else {
                     $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
                     $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
                     $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
-                        ->where('statut', 'Livrer')->where('imprimer', '1')->where('transfert', '<>', NULL)->orderByDesc('code')->get();
+                        ->where('statut', 'Livrer')->where('imprimer', '1')->where('transfert', '<>', NULL)
+                        ->orderByDesc('code');
                 }
             } elseif ($request->statuts == 5) {
                 if ($request->debut && $request->fin) {
@@ -90,12 +103,14 @@ class LivraisonController extends Controller
                     $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
                     $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
                         ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
-                        ->where('statut', 'Annuler')->where('imprimer', '1')->orderByDesc('code')->get();
+                        ->where('statut', 'Annuler')->where('imprimer', '1')
+                        ->orderByDesc('code');
                 } else {
                     $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
                     $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
                     $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
-                        ->where('statut', 'Annuler')->where('imprimer', '1')->orderByDesc('code')->get();
+                        ->where('statut', 'Annuler')->where('imprimer', '1')
+                        ->orderByDesc('code');
                 }
             }
         } else {
@@ -104,7 +119,9 @@ class LivraisonController extends Controller
                 $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
                 $programmations = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
                     ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
-                    ->where('statut', 'Valider')->where('imprimer', '1')->orWhere('statut', 'Livrer')->orderByDesc('code')->get();
+                    ->where('statut', 'Valider')->where('imprimer', '1')
+                    ->orWhere('statut', 'Livrer')
+                    ->orderByDesc('code');
             } else {
                 $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
                 $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
@@ -112,7 +129,7 @@ class LivraisonController extends Controller
                     ->where('statut', 'Valider')
                     ->where('imprimer', '1')
                     ->orWhere('statut', 'Livrer')
-                    ->orderByDesc('code')->get();
+                    ->orderByDesc('code');
             }
         }
 
@@ -120,14 +137,14 @@ class LivraisonController extends Controller
 
         // ON AFFICHE TOUTES LES LIVRAISONS POUR LES COMPTES *AIME & CHRISTIAN*
         if (!IS_AIME_ACCOUNT($user) && !IS_CHRISTIAN_ACCOUNT($user)) {
-            if (Auth::user()->roles()->where('libelle', 'SUPERVISEUR')->exists() || Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists()) {
+            if ($user->roles()->where('libelle', 'SUPERVISEUR')->exists() || $user->roles()->where('libelle', 'GESTIONNAIRE')->exists()) {
                 if ($request->debut && $request->fin)
                     $programmations = $programmations->whereBetween('dateprogrammer', [$request->debut, $request->fin]);
                 else
                     $programmations = $programmations;
             }
 
-            if (Auth::user()->roles()->where('libelle', 'VENDEUR')->exists()) {
+            if ($user->roles()->where('libelle', 'VENDEUR')->exists()) {
                 // LE VENDEUR NE VERRA DESORMAIS QUE LES LIVRAISONS DE SA ZONE
                 if ($request->debut && $request->fin)
                     $programmations = $programmations->where('zone_id', $user->zone_id)->whereBetween('dateprogrammer', [$request->debut, $request->fin]);
@@ -136,10 +153,9 @@ class LivraisonController extends Controller
             }
         }
 
-        $programmations = $programmations->filter(function (Programmation $programmation) {
-            $stockExiste = $programmation->qteprogrammer > $programmation->vendus()->sum('qteVendu');
-            return $stockExiste;
-        });
+        // On renvoie seulement les livraison ayant de stock
+        $programmations = $programmations->whereRaw('qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id)')
+            ->paginate($this->paginateNumber);
 
         return view('livraisons.index', compact('programmations', 'req'));
     }
@@ -385,14 +401,14 @@ class LivraisonController extends Controller
         }
 
         $req = $request->all();
-        if (Auth::user()->roles()->where('libelle', 'SUPERVISEUR')->exists()) {
+        if ($user->roles()->where('libelle', 'SUPERVISEUR')->exists()) {
             if ($request->debut && $request->fin)
                 $programmations = $programmations->whereBetween('dateprogrammer', [$request->debut, $request->fin]);
             else
                 $programmations = $programmations;
         }
 
-        if (Auth::user()->roles()->where('libelle', 'VENDEUR')->exists()) {
+        if ($user->roles()->where('libelle', 'VENDEUR')->exists()) {
             if ($request->debut && $request->fin)
                 $programmations = $programmations->whereIn('zone_id', $zones->pluck('id'))->whereBetween('dateprogrammer', [$request->debut, $request->fin]);
             else
@@ -747,7 +763,7 @@ class LivraisonController extends Controller
         $programmation = Programmation::find($prog_id);
 
         $user = Auth::user();
-        $gestionnaire = Auth::user()->roles()->where('libelle', 'GESTIONNAIRE')->exists();
+        $gestionnaire = $user->roles()->where('libelle', 'GESTIONNAIRE')->exists();
 
         //Constitution de table de transfert
         $transfert = [];
@@ -856,7 +872,7 @@ class LivraisonController extends Controller
 
         $programmations = $query->orderByDesc('code')
             ->get();
-    
+
         // Construction du messageReq (reprend la logique existante)
         $fournisseurs = Fournisseur::all();
         $fournisseur = Fournisseur::find($request->fournisseur);
