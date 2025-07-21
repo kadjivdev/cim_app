@@ -66,7 +66,7 @@ class BonCommandeController extends Controller
             $req = null;
         }
 
-        $boncommandes = $boncommandes->get();
+        $boncommandes = $boncommandes->paginate(50);
 
         return view('boncommandes.index', compact('boncommandes', 'req', 'pre_boncommandes', 'userRoles'));
     }
