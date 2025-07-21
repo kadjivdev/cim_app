@@ -47,7 +47,7 @@
                                     </div>
                                 @endif
 
-                                <form action="{{route('livraisons.postSuivichauffeur')}}" method="POST">
+                                <form action="{{route('livraisons.suivichauffeur')}}" method="GET">
                                     @csrf
                                     <div class="row">
                                         <div class="col-sm-4">
@@ -202,6 +202,13 @@
                                             </tr>
                                         </tfoot>
                                     </table>
+
+                                    <!-- Pagination -->
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-md-6">
+                                            <p class="text-center">{{$programmations->links('pagination::bootstrap-4')}}</p>
+                                        </div>
+                                    </div>
 
                                     <!-- MODAL DE TRANSFERT DE LIVRAISON -->
                                     <div class="modal fade" id="modal-default" style="display: none;"
@@ -513,7 +520,7 @@
 
         $(function () {
             $("#example1").DataTable({
-                // "paging": false, // Désactive la pagination DataTables
+                "paging": false, // Désactive la pagination DataTables
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,

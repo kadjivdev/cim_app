@@ -397,8 +397,9 @@ Route::middleware(['auth', 'pwd'])->group(function () {
             Route::get('/suivi-camion', 'suiviSortie')->name('livraisons.suivicamion');
             Route::get('/suivi-camions', 'suiviSortie')->name('livraisons.getSuivicamion');
 
-            Route::get('/suivi-chauffeur', 'suivichauffeurForm')->name('livraisons.suivichauffeur');
-            Route::post('/suivi-chauffeur', 'suiviChauffeur')->name('livraisons.postSuivichauffeur');
+            // Route::get('/suivi-chauffeur', 'suivichauffeurForm')->name('livraisons.suivichauffeur');
+            // Route::post('/suivi-chauffeur', 'suiviChauffeur')->name('livraisons.postSuivichauffeur');
+            Route::get('/suivi-chauffeur', 'suiviChauffeur')->name('livraisons.suivichauffeur');
             Route::get('/suivi-chauffeurs', 'suiviChauffeur')->name('livraisons.getSuivichauffeur');
 
             Route::get('/show/{programmation?}/{total}', 'show')->name('livraisons.show');

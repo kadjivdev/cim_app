@@ -1002,7 +1002,7 @@ class LivraisonController extends Controller
 
         // Pagination (20 résultats par page)
         $programmations = $query->orderByDesc('code')
-            ->get();
+            ->paginate($this->paginateNumber);
 
         // Construction du messageReq (reprend la logique existante)
         $chauffeurs = Chauffeur::all();
