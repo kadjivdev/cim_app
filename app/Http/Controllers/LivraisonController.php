@@ -856,7 +856,7 @@ class LivraisonController extends Controller
 
         $programmations = $query->orderByDesc('code')
             ->get();
-
+    
         // Construction du messageReq (reprend la logique existante)
         $fournisseurs = Fournisseur::all();
         $fournisseur = Fournisseur::find($request->fournisseur);
