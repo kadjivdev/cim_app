@@ -75,6 +75,11 @@
                 <!-- /.col -->
             </div>
             <!-- /.row -->
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-6">
+                    <p class="text-center">{{$recuDetails->links('pagination::bootstrap-4')}}</p>
+                </div>
+            </div>
         </div>
         <!-- /.container-fluid -->
     </section>
@@ -86,6 +91,7 @@
 <script>
     $(function() {
         $("#example1").DataTable({
+            "paging":false,
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
@@ -94,7 +100,7 @@
                 [0, 'asc']
             ],
             "pageLength": 15,
-            
+
             language: {
                 "emptyTable": "Aucune donnée disponible dans le tableau",
                 "lengthMenu": "Afficher _MENU_ éléments",

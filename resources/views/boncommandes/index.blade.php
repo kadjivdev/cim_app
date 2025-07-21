@@ -409,6 +409,7 @@
                                 </tfoot>
                             </table>
 
+                            <!-- Pagination -->
                             <div class="row d-flex justify-content-center">
                                 <div class="col-md-6">
                                     <p class="text-center">{{$boncommandes->links('pagination::bootstrap-4')}}</p>
