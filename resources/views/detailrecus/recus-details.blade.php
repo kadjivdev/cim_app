@@ -75,6 +75,7 @@
                 <!-- /.col -->
             </div>
             <!-- /.row -->
+            <!-- Pagination -->
             <div class="row d-flex justify-content-center">
                 <div class="col-md-6">
                     <p class="text-center">{{$recuDetails->links('pagination::bootstrap-4')}}</p>
@@ -91,7 +92,7 @@
 <script>
     $(function() {
         $("#example1").DataTable({
-            "paging":false,
+            "paging": false,
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,

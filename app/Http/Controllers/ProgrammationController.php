@@ -41,7 +41,7 @@ class ProgrammationController extends Controller
                 }
             })
             ->latest()
-            ->get();
+            ->paginate(50);
 
         $userRoles = auth()->user()
             ->roles()->pluck('libelle')
@@ -60,7 +60,7 @@ class ProgrammationController extends Controller
 
         $programmations = $detailboncommande
             ->programmations()
-            ->with(['chauffeur','detailboncommande','avaliseur','camion'])
+            ->with(['chauffeur', 'detailboncommande', 'avaliseur', 'camion'])
             ->orderByDesc('id')->get();
         $totalValider = $detailboncommande
             ->programmations()->whereIn('statut', ['Valider', 'Livrer', 'Vendu'])
@@ -71,8 +71,8 @@ class ProgrammationController extends Controller
         $userRoles = auth()->user()
             ->roles()->pluck('libelle')
             ->toArray();
-        
-        return view('programmations.create', compact('detailboncommande', 'boncommandes', 'zones', 'avaliseurs', 'camions', 'chauffeurs', 'programmations', 'programmation', 'total','userRoles'));
+
+        return view('programmations.create', compact('detailboncommande', 'boncommandes', 'zones', 'avaliseurs', 'camions', 'chauffeurs', 'programmations', 'programmation', 'total', 'userRoles'));
     }
 
     public function store(Request $request, DetailBonCommande $detailboncommande, Programmation $programmation = NULL)
