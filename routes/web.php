@@ -392,8 +392,9 @@ Route::middleware(['auth', 'pwd'])->group(function () {
 
             Route::get('/index', 'index')->name('livraisons.index');
             Route::get('/indexpartielle', 'indexpartielle')->name('livraisons.indexpartielle');
-            Route::get('/suivi-camion', 'suiviSortieForm')->name('livraisons.suivicamion');
-            Route::post('/suivi-camion', 'suiviSortie')->name('livraisons.postSuivicamion');
+            // Route::get('/suivi-camion', 'suiviSortieForm')->name('livraisons.suivicamion');
+            // Route::post('/suivi-camion', 'suiviSortie')->name('livraisons.postSuivicamion');
+            Route::get('/suivi-camion', 'suiviSortie')->name('livraisons.suivicamion');
             Route::get('/suivi-camions', 'suiviSortie')->name('livraisons.getSuivicamion');
 
             Route::get('/suivi-chauffeur', 'suivichauffeurForm')->name('livraisons.suivichauffeur');
