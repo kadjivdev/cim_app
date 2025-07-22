@@ -871,7 +871,7 @@ class LivraisonController extends Controller
         }
 
         $programmations = $query->orderByDesc('code')
-            ->paginate($this->paginateNumber);
+            ->get();
 
         // Construction du messageReq (reprend la logique existante)
         $fournisseurs = Fournisseur::all();
@@ -1002,7 +1002,7 @@ class LivraisonController extends Controller
 
         // Pagination (20 résultats par page)
         $programmations = $query->orderByDesc('code')
-            ->paginate($this->paginateNumber);
+            ->get();
 
         // Construction du messageReq (reprend la logique existante)
         $chauffeurs = Chauffeur::all();

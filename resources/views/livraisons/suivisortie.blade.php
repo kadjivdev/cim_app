@@ -46,7 +46,7 @@
                                         </div>
                                     </div>
                                 @endif
-                                <form id="statutsForm" action="{{route('livraisons.suivicamion')}}" method="GET">
+                                <form id="statutsForm" action="{{route('livraisons.postSuivicamion')}}" method="POST">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-2">
@@ -198,13 +198,6 @@
                                             </tr>
                                         </tfoot>
                                     </table>
-
-                                     <!-- Pagination -->
-                                    <div class="row d-flex justify-content-center">
-                                        <div class="col-md-6">
-                                            <p class="text-center">{{$programmations->links('pagination::bootstrap-4')}}</p>
-                                        </div>
-                                    </div>
 
                                     <!-- les modals -->
                                     <div class="modal fade" id="modal-default" style="display: none;"
@@ -532,7 +525,7 @@
 
         $(function () {
             $("#example1").DataTable({
-                "paging":false,
+                // "paging":false,
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
