@@ -312,13 +312,6 @@
                                 </tfoot>
                             </table>
 
-                            <!-- Pagination -->
-                            <div class="row d-flex justify-content-center">
-                                <div class="col-md-6">
-                                    <p class="text-center">{{$programmations->links('pagination::bootstrap-4')}}</p>
-                                </div>
-                            </div>
-
                             <div class="modal fade" id="modal-default" style="display: none;" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">

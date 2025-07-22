@@ -155,7 +155,7 @@ class LivraisonController extends Controller
 
         // On renvoie seulement les livraison ayant de stock
         $programmations = $programmations->whereRaw('qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id)')
-            ->paginate($this->paginateNumber);
+            ->get();
 
         return view('livraisons.index', compact('programmations', 'req'));
     }
