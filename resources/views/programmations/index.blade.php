@@ -136,13 +136,6 @@
                                 </tfoot>
                             </table>
 
-                            <!-- Pagination -->
-                            <div class="row d-flex justify-content-center">
-                                <div class="col-md-6">
-                                    <p class="text-center">{{$detailboncommandes->links('pagination::bootstrap-4')}}</p>
-                                </div>
-                            </div>
-
                             <div class="row">
                                 <div class="col-12">
                                     <table class="table table-bordered table-sm">

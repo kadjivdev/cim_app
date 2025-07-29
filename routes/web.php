@@ -95,6 +95,7 @@ Route::get("/regulation", function () {
 });
 
 Route::get("/find", function () {
+    return Programmation::findOrFail(2161)->vendus;
     $res = BonCommande::with("detailboncommandes")->firstWhere("code", "BCI-0728");
     return response()->json(
         [

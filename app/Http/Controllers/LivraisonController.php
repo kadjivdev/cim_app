@@ -171,7 +171,6 @@ class LivraisonController extends Controller
             }
         }
 
-
         $req = $request->all();
 
         // ON AFFICHE TOUTES LES LIVRAISONS POUR LES COMPTES *AIME & CHRISTIAN*

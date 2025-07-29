@@ -40,8 +40,8 @@ class ProgrammationController extends Controller
                     $query->whereIn('statut', ['Valider', 'Programmer', 'Livrer']);
                 }
             })
-            ->latest()
-            ->paginate(50);
+            ->get();
+            // ->get;
 
         $userRoles = auth()->user()
             ->roles()->pluck('libelle')
