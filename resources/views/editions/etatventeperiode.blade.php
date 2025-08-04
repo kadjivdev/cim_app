@@ -81,11 +81,11 @@
                                     <table id="example1" class="table table-bordered table-striped table-sm mt-2" style="font-size: 12px">
                                         <thead class="text-white text-center bg-gradient-gray-dark">
                                             <tr>
-                                                <th>#</th>
                                                 <th>Code</th>
+                                                <th>Acteur</th>
                                                 <th>date</th>
                                                 <th> Client</th>
-                                                <th>Chauf../Destin../Acteur</th>
+                                                <th>Chauf../Destin</th>
                                                 <th>Type</th>
                                                 <th>Pu ciment</th>
                                                 <th>Qte</th>
@@ -111,8 +111,8 @@
                                                 @php($regle = $regle + $item->reglements()->sum('montant'))
                                                 @php($totalQte = $totalQte + $item->qteTotal)
                                                 @php($totalTrans = $totalTrans + ($item->transport*$item->qteTotal))
-                                                <td>{{$cpt}}</td>
                                                 <td>{{$item->code}}</td>
+                                                <td><span class="badge text-white bg-warning">{{$item->user->name}}</span></td>
                                                 <td>{{date_format(date_create($item->date),'d/m/Y')}}</td>
                                                 <td>
                                                     @if($item->commandeclient)
@@ -125,7 +125,7 @@
                                                 <td class="text-center font-weight-bold">
                                                     @if(count($item->vendus)>0)
                                                     @foreach ($item->vendus as $vendu )
-                                                    {{ $vendu->programmation->chauffeur->nom}} {{ $vendu->programmation->chauffeur->prenom}} / {{ $item->destination }}/ <span class="badge text-white bg-warning">{{$item->user->name}}</span>
+                                                    {{ $vendu->programmation->chauffeur->nom}} {{ $vendu->programmation->chauffeur->prenom}} / {{ $item->destination }}
                                                     @endforeach
                                                     @else
                                                     ---
@@ -163,11 +163,11 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th>#</th>
                                                 <th class="text-center">Code</th>
+                                                <th>Acteur</th>
                                                 <th class="text-center">date</th>
                                                 <th class="text-center"> Client</th>
-                                                <th>Chauf../Destin../Acteur</th>
+                                                <th>Chauf../Destin</th>
                                                 <th class="text-center">Type</th>
                                                 <th class="text-center">Pu ciment</th>
                                                 <th class="text-center">Qte</th>
@@ -185,33 +185,7 @@
                                 <table class="table table-bordered table-striped table-sm mt-2" style="font-size: 12px">
                                     <thead class="text-white text-center bg-gradient-gray-dark">
                                         <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
+                                            <th colspan="13"></th>
                                             <th class="no-print"></th>
                                         </tr>
                                     </thead>
