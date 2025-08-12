@@ -78,6 +78,7 @@
                                     </h4>
                                     @endif
 
+                                    <h6 class="">Total : {{count(session('resultat')['ventes'])}} </h6>
                                     <table id="example1" class="table table-bordered table-striped table-sm mt-2" style="font-size: 12px">
                                         <thead class="text-white text-center bg-gradient-gray-dark">
                                             <tr>
@@ -98,21 +99,20 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @php($cpt = 0)
-                                            @php($montant = 0)
-                                            @php($regle = 0)
-                                            @php($totalTrans = 0)
-                                            @php($totalQte = 0)
 
-                                            @foreach(session('resultat')['ventes'] as $key=>$item)
+
+                                            @php($ventes = session('resultat')['ventes'])
+                                            @php($montant = $ventes->sum('montant'))
+                                            @php($regle = $ventes->flatMap->reglements->sum('montant'))
+                                            @php($totalQte = $ventes->sum('qteTotal'))
+                                            @php($totalTrans = 0)
+
+                                            @foreach($ventes as $key=>$item)
                                             <tr>
-                                                @php($cpt++)
-                                                @php($montant = $montant + ($item->montant) )
-                                                @php($regle = $regle + $item->reglements()->sum('montant'))
-                                                @php($totalQte = $totalQte + $item->qteTotal)
-                                                @php($totalTrans = $totalTrans + ($item->transport*$item->qteTotal))
+                                                @php($totalTrans += $item->transport*$item->qteTotal)
+
                                                 <td>{{$item->code}}</td>
-                                                <td><span class="badge text-white bg-warning">{{$item->user->name}}</span></td>
+                                                <td><span class="badge text-white bg-warning">{{$item->user?->name}}</span></td>
                                                 <td>{{date_format(date_create($item->date),'d/m/Y')}}</td>
                                                 <td>
                                                     @if($item->commandeclient)
@@ -131,10 +131,10 @@
                                                     ---
                                                     @endif
                                                 </td>
-                                                <td>{{$item->typeVente->libelle}}</td>
+                                                <td>{{$item->typeVente?->libelle}}</td>
                                                 <td class="text-right font-weight-bold">{{number_format($item->pu,'0','',' ')}}</td>
                                                 <td class="text-right font-weight-bold">{{number_format($item->qteTotal,'0','',' ')}}</td>
-                                                <td class="text-right font-weight-bold">{{number_format(($item->pu*$item->qteTotal),'0','',' ')}}</td>
+                                                <td class="text-right font-weight-bold">{{number_format(($item->montant),'0','',' ')}}</td>
                                                 <td class="text-right font-weight-bold">{{number_format(($item->transport),'0','',' ')}}</td>
                                                 <td class="text-right font-weight-bold">{{number_format(($item->transport*$item->qteTotal),'0','',' ')}}</td>
                                                 <td class="text-right font-weight-bold">{{number_format($item->reglements()->sum('montant'),'0','',' ')}}</td>
@@ -193,17 +193,16 @@
                                         <tr class="bg-info">
                                             <td colspan="26" class="font-weight-bold">Total</td>
                                             <td class="text-center font-weight-bold">-</td>
-                                            <td class="text-right font-weight-bold">Qte :{{number_format($totalQte,0,',',' ')}}</td>
-                                            <td class="text-right font-weight-bold">Amount :{{number_format($montant,0,',',' ')}}</td>
+                                            <td class="text-right font-weight-bold">Qte : {{number_format($totalQte,0,',',' ')}}</td>
+                                            <td class="text-right font-weight-bold">Amount : {{number_format($montant,0,',',' ')}}</td>
                                             <td class="text-right font-weight-bold">-</td>
-                                            <td class="text-right font-weight-bold">Transport :{{number_format($totalTrans,0,',',' ')}}</td>
-                                            <td class="text-right font-weight-bold">Regle :{{number_format($regle,0,',',' ')}}</td>
-                                            <td class="text-right font-weight-bold">Reste :{{number_format(($montant+$totalTrans) - $regle,0,',',' ')}}</td>
+                                            <td class="text-right font-weight-bold">Transport : {{number_format($totalTrans,0,',',' ')}}</td>
+                                            <td class="text-right font-weight-bold">Regle : {{number_format($regle,0,',',' ')}}</td>
+                                            <td class="text-right font-weight-bold">Reste : {{number_format(($montant) - $regle,0,',',' ')}}</td>
                                             <td class="text-right font-weight-bold">-</td>
                                         </tr>
                                     </tbody>
                                 </table>
-
 
                                 @else
                                 <div class="col-12 text-center border border-info p-2">
@@ -232,7 +231,8 @@
 @endsection
 
 @section('script')
-<script>
+<script type="text/javascript">
+
     $(function() {
         $("#example1").DataTable({
             "responsive": true,
