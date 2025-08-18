@@ -50,12 +50,12 @@ class BonCommandeController extends Controller
         // Bons en préparation (on peut aussi paginer si besoin)
 
         $pre_boncommandes = BonCommande::with(['typecommande', 'fournisseur'])
-            ->orderBy('code', 'desc')
+            // ->orderBy('code', 'desc')
             ->whereIn("statut", ['Préparation', 'En attente de validation', 'Envoyé'])
             ->get();
 
         $query = BonCommande::with(['typecommande', 'fournisseur'])
-            ->orderBy('code', 'desc')
+            // ->orderBy('code', 'desc')
             ->whereNotIn("statut", ['Préparation', 'En attente de validation', 'Envoyé']);
 
         if ($request->debut && $request->fin) {
@@ -66,7 +66,7 @@ class BonCommandeController extends Controller
             $req = null;
         }
 
-        $boncommandes = $boncommandes->paginate(50);
+        $boncommandes = $boncommandes->get();
 
         return view('boncommandes.index', compact('boncommandes', 'req', 'pre_boncommandes', 'userRoles'));
     }

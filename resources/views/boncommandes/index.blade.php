@@ -295,8 +295,8 @@
                                             <span class="badge bg-dark">{{$recu->reference}} </span>
                                             @endforeach
                                             /
-                                            {{ $boncommande->code }} 
-                                            
+                                            {{ $boncommande->code }}
+
                                         </td>
                                         <td class="text-center">{{ date('d/m/Y', strtotime($boncommande->dateBon)) }}</td>
                                         <td class=""><span class="badge bg-light"> {{ $boncommande->fournisseur->sigle }}</span></td>
@@ -413,12 +413,7 @@
                                 </tfoot>
                             </table>
 
-                            <!-- Pagination -->
-                            <div class="row d-flex justify-content-center">
-                                <div class="col-md-6">
-                                    <p class="text-center">{{$boncommandes->links('pagination::bootstrap-4')}}</p>
-                                </div>
-                            </div>
+
 
                             <div class="row">
                                 <div class="col-12">
@@ -680,13 +675,14 @@
 <script>
     $(function() {
         $("#example1").DataTable({
-            "paging": false,
+            "paging": true,
             "responsive": true,
             "lengthChange": false,
             "autoWidth": true,
             "buttons": ["excel", "pdf", "print"],
             "order": [
-                [0, 'asc']
+                [0, 'desc']
+
             ],
             "pageLength": 15,
             "columnDefs": [{
