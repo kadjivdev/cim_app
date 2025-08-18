@@ -254,7 +254,7 @@
                             <table id="example1" class="table table-bordered table-striped table-sm" style="font-size: 12px">
                                 <thead class="text-white text-center bg-gradient-gray-dark">
                                     <tr>
-                                        <th>Code/Reference</th>
+                                        <th>Reference/Code</th>
                                         <th>Date</th>
                                         <th>Fournisseur</th>
                                         <th>Qte com</th>
@@ -290,9 +290,13 @@
                                     ?>
 
                                     <tr class="">
-                                        <td>{{ $boncommande->code }} / @foreach($boncommande->recus as $recu)
-                                            <span class="badge bg-dark">REF_{{$recu->reference}} </span>
+                                        <td>
+                                            @foreach($boncommande->recus as $recu)
+                                            <span class="badge bg-dark">{{$recu->reference}} </span>
                                             @endforeach
+                                            /
+                                            {{ $boncommande->code }} 
+                                            
                                         </td>
                                         <td class="text-center">{{ date('d/m/Y', strtotime($boncommande->dateBon)) }}</td>
                                         <td class=""><span class="badge bg-light"> {{ $boncommande->fournisseur->sigle }}</span></td>
@@ -456,7 +460,7 @@
             "autoWidth": true,
             "buttons": ["excel", "pdf", "print"],
             "order": [
-                [0, 'asc']
+                [0, 'desc']
             ],
             "pageLength": 15,
             "columnDefs": [{

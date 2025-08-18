@@ -583,7 +583,7 @@ class VenteController extends Controller
                     ####____Suppression du Mouvement
                     $mvt->delete();
 
-                    ####___DESPORMAINS LA RESTITUTION SE FAIT SEULEMENT QUAND IL Y A DE REGLEMENT SUR LA VENTE
+                    ####___DESORMAINS LA RESTITUTION SE FAIT SEULEMENT QUAND IL Y A DE REGLEMENT SUR LA VENTE
                     $venteDeleted->restituted = true;
                     $venteDeleted->save();
                 }
