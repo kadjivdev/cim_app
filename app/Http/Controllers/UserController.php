@@ -94,15 +94,15 @@ class UserController extends Controller
                 'representent_id' => ['required', 'integer'],
                 // 'zone_id' => ['required', 'integer'],
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['string', 'email'],
+                'email' => ['string', 'email', Rule::unique("users")->ignore($user->id)],
             ]);
 
-            // $verif = User::all()->whereNotIn('id', $user->id)->firstWhere('email', '=', $request->email);
+            $verif = User::all()->whereNotIn('id', $user->id)->firstWhere('email', '=', $request->email);
 
-            // if ($verif) {
-            //     Session()->flash('error', 'L\'email existe déjà');
-            //     return redirect()->route('users.index');
-            // }
+            if ($verif) {
+                Session()->flash('error', 'L\'email existe déjà');
+                return redirect()->route('users.index');
+            }
 
             $user->representent_id = $request->representent_id;
             $user->zone_id = $request->zone_id;
@@ -115,12 +115,12 @@ class UserController extends Controller
                 return redirect()->route('users.index');
             }
         } else {
-
+            // dd("gogo");
             $request->validate([
                 'representent_id' => ['required', 'integer'],
                 'zone_id' => ['required', 'integer'],
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['string', 'email', 'max:255', 'unique:users'],
+                'email' => ['string', 'email', 'max:255', Rule::unique("users")->ignore($user->id)],
                 'password' => [
                     'required',
                     'confirmed',
@@ -128,16 +128,10 @@ class UserController extends Controller
                         ->letters()
                         ->numbers()
                         ->symbols()
-                        ->uncompromised()
+                        ->uncompromised(),
                 ],
             ]);
 
-            $verif = User::all()->whereNotIn('id', $user->id)->firstWhere('email', '=', $request->email);
-
-            if ($verif) {
-                Session()->flash('error', 'L\'email existe déjà');
-                return redirect()->route('users.index');
-            }
 
             $user = $user->update([
                 'representent_id' => $request->representent_id,
@@ -148,7 +142,7 @@ class UserController extends Controller
             ]);
 
             #3. Envoi du mail
-            Mail::to($user)->queue(new MessagePasseword($request->password));
+            // Mail::to($user)->queue(new MessagePasseword($request->password));
 
             if ($user) {
                 Session()->flash('message', 'Utilisateur modifié avec succès!');

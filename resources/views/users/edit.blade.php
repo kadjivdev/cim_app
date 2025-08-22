@@ -85,7 +85,7 @@
                                                 <input type="email" id="email" name="email"
                                                     value="{{ @old('email') ? @old('email') : $user->email }}" required
                                                     class="form-control  @error('email') is-invalid @enderror"
-                                                    placeholder="**Email**">
+                                                    placeholder="**Email **">
                                                 <div class="input-group-append">
                                                     <div class="input-group-text">
                                                         <span class="fas fa-envelope"></span>
