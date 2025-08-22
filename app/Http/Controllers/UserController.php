@@ -94,7 +94,7 @@ class UserController extends Controller
                 'representent_id' => ['required', 'integer'],
                 // 'zone_id' => ['required', 'integer'],
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['string', 'email',Rule::unique("users")->ignore($user->id)],
+                'email' => ['string', 'email'],
             ]);
 
             // $verif = User::all()->whereNotIn('id', $user->id)->firstWhere('email', '=', $request->email);
