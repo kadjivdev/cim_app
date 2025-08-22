@@ -10,6 +10,7 @@ use App\Models\Zone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
@@ -93,15 +94,15 @@ class UserController extends Controller
                 'representent_id' => ['required', 'integer'],
                 // 'zone_id' => ['required', 'integer'],
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['string', 'email'],
+                'email' => ['string', 'email',Rule::unique("users")->ignore($user->id)],
             ]);
 
-            $verif = User::all()->whereNotIn('id', $user->id)->firstWhere('email', '=', $request->email);
+            // $verif = User::all()->whereNotIn('id', $user->id)->firstWhere('email', '=', $request->email);
 
-            if ($verif) {
-                Session()->flash('error', 'L\'email existe déjà');
-                return redirect()->route('users.index');
-            }
+            // if ($verif) {
+            //     Session()->flash('error', 'L\'email existe déjà');
+            //     return redirect()->route('users.index');
+            // }
 
             $user->representent_id = $request->representent_id;
             $user->zone_id = $request->zone_id;
