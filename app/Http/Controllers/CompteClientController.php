@@ -84,7 +84,8 @@ class CompteClientController extends Controller
 
             // TRAITEMENT DU DOCUMENT
             $doc = $request->file("document");
-            $doc_name = $doc->getClientOriginalName();
+            // $doc_name = $doc->getClientOriginalName();
+            $doc_name = time().'-'.$doc->getClientOriginalName();
             $doc->move("files/", $doc_name);
 
             $file = asset("files/" . $doc_name);
