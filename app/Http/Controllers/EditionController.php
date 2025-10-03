@@ -14,6 +14,7 @@ use App\Models\Vendu;
 use App\Models\Vente;
 use App\Models\Reglement;
 use App\Models\Representant;
+use App\Models\User;
 use App\Models\Zone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -888,7 +889,7 @@ class EditionController extends Controller
     // GESTION DE LA LISTE DES APPROVISIONNEMENTS
     function CompteApprovisionnement(Request $request)
     {
-        $clients = Client::get(["id", "raisonSociale"]);
+        $users = User::get(["id", "name"]);
         $query = Reglement::with(["compte", "client"])
             ->whereNull("vente_id")
             ->whereNotNull("client_id")
@@ -896,10 +897,6 @@ class EditionController extends Controller
 
         ## QUAND C'EST UNE REQUETE GET
         if ($request->method() == "GET") {
-            // $query->get();
-            // $reglements = Reglement::with("compte")
-            // ->whereNull("vente_id")->whereNotNull("client_id")->orderBy('id', 'desc')->get();
-
             $startDate = null;
             $endDate = null;
             session()->put('result', false);
@@ -909,8 +906,8 @@ class EditionController extends Controller
             $endDate = $request->get('fin');
             ##___
 
-            if ($request->client_id) {
-                $query->where("client_id", $request->client_id);
+            if ($request->user_id) {
+                $query->where("user_id", $request->user_id);
             }
             $query->whereBetween('created_at', [$startDate, $endDate]);
             session()->put('result', true);
@@ -918,9 +915,7 @@ class EditionController extends Controller
 
         $reglements = $query->get();
 
-        // return $reglements->pluck("client");
-
-        return view('editions.approvisionnementCompte', compact('reglements', 'startDate', 'endDate', 'clients'));
+        return view('editions.approvisionnementCompte', compact('reglements', 'startDate', 'endDate', 'users'));
     }
 
     // RESTORER LES VENTES SUPPRIMEES AU SOLDE DU CLIENT

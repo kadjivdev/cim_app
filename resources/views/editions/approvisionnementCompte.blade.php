@@ -46,10 +46,10 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-3">
-                                        <select name="client_id" id="client_id" class="form-control">
-                                            <option value="">Selectionnez un client</option>
-                                            @foreach($clients as $client)
-                                            <option value="{{$client->id}}">{{$client->raisonSociale}}</option>
+                                        <select name="user_id" id="user_id" class="form-control">
+                                            <option value="">Selectionnez un utilisateur</option>
+                                            @foreach($users as $user)
+                                            <option value="{{$user->id}}">{{$user->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -81,8 +81,8 @@
                                                     <th>Reversement</th>
                                                     <th>Preuve</th>
                                                     <th>Compte</th>
+                                                    <th>Inseré par</th>
                                                     <th>Inséré le</th>
-                                                    <th>Par</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -111,8 +111,8 @@
                                                     </td>
                                                     <td class="text-center"> <a href="{{$reglement->document}}" class="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer"><i class="bi bi-file-earmark-pdf"></i></a> </td>
                                                     <td class="text-center"> {{$reglement->compte?->numero}} - {{$reglement->compte?->intitule}} </td>
+                                                    <td class="text-center"> <span class="bg-danger">{{$reglement->utilisateur?$reglement->utilisateur?->name:"---"}} </span> </td>
                                                     <td class="text-center">{{date_format(date_create($reglement->created_at),'d/m/Y H:i')}}</td>
-                                                    <td class="text-center"> <span class="badge bg-danger">{{$reglement->utilisateur?$reglement->utilisateur?->name:"---"}} </span> </td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -169,8 +169,8 @@
 @section('script')
 <script>
     $(document).ready(function() {
-        $('#client_id').select2({
-            placeholder: "Sélectionner un client",
+        $('#user_id').select2({
+            placeholder: "Sélectionner un utilisateur",
             allowClear: true
         });
     });
