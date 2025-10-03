@@ -770,7 +770,6 @@ class VenteController extends Controller
         }
 
         foreach ($ventes as  $vente) {
-
             $vente = Vente::find($vente);
             $vente->date_envoie_commercial = date('Y-m-d');
             $vente->user_envoie_commercial = Auth()->user()->id;

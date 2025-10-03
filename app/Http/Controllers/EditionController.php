@@ -888,23 +888,39 @@ class EditionController extends Controller
     // GESTION DE LA LISTE DES APPROVISIONNEMENTS
     function CompteApprovisionnement(Request $request)
     {
+        $clients = Client::get(["id", "raisonSociale"]);
+        $query = Reglement::with(["compte", "client"])
+            ->whereNull("vente_id")
+            ->whereNotNull("client_id")
+            ->orderBy('id', 'desc');
+
         ## QUAND C'EST UNE REQUETE GET
         if ($request->method() == "GET") {
-            $reglements = Reglement::with("compte")->whereNull("vente_id")->whereNotNull("client_id")->orderBy('id', 'desc')->get();
+            // $query->get();
+            // $reglements = Reglement::with("compte")
+            // ->whereNull("vente_id")->whereNotNull("client_id")->orderBy('id', 'desc')->get();
 
+            $startDate = null;
+            $endDate = null;
             session()->put('result', false);
-            return view('editions.approvisionnementCompte', compact('reglements'));
+        } else {
+            ## QUAND C'EST UNE REQUETE POST
+            $startDate = $request->get('debut');
+            $endDate = $request->get('fin');
+            ##___
+
+            if ($request->client_id) {
+                $query->where("client_id", $request->client_id);
+            }
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+            session()->put('result', true);
         }
 
-        ## QUAND C'EST UNE REQUETE POST
-        $startDate = $request->get('debut');
-        $endDate = $request->get('fin');
-        ##___
+        $reglements = $query->get();
 
-        $reglements = Reglement::whereNull("vente_id")->whereNotNull("client_id")->orderBy('id', 'desc')->whereBetween('created_at', [$startDate, $endDate])->get();
+        // return $reglements->pluck("client");
 
-        session()->put('result', true);
-        return view('editions.approvisionnementCompte', compact('reglements', 'startDate', 'endDate'));
+        return view('editions.approvisionnementCompte', compact('reglements', 'startDate', 'endDate', 'clients'));
     }
 
     // RESTORER LES VENTES SUPPRIMEES AU SOLDE DU CLIENT

@@ -30,9 +30,9 @@
                 $nowUpdate = end($ask_history);
                 json_encode($nowUpdate);
                 $dataUpdate = json_decode($nowUpdate);
-
             }
         @endphp
+
         @if (($vente->ask_history != NULL))
             <div class="col-md-12">
                 <div class="card card-outline card-warning">
@@ -40,15 +40,14 @@
                     <h3 class="card-title">Modification à effectuer</h3>
 
                     <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
                     </div>
                     <!-- /.card-tools -->
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="info-box-content">

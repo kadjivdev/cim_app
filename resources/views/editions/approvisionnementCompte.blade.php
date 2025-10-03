@@ -27,8 +27,7 @@
                             <form method="post" id="form_bc" action="{{route('edition.compteApprovisionnement')}}">
                                 @csrf
                                 <div class="row no-print">
-                                    <div class="col-1"></div>
-                                    <div class="col-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Date début</label>
                                             <input type="date" required class="form-control" name="debut" value="{{old('debut')}}">
@@ -37,7 +36,7 @@
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Date début</label>
                                             <input type="date" required class="form-control" name="fin" value="{{old('fin')}}">
@@ -46,10 +45,17 @@
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
                                     </div>
-                                    <div class="col-2">
-                                        <button class="btn btn-primary" type="submit" style="margin-top: 2em">Afficher</button>
+                                    <div class="col-md-3">
+                                        <select name="client_id" id="client_id" class="form-control">
+                                            <option value="">Selectionnez un client</option>
+                                            @foreach($clients as $client)
+                                            <option value="{{$client->id}}">{{$client->raisonSociale}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
-                                    <div class="col-1"></div>
+                                    <div class="col-md-3">
+                                        <button class="w-100 btn btn-primary" type="submit" style="margin-top: 2em">Afficher</button>
+                                    </div>
                                 </div>
                             </form>
 
@@ -90,7 +96,7 @@
                                                     <td class="text-center"><span class="badge bg-warning">{{$reglement->reference}} </span></td>
                                                     <td class="text-center">
                                                         <b>
-                                                            {{$reglement->client->raisonSociale}}
+                                                            {{$reglement->client?->raisonSociale}}
                                                         </b>
                                                     </td>
                                                     <td class="text-center">{{date_format(date_create($reglement->date),'d/m/Y')}}</td>
@@ -104,9 +110,9 @@
                                                         @endif
                                                     </td>
                                                     <td class="text-center"> <a href="{{$reglement->document}}" class="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer"><i class="bi bi-file-earmark-pdf"></i></a> </td>
-                                                    <td class="text-center"> {{$reglement->compte->numero}} - {{$reglement->compte->intitule}} </td>
+                                                    <td class="text-center"> {{$reglement->compte?->numero}} - {{$reglement->compte?->intitule}} </td>
                                                     <td class="text-center">{{date_format(date_create($reglement->created_at),'d/m/Y H:i')}}</td>
-                                                    <td class="text-center"> <span class="badge bg-danger">{{$reglement->utilisateur?$reglement->utilisateur->name:"---"}} </span> </td>
+                                                    <td class="text-center"> <span class="badge bg-danger">{{$reglement->utilisateur?$reglement->utilisateur?->name:"---"}} </span> </td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -162,6 +168,13 @@
 
 @section('script')
 <script>
+    $(document).ready(function() {
+        $('#client_id').select2({
+            placeholder: "Sélectionner un client",
+            allowClear: true
+        });
+    });
+
     $(function() {
         $("#example1").DataTable({
             "responsive": true,
