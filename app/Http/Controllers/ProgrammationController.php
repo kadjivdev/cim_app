@@ -418,17 +418,20 @@ class ProgrammationController extends Controller
         foreach ($programmes as $programme) {
             $zone = Zone::find($programme->zone_id);
             $prog = Programmation::find($programme->id);
-            if ($prog->update(['imprimer' => 1])) {
-                $destinataire = [
-                    'nom' => $zone->representant->nom . ' ' . $zone->representant->prenom,
-                    'email' => $zone->representant->email
-                ];
-                $subject = 'PROGRAMMATION DU ' . date_format(date_create($programme->dateprogrammer), 'd/m/Y');
-                $message_html = "Nous vous informont d'une nouvelle programmation de camion pour votre zone.";
-                $lienAction = route('programmations.index');
-                $mail = new NotificateurProgrammationMail($destinataire, $subject, $message_html, $prog->avaliseur->email ? [$prog->avaliseur->email] : [], $programme, $lienAction);
-                Mail::send($mail);
-            }
+
+            $prog->update(['imprimer' => 1]);
+
+            // if ($prog->update(['imprimer' => 1])) {
+            //     $destinataire = [
+            //         'nom' => $zone->representant->nom . ' ' . $zone->representant->prenom,
+            //         'email' => $zone->representant->email
+            //     ];
+            //     $subject = 'PROGRAMMATION DU ' . date_format(date_create($programme->dateprogrammer), 'd/m/Y');
+            //     $message_html = "Nous vous informont d'une nouvelle programmation de camion pour votre zone.";
+            //     $lienAction = route('programmations.index');
+            //     $mail = new NotificateurProgrammationMail($destinataire, $subject, $message_html, $prog->avaliseur->email ? [$prog->avaliseur->email] : [], $programme, $lienAction);
+            //     Mail::send($mail);
+            // }
         }
         return redirect()->route('programmations.impression', ['debut' => $debut, 'fin' => $fin, 'fournisseur' => $fournisseur->id]);
     }
