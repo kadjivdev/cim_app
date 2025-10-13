@@ -351,9 +351,9 @@ class VenduController extends Controller
         $vente = $vendu->vente;
         if ($vente->statut == "Vendue") {
             Session()->flash('error', 'Vous essayez de supprimer une ligne de vente n° ' . $vente->code . 'déjà valider. Ce comportement est suspect et sera notifier au administrateur');
-            $message = "Sur la vente n° " . $vente->code . ", le vendeur " . Auth::user()->name . " a esayer de supprimer un detail alors que la vente a été déjà valider";
-            $mail = new SuspectMail(['email' => env('ADMIN_SUSPECT')], 'Action suspecte', $message);
-            Mail::send($mail);
+            // $message = "Sur la vente n° " . $vente->code . ", le vendeur " . Auth::user()->name . " a esayer de supprimer un detail alors que la vente a été déjà valider";
+            // $mail = new SuspectMail(['email' => env('ADMIN_SUSPECT')], 'Action suspecte', $message);
+            // Mail::send($mail);
             return redirect()->route('ventes.index', ['vente' => $vente->id]);
         }
         $vente->update(['montant' => $vente->montant - ($vendu->qteVendu * $vendu->pu)]);
