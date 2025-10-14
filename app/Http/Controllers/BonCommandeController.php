@@ -267,23 +267,23 @@ class BonCommandeController extends Controller
                     $boncommande->statut = $request->statut;
                     $boncommandes = $boncommande;
                     if ($boncommande->update()) {
-                        $validateur = User::find(env('GESTIONNAIRE_ID'));
-                        $destinataire = [
-                            'nom' => $validateur->name,
-                            'email' => $validateur->email
-                        ];
-                        $subject = 'CONFIRMATION DE VALIDATION DE COMMANDE';
-                        $message_html = "Votre demande validation de la commande ci-dessous a été prise en compte. Vous pouvez passer à la programmation.<br>
-                            <ul>
-                            <li>Commande N° $boncommandes->code</li>
-                            <li>Date : " . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</li>
-                            <li>Date : " . number_format($boncommandes->montant, 2, ',', ' ') . "</li>
-                            </ul>
-                            <p><b> Valider par : </b> " . Auth::user()->name . " le <b> " . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</b></p>
-                        ";
-                        $lienAction = route('programmations.index');
-                        $mail = new CommandeMail($destinataire, $subject, $message_html, [], $lienAction);
-                        Mail::send($mail);
+                        // $validateur = User::find(env('GESTIONNAIRE_ID'));
+                        // $destinataire = [
+                        //     'nom' => $validateur->name,
+                        //     'email' => $validateur->email
+                        // ];
+                        // $subject = 'CONFIRMATION DE VALIDATION DE COMMANDE';
+                        // $message_html = "Votre demande validation de la commande ci-dessous a été prise en compte. Vous pouvez passer à la programmation.<br>
+                        //     <ul>
+                        //     <li>Commande N° $boncommandes->code</li>
+                        //     <li>Date : " . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</li>
+                        //     <li>Date : " . number_format($boncommandes->montant, 2, ',', ' ') . "</li>
+                        //     </ul>
+                        //     <p><b> Valider par : </b> " . Auth::user()->name . " le <b> " . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</b></p>
+                        // ";
+                        // $lienAction = route('programmations.index');
+                        // $mail = new CommandeMail($destinataire, $subject, $message_html, [], $lienAction);
+                        // Mail::send($mail);
                         Session()->flash('message', 'Bon de commande validé avec succès!');
                         return redirect()->route('boncommandes.index');
                     }
@@ -351,25 +351,25 @@ class BonCommandeController extends Controller
     public function postEnvoyerCommande(BonCommande $boncommandes)
     {
         if ($boncommandes->statut == 'Préparation') {
-            $validateur = User::find(env('VALIDATEUR_ID'));
-            $destinataire = [
-                'nom' => $validateur->name,
-                'email' => $validateur->email
-            ];
-            $subject = 'DEMANDE DE VALIDATION COMMANDE';
-            $message_html = "Vous avez une nouvelle commande en attente de validation. <br>
-                <ul>
-                <li>Commande N° $boncommandes->code</li>
-                <li>Date : " . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</li>
-                <li>Date : " . number_format($boncommandes->montant, 2, ',', ' ') . "</li>
-                </ul>
-                <p><b>Validation demandée par :</b> $boncommandes->users le <b>" . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</b></p>
-                ";
-            $lienAction = route('boncommandes.index');
-            $mail = new CommandeMail($destinataire, $subject, $message_html, [], $lienAction);
+            // $validateur = User::find(env('VALIDATEUR_ID'));
+            // $destinataire = [
+            //     'nom' => $validateur->name,
+            //     'email' => $validateur->email
+            // ];
+            // $subject = 'DEMANDE DE VALIDATION COMMANDE';
+            // $message_html = "Vous avez une nouvelle commande en attente de validation. <br>
+            //     <ul>
+            //     <li>Commande N° $boncommandes->code</li>
+            //     <li>Date : " . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</li>
+            //     <li>Date : " . number_format($boncommandes->montant, 2, ',', ' ') . "</li>
+            //     </ul>
+            //     <p><b>Validation demandée par :</b> $boncommandes->users le <b>" . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</b></p>
+            //     ";
+            // $lienAction = route('boncommandes.index');
+            // $mail = new CommandeMail($destinataire, $subject, $message_html, [], $lienAction);
             $boncommandes->statut = 'Envoyé';
             if ($boncommandes->update()) {
-                Mail::send($mail);
+                // Mail::send($mail);
                 Session()->flash('message', 'Bon de commande envoyé avec succès!');
                 return redirect()->route('boncommandes.index');
             } else {
@@ -389,26 +389,26 @@ class BonCommandeController extends Controller
     public function postRetournerCommande(BonCommande $boncommandes)
     {
         if ($boncommandes->statut == 'Envoyé') {
-            $user = User::where('name', $boncommandes->users)->first();
-            $validateur = User::find($user->id);
-            $destinataire = [
-                'nom' => $validateur->name,
-                'email' => $validateur->email
-            ];
-            $subject = 'DEMANDE DE VALIDATION COMMANDE';
-            $message_html = "<b style='color: red'>La validationd de votre nouvelle commande a été rejeter.</b> <br>
-                <ul>
-                <li>Commande N° $boncommandes->code</li>
-                <li>Date : " . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</li>
-                <li>Date : " . number_format($boncommandes->montant, 2, ',', ' ') . "</li>
-                </ul>
-                <p><b>Validation demandée par :</b> $boncommandes->users le <b>" . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</b></p>
-                ";
-            $lienAction = route('boncommandes.index');
-            $mail = new CommandeMail($destinataire, $subject, $message_html, [], $lienAction);
+            // $user = User::where('name', $boncommandes->users)->first();
+            // $validateur = User::find($user->id);
+            // $destinataire = [
+            //     'nom' => $validateur->name,
+            //     'email' => $validateur->email
+            // ];
+            // $subject = 'DEMANDE DE VALIDATION COMMANDE';
+            // $message_html = "<b style='color: red'>La validationd de votre nouvelle commande a été rejeter.</b> <br>
+            //     <ul>
+            //     <li>Commande N° $boncommandes->code</li>
+            //     <li>Date : " . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</li>
+            //     <li>Date : " . number_format($boncommandes->montant, 2, ',', ' ') . "</li>
+            //     </ul>
+            //     <p><b>Validation demandée par :</b> $boncommandes->users le <b>" . date_format(date_create($boncommandes->dateBon), 'd/m/Y') . "</b></p>
+            //     ";
+            // $lienAction = route('boncommandes.index');
+            // $mail = new CommandeMail($destinataire, $subject, $message_html, [], $lienAction);
             $boncommandes->statut = 'Préparation';
             if ($boncommandes->update()) {
-                Mail::send($mail);
+                // Mail::send($mail);
                 Session()->flash('message', 'Bon de commande Retourner avec succès!');
                 return redirect()->route('boncommandes.index');
             } else {
