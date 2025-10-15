@@ -648,17 +648,17 @@ class VenteController extends Controller
             $vente->update(['statut' => 'Vendue', "validated_date" => now()]);
 
             CommandeClientTools::changeStatutCommande($vente->commandeclient);
-            $venteAttentes = DB::select("
-                SELECT date,COUNT(*) AS nombre
-                FROM ventes
-                WHERE statut = 'Vendue'
-                GROUP BY date
-            ");
-            $desMail = User::find(env('GESTIONNAIRE_VENTE'));
-            $copieMail = User::find(env('COPIE_GESTIONNAIRE_VENTE'));
-            $message = "<p>Nous vous notifions une nouvelle vente effectuée par <b>" . $vente->user->name . "</b>. Merci de vous connecter pour traiter.</p>";
-            $mail = new NotificationVenteMail(['email' => $desMail->email, 'nom' => $desMail->nom], 'Vente n° ' . $vente->code . ' du ' . date_format(date_create($vente->date), 'd/m/Y'), $message, $vente, $venteAttentes, $copieMail->email);
-            Mail::send($mail);
+            // $venteAttentes = DB::select("
+            //     SELECT date,COUNT(*) AS nombre
+            //     FROM ventes
+            //     WHERE statut = 'Vendue'
+            //     GROUP BY date
+            // ");
+            // $desMail = User::find(env('GESTIONNAIRE_VENTE'));
+            // $copieMail = User::find(env('COPIE_GESTIONNAIRE_VENTE'));
+            // $message = "<p>Nous vous notifions une nouvelle vente effectuée par <b>" . $vente->user->name . "</b>. Merci de vous connecter pour traiter.</p>";
+            // $mail = new NotificationVenteMail(['email' => $desMail->email, 'nom' => $desMail->nom], 'Vente n° ' . $vente->code . ' du ' . date_format(date_create($vente->date), 'd/m/Y'), $message, $vente, $venteAttentes, $copieMail->email);
+            // Mail::send($mail);
             return redirect()->route('ventes.index')->with('message', 'Félicitation! Votre vente a été enregistrée');
         } else
             abort(403);
@@ -739,15 +739,15 @@ class VenteController extends Controller
                 $vente->update(['ask_history' => $ask_history, 'statut' => 'En attente de modification']);
             }
 
-            $desMail = User::find(env('GESTIONNAIRE_ID'));
-            $copieMail = User::find(env('COPIE_GESTIONNAIRE_VENTE'));
-            $message = "
-                <p>Nous vous notifions une nouvelle demande de modification vente effectuée par <b>" . Auth()->user()->name . "</b> <br>.
-                <b>Ci-joint l'observation de modification<b>:<br> <i>" . $request->observation . "</i>
-                </p>";
-            $lienAction =  route('ventes.askUpdate');
-            $mail = new NotificationAskUpdateVente(['email' => $desMail->email, 'nom' => $desMail->nom], 'Demande de mofication Vente n° ' . $vente->code . ' du ' . date_format(date_create($vente->date), 'd/m/Y'), $message, $vente, $copieMail->email, $lienAction);
-            Mail::send($mail);
+            // $desMail = User::find(env('GESTIONNAIRE_ID'));
+            // $copieMail = User::find(env('COPIE_GESTIONNAIRE_VENTE'));
+            // $message = "
+            //     <p>Nous vous notifions une nouvelle demande de modification vente effectuée par <b>" . Auth()->user()->name . "</b> <br>.
+            //     <b>Ci-joint l'observation de modification<b>:<br> <i>" . $request->observation . "</i>
+            //     </p>";
+            // $lienAction =  route('ventes.askUpdate');
+            // $mail = new NotificationAskUpdateVente(['email' => $desMail->email, 'nom' => $desMail->nom], 'Demande de mofication Vente n° ' . $vente->code . ' du ' . date_format(date_create($vente->date), 'd/m/Y'), $message, $vente, $copieMail->email, $lienAction);
+            // Mail::send($mail);
             return back();
         } catch (\Throwable $th) {
             //throw $th;
