@@ -123,19 +123,19 @@
                                         <tbody>
                                             @foreach($programmations as $programmation)
                                                 <tr class="">
-                                                    <td>{{ $programmation->detailboncommande->boncommande->code }}</td>
+                                                    <td>{{ $programmation->detailboncommande?->boncommande?->code }}</td>
                                                     <td>{{ $programmation->code }}</td>
                                                     <td class="text-center">{{date_format(date_create($programmation->created_at), 'd/m/Y')}} | {{date_format(date_create($programmation->dateprogrammer), 'd/m/Y')}} | {{ $programmation->dateSortie?date_format(date_create($programmation->dateSortie), 'd/m/Y'):'' }}</td>
-                                                    <td>{{ $programmation->detailboncommande->boncommande->fournisseur->sigle }}</td>
-                                                    <td>{{ $programmation->detailboncommande->produit->libelle }}</td>
-                                                    <td>{{ $programmation->camion->immatriculationTracteur }}
-                                                        ({{ $programmation->camion->marque->libelle }})
+                                                    <td>{{ $programmation->detailboncommande?->boncommande?->fournisseur->sigle }}</td>
+                                                    <td>{{ $programmation->detailboncommande?->produit?->libelle }}</td>
+                                                    <td>{{ $programmation->camion?->immatriculationTracteur }}
+                                                        ({{ $programmation->camion?->marque?->libelle }})
                                                     </td>
-                                                    <td>{{ $programmation->chauffeur->nom }} {{ $programmation->chauffeur->prenom }}
-                                                        ({{ $programmation->chauffeur->telephone }})
+                                                    <td>{{ $programmation->chauffeur?->nom }} {{ $programmation->chauffeur?->prenom }}
+                                                        ({{ $programmation->chauffeur?->telephone }})
                                                     </td>
-                                                    <td>{{ $programmation->zone->libelle }}
-                                                        ({{ $programmation->zone->departement->libelle }})
+                                                    <td>{{ $programmation->zone?->libelle }}
+                                                        ({{ $programmation->zone?->departement?->libelle }})
                                                     </td>
                                                     <td class="text-right">{{ number_format($programmation->qteprogrammer,2,","," ") }}</td>
                                                     <td class="">
@@ -148,7 +148,7 @@
                                                         <div class="form-group" style="font-size: 14px">
                                                             <input type="text" class="form-control col-md-12" onchange="handleBordLivChange('{{ $programmation->id }}', this)" value="{{$programmation->bl_gest ?  : ''}}"@if ($programmation->bl_gest && $programmation->detailboncommande->boncommande->statut=="Livrer") readonly @endif >
                                                             <div class="message-container-bl d-none"></div> <!-- Conteneur pour le message -->
-                                                            <small class="text-primary text-center d-block"> {{$programmation->detailboncommande->boncommande->statut}} </small>
+                                                            <small class="text-primary text-center d-block"> {{$programmation->detailboncommande?->boncommande?->statut}} </small>
                                                         </div>
                                                     </td>
 
@@ -522,10 +522,8 @@
                 })
         }
             
-
         $(function () {
             $("#example1").DataTable({
-                // "paging":false,
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
