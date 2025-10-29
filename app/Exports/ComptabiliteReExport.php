@@ -20,6 +20,7 @@ class ComptabiliteReExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+           'Insérée par',
            'Heure & Date système',
         //    'Date système',
            'Date vente',

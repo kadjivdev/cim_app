@@ -38,7 +38,7 @@
                             {{ $message }}
                         </div>
                         @endif
-                        
+
                         <div class="card-header">
                             <h3 class="card-title"></h3>
                             @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
@@ -86,6 +86,7 @@
                                         <th>Code Commande</th>
                                         @endif
                                         <th>BorLiv</th>
+                                        <th>Facture</th>
                                         <th>Date</th>
                                         <th>Client</th>
                                         <th>PU</th>
@@ -124,6 +125,17 @@
                                             <span class="badge bg-dark">{{ $vendu->programmation->bl_gest?$vendu->programmation->bl_gest:'--'}} / {{$vendu->programmation->bl?$vendu->programmation->bl:'--'}}</span>
                                             @endforeach
                                         </td>
+                                        <td>
+                                            @if($vente->facture)
+                                            <strong class="badge bg-light border rounded text-success">
+                                                Avec facture
+                                            </strong>
+                                            @else
+                                            <strong class="badge bg-light border rounded text-danger">
+                                                Sans facture
+                                            </strong>
+                                            @endif
+                                        </td>
                                         <td class="text-center">{{ date('d/m/Y', strtotime($vente->date)) }}</td>
                                         <td class="pl-2">
                                             {{ $vente->commandeclient->client->raisonSociale }}
@@ -137,17 +149,17 @@
                                         <td class="pl-2"> {{ $vente->commandeclient->zone->libelle }} </td>
                                         @endif
                                         @if ($vente->statut == 'Vendue')
-                                            @if(($vente->montant-$vente->remise) - $vente->reglements->sum('montant') == 0)
-                                            <td class="text-center"><span class="badge badge-success">Soldé</span></td>
-                                            @elseif( $vente->reglements->sum('montant') > 0)
-                                            <td class="text-center"><span class="badge badge-warning">Solde en cours</span></td>
-                                            @else
-                                            <td class="text-center"><span class="badge badge-success">{{ $vente->statut }}</span></td>
-                                            @endif
-                                        @elseif ($vente->statut == 'Annulée')
-                                            <td class="text-center"><span class="badge badge-danger">{{ $vente->statut }}</span></td>
+                                        @if(($vente->montant-$vente->remise) - $vente->reglements->sum('montant') == 0)
+                                        <td class="text-center"><span class="badge badge-success">Soldé</span></td>
+                                        @elseif( $vente->reglements->sum('montant') > 0)
+                                        <td class="text-center"><span class="badge badge-warning">Solde en cours</span></td>
                                         @else
-                                            <td class="text-center"><span class="badge badge-info">{{ $vente->statut }}</span></td>
+                                        <td class="text-center"><span class="badge badge-success">{{ $vente->statut }}</span></td>
+                                        @endif
+                                        @elseif ($vente->statut == 'Annulée')
+                                        <td class="text-center"><span class="badge badge-danger">{{ $vente->statut }}</span></td>
+                                        @else
+                                        <td class="text-center"><span class="badge badge-info">{{ $vente->statut }}</span></td>
                                         @endif
 
                                         <!-- COMPTABILITE -->
@@ -168,25 +180,25 @@
                                             @endif
                                             @endif
                                             @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() || Auth::user()->roles()->where('libelle', 'VENDEUR')->exists())
-                                                @if ($vente->statut == 'Vendue')
-                                                <a class="btn btn-primary btn-sm" href="{{ route('ventes.show', ['vente'=>$vente->id]) }}"><i class="fa fa-print"></i></a>
-                                                @if(false)
-                                                <a class="btn btn-info btn-sm" href="{{ route('ventes.invalider', ['vente'=>$vente->id]) }}"><i class="fa-regular fa-rectangle-xmark"></i></a>
-                                                @endif
+                                            @if ($vente->statut == 'Vendue')
+                                            <a class="btn btn-primary btn-sm" href="{{ route('ventes.show', ['vente'=>$vente->id]) }}"><i class="fa fa-print"></i></a>
+                                            @if(false)
+                                            <a class="btn btn-info btn-sm" href="{{ route('ventes.invalider', ['vente'=>$vente->id]) }}"><i class="fa-regular fa-rectangle-xmark"></i></a>
+                                            @endif
                                             @elseif($vente->statut == 'Préparation')
-                                                @if($vente->vendus->count() > 0)
-                                                <a class="btn btn-success btn-sm" href="{{ route('vendus.create', ['vente'=>$vente->id]) }}" title="Valider"><i class="fa-solid fa-check"></i></a>
-                                                @endif
-                                                <a class="btn btn-secondary btn-sm" href="{{ route('vendus.create', ['vente'=>$vente->id]) }}" title="Ajouter Détails Vente"><i class="fa-solid fa-circle-plus"></i></a>
-                                                <!--<a class="btn btn-warning btn-sm" href="{{ route('ventes.edit', ['vente'=>$vente->id, 'statuts'=>$vente->commandeclient->type_commande_id]) }}"><i class="fa-solid fa-pen-to-square"></i></a>-->
-                                                <a class="btn btn-danger btn-sm" href="{{ route('ventes.delete', ['vente'=>$vente->id]) }}"><i class="fa-solid fa-trash-can"></i></a>
+                                            @if($vente->vendus->count() > 0)
+                                            <a class="btn btn-success btn-sm" href="{{ route('vendus.create', ['vente'=>$vente->id]) }}" title="Valider"><i class="fa-solid fa-check"></i></a>
+                                            @endif
+                                            <a class="btn btn-secondary btn-sm" href="{{ route('vendus.create', ['vente'=>$vente->id]) }}" title="Ajouter Détails Vente"><i class="fa-solid fa-circle-plus"></i></a>
+                                            <!--<a class="btn btn-warning btn-sm" href="{{ route('ventes.edit', ['vente'=>$vente->id, 'statuts'=>$vente->commandeclient->type_commande_id]) }}"><i class="fa-solid fa-pen-to-square"></i></a>-->
+                                            <a class="btn btn-danger btn-sm" href="{{ route('ventes.delete', ['vente'=>$vente->id]) }}"><i class="fa-solid fa-trash-can"></i></a>
                                             @else
 
                                             @endif
                                             @endif
                                             <a class="btn btn-dark btn-sm" href="#" onclick="charger({{ $vente->id }} )" data-toggle="modal" data-target="#modal-lg"><i class="fa-solid fa-list"></i></a>
                                         </td>
-                                        
+
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
 
                                         <td class="text-center">
@@ -239,6 +251,7 @@
                                         <th>Code Commande</th>
                                         @endif
                                         <th>BorLiv</th>
+                                        <th>Facture</th>
                                         <th>Date</th>
                                         <th>Client</th>
                                         <th>PU</th>

@@ -14,7 +14,7 @@ class Vente extends Model
         'produit_id','type_vente_id','vente_validation','historiques','transport','destination','ask_history',
         'ctl_payeur','date_comptabilisation','taux_aib','taux_tva','prix_impot','prix_achat','marge',
         'date_traitement','user_traitement','date_envoie_commercial','user_envoie_commercial','filleuls','statut_reglement',
-        "validated_date","traited_date"
+        "validated_date","traited_date",'facture','no_facture'
     ];
 
     public function vendus()

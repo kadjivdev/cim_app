@@ -42,7 +42,7 @@
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label for="">Date début</label>
-                                            <input type="date" class="form-control" name="fin" value="{{session('fin')}}" >
+                                            <input type="date" class="form-control" name="fin" value="{{session('fin')}}">
                                         </div>
                                         @error('fin')
                                         <span class="text-danger">{{$message}}</span>
@@ -76,6 +76,7 @@
                                                     <th>Envoyé par:</th>
 
                                                     <th>Modifée</th>
+                                                    <th>Facture</th>
 
                                                     <th>Date Vente</th>
                                                     <th>Date Validation</th>
@@ -115,7 +116,13 @@
                                                         @endif
                                                         <!-- </span> -->
                                                     </td>
-
+                                                    <td class="text-center">
+                                                        @if($AComptabiliser->facture)
+                                                        <span class="badge bg-light text-success border rounded">Avec facture</span>
+                                                        @else
+                                                        <span class="badge bg-light text-danger border rounded">Sans facture</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="text-center">{{ date_format(date_create($AComptabiliser->date),'d/m/Y') }}</td>
                                                     <td class="text-center">{{$AComptabiliser->validated_date? date_format(date_create($AComptabiliser->validated_date),'d/m/Y'):"---" }}</td>
                                                     <td class="">{{ $AComptabiliser->typeVente->libelle }}</td>
@@ -145,6 +152,7 @@
                                                     <th>Envoyé par:</th>
 
                                                     <th>Modifée</th>
+                                                    <th>Facture</th>
 
                                                     <th>Date Vente</th>
                                                     <th>Date Validation</th>

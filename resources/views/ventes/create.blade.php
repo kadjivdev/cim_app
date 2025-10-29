@@ -18,6 +18,12 @@
                 </div>
             </div>
         </div><!-- /.container-fluid -->
+
+        <div class="row">
+            @if(session()->has("error"))
+            <div class="alert alert-danger">{{session()->get("error")}}</div>
+            @endif
+        </div>
     </section>
 
     <section class="content">
@@ -186,6 +192,20 @@
                                                 <option class="text-center" value="1"> Avec Transport</option>
                                             </select>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-check mx-3">
+                                        <input class="form-check-input" name="facture" type="checkbox" id="checkDefault">
+                                        <label class="form-check-label" for="checkDefault">
+                                            Avec facture
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="no_facture" type="checkbox"  id="checkChecked" checked>
+                                        <label class="form-check-label" for="checkChecked">
+                                            Sans facture
+                                        </label>
                                     </div>
                                 </div>
                                 <div class="row" id="confirmation_msg" hidden>

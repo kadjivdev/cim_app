@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Exports\ComptabiliteExport;
 use App\Exports\ComptabiliteReExport;
 use App\Mail\NotificateurProgrammationMail;
-use App\Mail\NotificationAskUpdateVente;
-use App\Mail\NotificationVenteMail;
 use App\Models\EcheanceCredit;
 use App\Models\User;
 use App\tools\CommandeClientTools;
@@ -88,7 +86,7 @@ class VenteController extends Controller
                 ->where('users', $user->id);
         }
 
-        $ventes = $query->get();
+        $ventes = $query->whereBetween("id", [1, 100])->get(); //->whereBetween("id",[1,100])
         return view('ventes.index', compact('ventes'));
     }
 
@@ -202,6 +200,20 @@ class VenteController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
+        if (!$request->facture && !$request->no_facture) {
+            $req = $request->statuts;
+            return redirect()->route('ventes.create', ['statuts' => $req])->with(["error"=>"Préciser si la vente est avec ou sans facture"])->withInput();
+        }
+
+        if ($request->facture && $request->no_facture) {
+            $req = $request->statuts;
+            return redirect()->route('ventes.create', ['statuts' => $req])->with(["error"=>"Préciser une seule option(soit la vente est avec facture ou soit sans facture"])->withInput();
+        }
+
+        $facture = $request->facture ? true : false;
+        $no_facture = $request->no_facture ? true : false;
+
         $req = NULL;
         if ($request->statuts == 1) {
             if ($request->type_vente_id == 1) {
@@ -280,7 +292,9 @@ class VenteController extends Controller
                         'type_vente_id' => $request->type_vente_id,
                         'transport' => $request->transport,
                         'ctl_payeur' => $request->ctl_payeur,
-                        'filleuls' => $filleuls
+                        'filleuls' => $filleuls,
+                        'facture' => $facture,
+                        'no_facture' => $no_facture,
                     ]);
 
                     if ($ventes) {
@@ -347,7 +361,9 @@ class VenteController extends Controller
                 'users' => Auth::user()->id,
                 'type_vente_id' => $request->type_vente_id,
                 'transport' => $request->transport,
-                'ctl_payeur' => $request->ctl_payeur
+                'ctl_payeur' => $request->ctl_payeur,
+                'facture' => $facture,
+                'no_facture' => $no_facture,
             ]);
 
             if ($ventes) {
@@ -826,7 +842,7 @@ class VenteController extends Controller
             ->join('fournisseurs', 'fournisseurs.id', '=', 'bon_commandes.fournisseur_id')
             ->select('ventes.*', 'fournisseurs.sigle')->where('fournisseurs.id', '<>', 4)
             ->orderBy('date', 'DESC')
-            ->get();
+            ;
 
         $AComptabilisersAdjeOla = $AComptabilisers
 
@@ -1264,6 +1280,11 @@ class VenteController extends Controller
                 $comptabiliser[$key]->clientFilleulsifu = '';
                 unset($comptabiliser[$key]->filleuls);
             }
+
+            $vente = Vente::firstWhere("id", $comptabilise->id);
+            $comptabiliser[$key]->user_name = $vente?->user?->name;
+            $comptabiliser[$key]->facture = $vente?->facture;
+            // dd($comptabiliser);
         }
 
         return redirect()->route('ventes.viewVenteComptabiliser')->withInput()->with('resultat', ['comptabilisers' => $comptabiliser, 'debut' => $request->debut, 'fin' => $request->fin, 'filtre' => $request->filtre]);

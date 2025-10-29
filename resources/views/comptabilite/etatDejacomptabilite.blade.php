@@ -26,25 +26,6 @@
                             <form method="post" id="form_bc" action="{{route('ventes.postDejaExport')}}">
                                 @csrf
                                 <div class="row no-print">
-                                    <!-- <div class="col-1"></div> -->
-                                    <!-- <div class="col-3">
-                                        <div class="form-group mt-3">
-
-                                            <div class="custom-control custom-radio">
-                                                <input class="custom-control-input custom-control-input-success custom-control-input-outline" type="radio" id="customRadio6" name="filtre" value="creation">
-                                                <label for="customRadio6" class="custom-control-label">Filtrer par date de création</label>
-                                            </div>
-                                            <div class="custom-control custom-radio">
-                                                <input class="custom-control-input custom-control-input-success" type="radio" id="customRadio4" name="filtre" checked="" value="traitement">
-                                                <label for="customRadio4" class="custom-control-label">Filtrer par date de traitement</label>
-                                            </div>
-                                            <div class="custom-control custom-radio">
-                                                <input class="custom-control-input custom-control-input-success custom-control-input-outline" type="radio" id="customRadio5" name="filtre" value="comptabilisation">
-                                                <label for="customRadio5" class="custom-control-label">Filtrer par date de comptabilisation</label>
-                                            </div>
-                                        </div>
-                                    </div> -->
-
                                     <div class="custom-control custom-radio" hidden>
                                         <input class="custom-control-input custom-control-input-success" type="radio" id="customRadio4" name="filtre" checked="" value="traitement">
                                         <label for="customRadio4" class="custom-control-label">Filtrer par date de traitement</label>
@@ -98,6 +79,8 @@
                                     <table id="example1" class="table table-bordered table-striped table-sm mt-2" style="font-size: 12px">
                                         <thead class="text-white text-center bg-gradient-gray-dark">
                                             <tr>
+                                                <th>Insérée par</th>
+                                                <th>Facture</th>
                                                 <th>Date & Heure système</th>
                                                 <th>Date Traitement</th>
                                                 <th>Code vente</th>
@@ -127,6 +110,14 @@
                                             @php($qteVente+=$item->qte)
                                             @php($montantVente+=$item->prixTTC)
                                             <tr>
+                                                <td><span class="bg-light badge rounded border">{{$item->user_name}}</span></td>
+                                                <td class="text-center">
+                                                    @if($item->facture)
+                                                    <span class="badge bg-light text-success border rounded">Avec facture</span>
+                                                    @else
+                                                    <span class="badge bg-light text-danger border rounded">Sans facture</span>
+                                                    @endif
+                                                </td>
                                                 <td class="text-center text-danger">{{GetVenteTraitedDateViaCode($item->code)?GetVenteTraitedDateViaCode($item->code):"---"}}</td>
                                                 <!-- <td>{{date_format(date_create($item->dateSysteme),'d/m/Y')}} {{$item->heureSysteme}}</td> -->
                                                 <td>{{date_format(date_create($item->date_traitement),'d/m/Y')}}</td>
@@ -160,12 +151,12 @@
                                                 <tr>
                                                     <br />
                                                     <td class="" colspan="2"><b>Total Quantité Vendu</b></td>
-                                                    <td colspan="6" class="text-right"><b id='qteVente'>{{ number_format($qteVente ?? 0,0,","," ") }} Tonnes</b></td>
+                                                    <td colspan="7" class="text-right"><b id='qteVente'>{{ number_format($qteVente ?? 0,0,","," ") }} Tonnes</b></td>
                                                 </tr>
                                                 <tr>
                                                     <br />
                                                     <td class="" colspan="2"><b>Total Montant Vendu</b></td>
-                                                    <td colspan="6" class="text-right"><b id='montantVente'>{{ number_format($montantVente ?? 0,0,","," ")  }} FCFA</b></td>
+                                                    <td colspan="7" class="text-right"><b id='montantVente'>{{ number_format($montantVente ?? 0,0,","," ")  }} FCFA</b></td>
                                                 </tr>
                                             </table>
                                         </div>
