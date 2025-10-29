@@ -86,7 +86,7 @@ class VenteController extends Controller
                 ->where('users', $user->id);
         }
 
-        $ventes = $query->whereBetween("id", [1, 100])->get(); //->whereBetween("id",[1,100])
+        $ventes = $query->get(); //->whereBetween("id",[1,100])
         return view('ventes.index', compact('ventes'));
     }
 
