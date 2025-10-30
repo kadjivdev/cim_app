@@ -340,6 +340,6 @@ function Somm($a, $b)
 ###___
 function GetUserByZoneId($zoneId)
 {
-    $user = User::where("zone_id", $zoneId)->last();
+    $user = User::where("zone_id", $zoneId)->first();
     return $user ? $user->name : '';
 }
