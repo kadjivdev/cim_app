@@ -87,7 +87,8 @@
                                     <table id="example1" class="table table-bordered table-striped table-sm mt-2" style="font-size: 12px">
                                         <thead class="text-white text-center bg-gradient-gray-dark">
                                             <tr>
-                                                <!-- <th>Heure système</th> -->
+                                                <th>Insérée par</th>
+
                                                 <th>Date & heure système</th>
                                                 <th>Code vente</th>
                                                 <th>Date vente</th>
@@ -113,8 +114,8 @@
 
                                             @foreach(session('resultat')['comptabilisers'] as $key=>$item)
                                             <tr>
-                                                <!-- <td>{{$item->heureSysteme}}</td> -->
-                                                    <td class="text-center text-danger">{{GetVenteTraitedDateViaCode($item->code)?GetVenteTraitedDateViaCode($item->code):"---"}}</td>
+                                                <td><span class="bg-light badge rounded border">{{$item->user_name}}</span></td>
+                                                <td class="text-center text-danger">{{GetVenteTraitedDateViaCode($item->code)?GetVenteTraitedDateViaCode($item->code):"---"}}</td>
                                                 <td>{{$item->code}}</td>
                                                 <td>{{date_format(date_create($item->dateVente),'d/m/Y')}}</td>
                                                 <td>{{$item->clients}}</td>
@@ -174,7 +175,7 @@
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
-            "buttons": ["pdf", "print"],
+            "buttons": ["pdf", "print","excel"],
             // "order": [
             //     [0, 'asc']
             // ],

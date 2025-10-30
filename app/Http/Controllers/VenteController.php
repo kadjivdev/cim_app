@@ -1181,6 +1181,9 @@ class VenteController extends Controller
                 $comptabiliser[$key]->clientFilleulsifu = '';
                 unset($comptabiliser[$key]->filleuls);
             }
+
+            $vente = Vente::firstWhere("id", $comptabilise->id);
+            $comptabiliser[$key]->user_name = $vente?->user?->name;
         }
 
         return redirect()->route('ventes.viewVenteTraiter')->withInput()->with('resultat', ['comptabilisers' => $comptabiliser, 'debut' => $request->debut, 'fin' => $request->fin, 'filtre' => $request->filtre]);

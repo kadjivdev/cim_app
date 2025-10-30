@@ -111,10 +111,8 @@
 
                                         <th>Département</th>
 
-                                        @if(!(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists()))
                                         <th>Actualisation</th>
                                         <th>Action</th>
-                                        @endif
                                     </tr>
 
                                 </thead>
@@ -172,7 +170,6 @@
 
                                         <td>@if($zone->departement){{ $zone->departement->libelle }}@endif</td>
 
-                                        @if(!(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists()))
                                         <td class="text-center">
                                             <a class="btn btn-warning btn-sm" href="{{ route('zones.edit', ['zone'=>$zone->id]) }}"><i class="fa-solid fa-pen-to-square"></i></a>
                                             <a class="btn btn-danger btn-sm" href="{{ route('zones.delete', ['zone'=>$zone->id]) }}"><i class="fa-regular fa-money-bill-1"></i></a>
@@ -189,7 +186,6 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        @endif
                                     </tr>
                                     @endforeach
                                     @endif
@@ -205,11 +201,9 @@
                                         <!--  -->
 
                                         <th>Département</th>
-                                        @if(!(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists()))
                                         <th>Actualisation</th>
 
                                         <th>Action</th>
-                                        @endif
                                     </tr>
 
                                 </tfoot>
