@@ -88,6 +88,7 @@
                                         <thead class="text-white text-center bg-gradient-gray-dark">
                                             <tr>
                                                 <th>Insérée par</th>
+                                                <th>Facture</th>
 
                                                 <th>Date & heure système</th>
                                                 <th>Code vente</th>
@@ -115,6 +116,7 @@
                                             @foreach(session('resultat')['comptabilisers'] as $key=>$item)
                                             <tr>
                                                 <td><span class="bg-light badge rounded border">{{$item->user_name}}</span></td>
+                                                <td><span class="bg-light badge rounded border">{{$item->facture?'Avec facture':'Sans facture'}}</span></td>
                                                 <td class="text-center text-danger">{{GetVenteTraitedDateViaCode($item->code)?GetVenteTraitedDateViaCode($item->code):"---"}}</td>
                                                 <td>{{$item->code}}</td>
                                                 <td>{{date_format(date_create($item->dateVente),'d/m/Y')}}</td>

@@ -203,12 +203,12 @@ class VenteController extends Controller
         // dd($request->all());
         if (!$request->facture && !$request->no_facture) {
             $req = $request->statuts;
-            return redirect()->route('ventes.create', ['statuts' => $req])->with(["error"=>"Préciser si la vente est avec ou sans facture"])->withInput();
+            return redirect()->route('ventes.create', ['statuts' => $req])->with(["error" => "Préciser si la vente est avec ou sans facture"])->withInput();
         }
 
         if ($request->facture && $request->no_facture) {
             $req = $request->statuts;
-            return redirect()->route('ventes.create', ['statuts' => $req])->with(["error"=>"Préciser une seule option(soit la vente est avec facture ou soit sans facture"])->withInput();
+            return redirect()->route('ventes.create', ['statuts' => $req])->with(["error" => "Préciser une seule option(soit la vente est avec facture ou soit sans facture"])->withInput();
         }
 
         $facture = $request->facture ? true : false;
@@ -841,8 +841,7 @@ class VenteController extends Controller
             ->join('bon_commandes', 'bon_commandes.id', '=', 'detail_bon_commandes.bon_commande_id')
             ->join('fournisseurs', 'fournisseurs.id', '=', 'bon_commandes.fournisseur_id')
             ->select('ventes.*', 'fournisseurs.sigle')->where('fournisseurs.id', '<>', 4)
-            ->orderBy('date', 'DESC')
-            ;
+            ->orderBy('date', 'DESC');
 
         $AComptabilisersAdjeOla = $AComptabilisers
 
@@ -1184,6 +1183,7 @@ class VenteController extends Controller
 
             $vente = Vente::firstWhere("id", $comptabilise->id);
             $comptabiliser[$key]->user_name = $vente?->user?->name;
+            $comptabiliser[$key]->facture = $vente->facture;
         }
 
         return redirect()->route('ventes.viewVenteTraiter')->withInput()->with('resultat', ['comptabilisers' => $comptabiliser, 'debut' => $request->debut, 'fin' => $request->fin, 'filtre' => $request->filtre]);
