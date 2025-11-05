@@ -75,9 +75,12 @@ use App\Models\Vente;
 */
 
 // REVERSEMENT DES APPROVISIONNEMENTS D'UN COMPTE SUR UN AUTRE
-Route::get("/regulation", function () {
-    $vente = Vente::find(16408);
-    return $vente;
+Route::get("/debug", function () {
+    $programmation = BonCommande::firstWhere("code", "BCI-0768");
+
+    $programmation->update(["statut" => 'Valider']);
+    return $programmation;
+
     return "Reversement effectué avec succès ...";
 });
 
