@@ -161,9 +161,9 @@ class LivraisonController extends Controller
                 $boncommandesV = BonCommande::whereIn('statut', ['Valider', 'Programmer'])->pluck('id');
                 $detailboncommande = DetailBonCommande::whereIn('bon_commande_id', $boncommandesV)->pluck('id');
                 $preloads = Programmation::whereIn('detail_bon_commande_id', $detailboncommande)
-                    ->whereIn('statut', ['Valider','Livrer'])
+                    ->where('statut', 'Valider')
                     ->where('imprimer', '1')
-                    // ->orWhere('statut', 'Livrer')
+                    ->orWhere('statut', 'Livrer')
                     ->orderByDesc('code')
                     // // On renvoie seulement les livraison ayant de stock
                     ->whereRaw('qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id)')
