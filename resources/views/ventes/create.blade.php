@@ -195,18 +195,15 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-check mx-3">
-                                        <input class="form-check-input" name="facture" type="checkbox" id="checkDefault">
-                                        <label class="form-check-label" for="checkDefault">
-                                            Avec facture
-                                        </label>
+                                    <div class="col">
+                                        <select class="form-control" name="type_facture"  required>
+                                            <option value="">Type de facture pour la vente</option>
+                                            <option value="facture">Avec facture</option>
+                                            <option value="no_facture">Sans facture</option>
+                                            <option value="later_facture">Facture à prendre après</option>
+                                        </select>
                                     </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" name="no_facture" type="checkbox"  id="checkChecked" checked>
-                                        <label class="form-check-label" for="checkChecked">
-                                            Sans facture
-                                        </label>
-                                    </div>
+
                                 </div>
                                 <div class="row" id="confirmation_msg" hidden>
                                     <div class="col-sm-12 alert alert-warning">

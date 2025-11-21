@@ -117,10 +117,20 @@
                                                         <!-- </span> -->
                                                     </td>
                                                     <td class="text-center">
-                                                        @if($AComptabiliser->facture)
-                                                        <span class="badge bg-light text-success border rounded">Avec facture</span>
+                                                        @if($AComptabiliser->type_facture=='facture')
+                                                        <strong class="badge bg-light border rounded text-success">
+                                                            Avec facture
+                                                        </strong>
+                                                        @elseif($AComptabiliser->type_facture=='no_facture')
+                                                        <strong class="badge bg-light border rounded text-danger">
+                                                            Sans facture
+                                                        </strong>
+                                                        @elseif($AComptabiliser->type_facture=='later_facture')
+                                                        <strong class="badge bg-light border rounded text-danger">
+                                                            Facture à prendre après
+                                                        </strong>
                                                         @else
-                                                        <span class="badge bg-light text-danger border rounded">Sans facture</span>
+                                                            ---
                                                         @endif
                                                     </td>
                                                     <td class="text-center">{{ date_format(date_create($AComptabiliser->date),'d/m/Y') }}</td>
@@ -347,7 +357,7 @@
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
-            "buttons": ["pdf", "print","excel"],
+            "buttons": ["pdf", "print", "excel"],
             "order": [
                 [3, 'desc']
             ],

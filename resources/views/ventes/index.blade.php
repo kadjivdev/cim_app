@@ -126,13 +126,17 @@
                                             @endforeach
                                         </td>
                                         <td>
-                                            @if($vente->facture)
+                                            @if($vente->type_facture=='facture')
                                             <strong class="badge bg-light border rounded text-success">
                                                 Avec facture
                                             </strong>
-                                            @else
+                                            @elseif($vente->type_facture=='no_facture')
                                             <strong class="badge bg-light border rounded text-danger">
                                                 Sans facture
+                                            </strong>
+                                            @elseif($vente->type_facture=='later_facture')
+                                            <strong class="badge bg-light border rounded text-danger">
+                                                Facture à prendre après
                                             </strong>
                                             @endif
                                         </td>

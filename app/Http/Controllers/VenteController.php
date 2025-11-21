@@ -200,20 +200,6 @@ class VenteController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-        if (!$request->facture && !$request->no_facture) {
-            $req = $request->statuts;
-            return redirect()->route('ventes.create', ['statuts' => $req])->with(["error" => "Préciser si la vente est avec ou sans facture"])->withInput();
-        }
-
-        if ($request->facture && $request->no_facture) {
-            $req = $request->statuts;
-            return redirect()->route('ventes.create', ['statuts' => $req])->with(["error" => "Préciser une seule option(soit la vente est avec facture ou soit sans facture"])->withInput();
-        }
-
-        $facture = $request->facture ? true : false;
-        $no_facture = $request->no_facture ? true : false;
-
         $req = NULL;
         if ($request->statuts == 1) {
             if ($request->type_vente_id == 1) {
@@ -224,6 +210,7 @@ class VenteController extends Controller
                     'type_vente_id' => ['required'],
                     'transport' => ['required'],
                     'ctl_payeur' => ['required'],
+                    'type_facture' => ['required'],
                 ]);
             } else {
                 $validator = Validator::make($request->all(), [
@@ -234,6 +221,7 @@ class VenteController extends Controller
                     'echeance' => ['required', 'after:' . date('Y-m-d')],
                     'transport' => ['required'],
                     'ctl_payeur' => ['required'],
+                    'type_facture' => ['required'],
                 ]);
             }
 
@@ -293,8 +281,7 @@ class VenteController extends Controller
                         'transport' => $request->transport,
                         'ctl_payeur' => $request->ctl_payeur,
                         'filleuls' => $filleuls,
-                        'facture' => $facture,
-                        'no_facture' => $no_facture,
+                        'type_facture' => $request->type_facture,
                     ]);
 
                     if ($ventes) {
@@ -823,6 +810,7 @@ class VenteController extends Controller
 
     public function postVenteAComptabiliser(Request $request)
     {
+        // dd("gogo");
         $AComptabilisers = collect();
         Vente::where('date_envoie_commercial', '<>', NULL)->whereIn('ventes.statut', ['Vendue', 'Contrôller', 'Soldé'])
             ->chunk(100, function ($chunk) use (&$AComptabilisers) {
@@ -843,6 +831,7 @@ class VenteController extends Controller
             ->select('ventes.*', 'fournisseurs.sigle')->where('fournisseurs.id', '<>', 4)
             ->orderBy('date', 'DESC');
 
+        // dd("bbbbbb");
         $AComptabilisersAdjeOla = $AComptabilisers
 
             ###__on recherche desormais via la date de validation
@@ -867,7 +856,6 @@ class VenteController extends Controller
     ####___TOUTES VENTES A TRAITER
     public function getVenteATraiter(Request $request)
     {
-
         $AComptabilisers =  Vente::where('date_envoie_commercial', '<>', NULL)
             ->where('date_traitement', NULL)->whereIn('ventes.statut', ['Vendue', 'Contrôller', 'Soldé'])
 
