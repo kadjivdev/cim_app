@@ -42,8 +42,7 @@ class clientsController extends Controller
 
         if (
             !(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() ||
-                Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() ||
-                Auth::user()->roles()->where('libelle', ['RECOUVREUR'])->exists()) &&
+                Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists()) &&
             Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists()
         ) {
             $clients = $clients->where("zone_id", $user->zone_id);
