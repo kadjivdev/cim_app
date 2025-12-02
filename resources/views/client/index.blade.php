@@ -195,7 +195,7 @@
                                                             class="nav-icon fa-solid fa-money-check-dollar"></i>
                                                         Compte</a>
 
-                                                    @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists())
+                                                    @if(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['GESTION CLIENT'])->exists())
                                                     <a class="dropdown-item" href="{{ route('newclient.achatClient', ['client' => $client->id]) }}"><i
                                                             class="nav-icon fa-solid fa-bag-shopping"></i>
                                                         Achat</a>
