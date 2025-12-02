@@ -520,7 +520,6 @@ class ClientController extends Controller
         }
     }
 
-
     public function reveil(Request $request, Client $client)
     {
         try {
@@ -553,7 +552,6 @@ class ClientController extends Controller
             }
         }
     }
-
 
     public function delete(Client $client)
     {

@@ -49,7 +49,6 @@ class clientsController extends Controller
             $clients = $clients->where("zone_id", $user->zone_id);
         }
 
-
         // NI INACTIF NI BEFS NI AJOUTE AU BEFS PAR FORCE
         $clients = $clients->filter(function ($client) {
             return (!$client->Is_Bef() && !$client->Is_Inactif() && !$client->Added_To_Bef());
