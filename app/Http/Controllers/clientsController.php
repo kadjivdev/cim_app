@@ -36,7 +36,6 @@ class clientsController extends Controller
             });
         }
 
-
         // UN AGENT NE VERA QUE LES CLIENTS SE TROUVANT DANS LA ZONE DE SON REPRESENTANT
         $user = Auth::user();
 
@@ -108,7 +107,11 @@ class clientsController extends Controller
         // UN AGENT NE VERA QUE LES CLIENTS SE TROUVANT DANS LA ZONE DE SON REPRESENTANT
         $user = Auth::user();
 
-        if (!(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() || Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists()) && Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists()) {
+        if (
+            !(Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists() ||
+                Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists()) &&
+            Auth::user()->roles()->where('libelle', ['VENDEUR'])->exists()
+        ) {
             $clients = $clients->where("zone_id", $user->zone_id);
         }
 
