@@ -137,6 +137,7 @@
                                         <th>Etat</th>
                                         <th>MAJ</th>
                                         <th>Inséré.e le</th>
+                                        <th>Bordereau</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -179,7 +180,8 @@
                                             @endif
                                         </td>
 
-                                        <td><span class="badge bg-light text-dark rounded shadow">{{ Carbon\Carbon::parse($client->created_at)->locale("fr")->isoFormat('DD MM YYYY') }}</span></td>
+                                        <td><span class="badge bg-light text-dark rounded shadow">{{ Carbon\Carbon::parse($client->created_at)->locale("fr")->isoFormat('D MM YYYY') }}</span></td>
+                                        <td><a href="{{$client->bordereau_receit}}" target="_blank" class=""> <span class="badge bg-light text-dark rounded shadow"><i class="bi bi-file-earmark-arrow-down-fill"></i></span></a></td>
 
                                         <td class="text-center">
                                             <div class="dropdown">
@@ -230,6 +232,7 @@
                                         <th>Etat</th>
                                         <th>MAJ</th>
                                         <th>Inséré.e le</th>
+                                        <th>Bordereau</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
