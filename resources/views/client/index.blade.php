@@ -136,6 +136,7 @@
                                         <th>Reglé</th>
                                         <th>Etat</th>
                                         <th>MAJ</th>
+                                        <th>Inséré.e le</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -169,7 +170,6 @@
                                                 href="{{ route('newclient.show', ['client' => $client->id]) }}"><i
                                                     class="fa-solid fa-eye"></i></a>
                                             @if (Auth::user()->roles()->where('libelle', 'ADMINISTRATEUR')->exists())
-
                                             <a class="btn btn-warning btn-sm"
                                                 href="{{ route('newclient.edit', ['client' => $client->id]) }}"><i
                                                     class="fa-solid fa-pen-to-square"></i></a>
@@ -179,6 +179,8 @@
                                             @endif
                                         </td>
 
+                                        <td><span class="badge bg-light text-dark rounded shadow">{{ Carbon\Carbon::parse($client->created_at)->isoFormat('DD MM YYYY') }}</span></td>
+                                        
                                         <td class="text-center">
                                             <div class="dropdown">
                                                 <button type="button"
@@ -227,6 +229,7 @@
                                         <th>Reglé</th>
                                         <th>Etat</th>
                                         <th>MAJ</th>
+                                        <th>Inséré.e le</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
