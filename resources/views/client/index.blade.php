@@ -179,8 +179,8 @@
                                             @endif
                                         </td>
 
-                                        <td><span class="badge bg-light text-dark rounded shadow">{{ Carbon\Carbon::parse($client->created_at)->isoFormat('DD MM YYYY') }}</span></td>
-                                        
+                                        <td><span class="badge bg-light text-dark rounded shadow">{{ Carbon\Carbon::parse($client->created_at)->locale("fr")->isoFormat('DD MM YYYY') }}</span></td>
+
                                         <td class="text-center">
                                             <div class="dropdown">
                                                 <button type="button"
