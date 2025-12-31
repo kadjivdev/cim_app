@@ -68,7 +68,6 @@
                                         <th>Date Vente</th>
                                         <th>Type de Vente</th>
                                         <th>Payeur</th>
-
                                         <th>Chauffeur</th>
                                         <th>Bl</th>
                                         <th>Camion</th>
@@ -131,10 +130,11 @@
                                         <td class="text-right">{{ number_format((($AEnvoyer->pu*$AEnvoyer->qteTotal)+($AEnvoyer->transport*$AEnvoyer->qteTotal)),0,'',' ') }}</td>
                                         <td class="text-right "><span class="badge badge-success">{{ $AEnvoyer->statut }}</span></td>
 
-                                        @if(IS_BONI_ACCOUNT(auth()->user()) || IS_LAWANI_ACCOUNT(auth()->user()))
+                                        @if(IS_BONI_ACCOUNT(auth()->user()) || IS_CHRISTIAN_ACCOUNT(auth()->user()) || IS_AIME_ACCOUNT(auth()->user()))
                                         <td class="text-right "><a data-id="{{$AEnvoyer->id}}" class="btn btn-success btn-sm" href="#" onclick="charger({{ $AEnvoyer->id }})" data-toggle="modal" data-target="#modal-lg"> Demande </a></td>
                                         @endif
                                     </tr>
+
                                     @endforeach
                                 </tbody>
                                 <tfoot class="text-white text-center bg-gradient-gray-dark">
