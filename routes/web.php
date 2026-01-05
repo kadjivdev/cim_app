@@ -76,11 +76,9 @@ use App\Models\Vente;
 
 // REVERSEMENT DES APPROVISIONNEMENTS D'UN COMPTE SUR UN AUTRE
 Route::get("/debug", function () {
-    $programmation = Programmation::with("detailboncommande.boncommande")->firstWhere("code", "PR-14104");
+    $bonCommande = BonCommande::with("detailboncommandes")->firstWhere("code", "BCI-0834");
 
-    return $programmation;
-
-    return "Reversement effectué avec succès ...";
+    return $bonCommande;
 });
 
 Route::get("/find", function () {

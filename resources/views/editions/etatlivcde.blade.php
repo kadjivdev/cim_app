@@ -38,7 +38,7 @@
                                     </div>
                                     <div class="col-4">
                                         <div class="form-group">
-                                            <label for="">Date début</label>
+                                            <label for="">Date fin</label>
                                             <input type="date" class="form-control" name="fin" value="{{old('fin')}}">
                                         </div>
                                         @error('fin')
@@ -175,7 +175,6 @@
                                     Aucun stock trouvé pour votre requête.
                                 </div>
                                 @endif
-
                                 @endif
                             </div>
                             @if(!(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists()))
