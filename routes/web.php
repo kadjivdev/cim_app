@@ -77,6 +77,7 @@ use App\Models\Vente;
 // REVERSEMENT DES APPROVISIONNEMENTS D'UN COMPTE SUR UN AUTRE
 Route::get("/debug", function () {
     $programmation = Programmation::firstWhere("code", "PR-15690");
+    $programmation->update(["qtelivrer" => $programmation->qteprogrammer]);
     return $programmation;
 });
 
