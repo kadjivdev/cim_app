@@ -23,7 +23,7 @@ class DetailRecuController extends Controller
     
     public function details(Request $request)
     {
-        $recuDetails = DetailRecu::with("recu")->paginate(50);
+        $recuDetails = DetailRecu::with("recu")->get();
         return view('detailrecus.recus-details', compact('recuDetails'));
     }
 
