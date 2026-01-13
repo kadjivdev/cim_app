@@ -52,6 +52,7 @@ use App\Http\Controllers\RecouvrementController;
 use App\Http\Controllers\VenduController;
 use App\Models\BonCommande;
 use App\Models\Client;
+use App\Models\DetailRecu;
 use App\Models\LogUser;
 use App\Models\Programmation;
 use App\Models\Vendu;
@@ -76,9 +77,14 @@ use App\Models\Vente;
 
 // REVERSEMENT DES APPROVISIONNEMENTS D'UN COMPTE SUR UN AUTRE
 Route::get("/debug", function () {
-    $programmation = Programmation::firstWhere("code", "PR-15690");
-    $programmation->update(["qtelivrer" => $programmation->qteprogrammer]);
-    return $programmation;
+    $detail_recu = DetailRecu::firstWhere("code", "DR-0682");
+    if ($detail_recu) {
+        $detail_recu->delete();
+
+        return "Detail recu deleted";
+    }
+
+    return "Detail recu not found";
 });
 
 Route::get("/find", function () {
