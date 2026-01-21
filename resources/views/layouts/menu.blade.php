@@ -426,118 +426,109 @@
                     <ul class="nav nav-treeview">
 
                         @if(Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists()||Auth::user()->roles()->where('libelle', ['COMPTABLE'])->exists()|| Auth::user()->roles()->where('libelle', ['GESTIONNAIRE'])->exists() || Auth::user()->roles()->where('libelle', ['CREANT'])->exists())
-                        @if(Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists() || Auth::user()->roles()->where('libelle', ['COMPTABLE'])->exists() || Auth::user()->roles()->where('libelle', ['CREANT'])->exists())
-                        <li class="nav-item">
-                            <a href="{{ route('recouvrement.index') }}" class="nav-link {{ (route('recouvrement.index') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Récouvrements
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('edition.stock') }}" class="nav-link {{ (route('edition.stock') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Point des stocks livrés
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('edition.stockValider') }}" class="nav-link {{ (route('edition.stockValider') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Point des stocks non livrés
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('edition.etatLivraisonPeriode') }}" class="nav-link {{ (route('edition.etatLivraisonPeriode') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Etat des Livraison
-                                </p>
-                            </a>
-                        </li>
-                        @endif
+                            @if(Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists() || Auth::user()->roles()->where('libelle', ['COMPTABLE'])->exists() || Auth::user()->roles()->where('libelle', ['CREANT'])->exists())
+                            <li class="nav-item">
+                                <a href="{{ route('recouvrement.index') }}" class="nav-link {{ (route('recouvrement.index') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Récouvrements
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('edition.stock') }}" class="nav-link {{ (route('edition.stock') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Point des stocks livrés
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('edition.stockValider') }}" class="nav-link {{ (route('edition.stockValider') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Point des stocks non livrés
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('edition.etatLivraisonPeriode') }}" class="nav-link {{ (route('edition.etatLivraisonPeriode') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Etat des Livraison
+                                    </p>
+                                </a>
+                            </li>
+                            @endif
                         @endif
 
                         @if (Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists() || Auth::user()->roles()->where('libelle', ['COMPTABLE'])->exists() || Auth::user()->roles()->where('libelle', ['CREANT'])->exists())
-                        <li class="nav-item">
-                            <a href="{{ route('edition.etatReglementperiode') }}" class="nav-link {{ (route('edition.etatReglementperiode') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Etat des reglement
-                                </p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a href="{{ route('edition.etatReglementperiode') }}" class="nav-link {{ (route('edition.etatReglementperiode') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Etat des reglement
+                                    </p>
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a href="{{ route('edition.solde') }}" class="nav-link {{ (route('edition.solde') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Point du solde.
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('edition.etatCompte') }}" class="nav-link {{ (route('edition.etatCompte') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Etat des Comptes.
-                                </p>
-                            </a>
-                        </li>
-                        <!-- <li class="nav-item">
-                            <a href="{{ route('edition.revouvrement') }}" class="nav-link {{ (route('edition.revouvrement') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Crédit à recouvrir
-                                </p>
-                            </a>
-                        </li> -->
+                            <li class="nav-item">
+                                <a href="{{ route('edition.solde') }}" class="nav-link {{ (route('edition.solde') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Point du solde.
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('edition.etatCompte') }}" class="nav-link {{ (route('edition.etatCompte') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Etat des Comptes.
+                                    </p>
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a href="{{ route('accusedocuments.indexAll') }}" class="nav-link {{ (route('accusedocuments.indexAll') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Etat des accusés
-                                </p>
-                            </a>
-                            <a href="{{ route('edition.etatCaProgPeriode') }}" class="nav-link {{ (route('edition.etatCaProgPeriode') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Etat des Camions
-                                </p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a href="{{ route('accusedocuments.indexAll') }}" class="nav-link {{ (route('accusedocuments.indexAll') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Etat des accusés
+                                    </p>
+                                </a>
+                                <a href="{{ route('edition.etatCaProgPeriode') }}" class="nav-link {{ (route('edition.etatCaProgPeriode') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Etat des Camions
+                                    </p>
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a href="{{ route('edition.etatLivraisonPeriode') }}" class="nav-link {{ (route('edition.etatLivraisonPeriode') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Etat des Livraison
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('edition.EtatGenePeriode') }}" class="nav-link {{ (route('edition.EtatGenePeriode') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Etat versement Journalier
-                                </p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a href="{{ route('edition.etatLivraisonPeriode') }}" class="nav-link {{ (route('edition.etatLivraisonPeriode') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Etat des Livraison
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('edition.EtatGenePeriode') }}" class="nav-link {{ (route('edition.EtatGenePeriode') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Etat versement Journalier
+                                    </p>
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a href="{{ route('edition.compteApprovisionnement') }}" class="nav-link {{ (route('edition.compteApprovisionnement') == url()->current()) ? 'active' : '' }}">
-                                <i class="nav-icon far  fa-list text-cyan"></i>
-                                <p>
-                                    Approvisionnements
-                                </p>
-                            </a>
-                        </li>
-
+                            <li class="nav-item">
+                                <a href="{{ route('edition.compteApprovisionnement') }}" class="nav-link {{ (route('edition.compteApprovisionnement') == url()->current()) ? 'active' : '' }}">
+                                    <i class="nav-icon far  fa-list text-cyan"></i>
+                                    <p>
+                                        Approvisionnements
+                                    </p>
+                                </a>
+                            </li>
                         @endif
 
                         <li class="nav-item">
