@@ -334,6 +334,7 @@ class ClientController extends Controller
                         'email' => ['nullable', 'string', 'email', 'max:255', Rule::unique('clients')->ignore($client->id)],
                         'adresse' => ['nullable', 'string', 'max:255'],
                         'domaine' => ['nullable', 'string', 'max:255'],
+                        'raisonSociale' => 'nullable'
                     ]);
 
                     if ($validator->fails()) {
@@ -346,6 +347,8 @@ class ClientController extends Controller
                         'civilite' => ucwords($request->civilite),
                         'nom' => strtoupper($request->nom),
                         'prenom' => ucwords($request->prenom),
+                        'raisonSociale' => ucwords($request->raisonSociale),
+
                         'telephone' => $request->telephone,
                         'email' => $request->email,
                         'statutCredit' => $request->statutCredit ? $request->statutCredit : 0,
