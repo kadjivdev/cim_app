@@ -226,7 +226,6 @@ class BonCommandeController extends Controller
         $fournisseur = $this->fournisseurs->findOrFail($boncommande->fournisseur_id);
         $produits = $fournisseur->produits;
         $boncommandes = $boncommande;
-
         return view('boncommandes.edit', compact('boncommandes', 'detailboncommande', 'produits', 'userRoles'));
     }
 

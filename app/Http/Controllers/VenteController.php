@@ -137,7 +137,9 @@ class VenteController extends Controller
 
     public function detailVente(Vente $vente)
     {
-        $commandeclients = CommandeClient::whereIn('statut', ['Préparation', 'Vendue', 'Validée', 'Livraison partielle', 'Livrée'])->pluck('id');
+        $commandeclients = CommandeClient::whereIn('statut', ['Préparation', 'Vendue', 'Validée', 'Livraison partielle', 'Livrée'])
+            ->pluck('id');
+
         $ventes = Vente::whereIn('commande_client_id', $commandeclients)
             ->where('ventes.statut', '<>', 'Contrôller')
             ->where('ventes.statut', '<>', 'En attente de modification')
