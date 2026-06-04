@@ -74,7 +74,7 @@ class BonCommandeController extends Controller
     public function create(Request $request, BonCommande $boncommandes = NULL)
     {
         $userRoles = $this->userRoles;
-        if (in_array('GESTIONNAIRE', $this->userRoles)) {
+        if (in_array('GESTIONNAIRE', $this->userRoles) || Auth::id() == 30) {
             $typecommandes = $this->typecommandes->orderBy('libelle')->get();
             $fournisseurs = $this->fournisseurs->orderBy('sigle')->get();
             $produits = $this->produits->orderBy('libelle')->get();
