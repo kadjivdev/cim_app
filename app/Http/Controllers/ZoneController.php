@@ -16,7 +16,7 @@ class ZoneController extends Controller
 {
     public function index()
     {
-        $zones = Zone::orderBy('id','desc')->get();
+        $zones = Zone::get();
 
         $bcs = BonCommande::orderBy('code', 'desc')->whereNotIn("statut", ['Préparation', 'En attente de validation', 'Envoyé'])->get();
         $bon_details = DetailBonCommande::whereIn("bon_commande_id", $bcs->pluck("id"))->get();

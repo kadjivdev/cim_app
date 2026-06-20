@@ -798,9 +798,10 @@ class VenteController extends Controller
 
         ##____
         $AEnvoyers = collect();
-        Vente::orderBy('id', 'desc')->whereIn('statut', ['Vendue', 'Contrôller', 'Soldé'])->where('date_envoie_commercial', NULL)->where("users", "!=", $current->id)->chunk(100, function ($chunk) use (&$AEnvoyers) {
-            $AEnvoyers = $AEnvoyers->merge($chunk); //merge the chunk
-        });
+        Vente::orderBy('id', 'desc')->whereIn('statut', ['Vendue', 'Contrôller', 'Soldé'])
+            ->where('date_envoie_commercial', NULL)->where("users", "!=", $current->id)->chunk(100, function ($chunk) use (&$AEnvoyers) {
+                $AEnvoyers = $AEnvoyers->merge($chunk); //merge the chunk
+            });
         return view('comptabilite.listesVenteAEnvoyer', compact('AEnvoyers'));
     }
 

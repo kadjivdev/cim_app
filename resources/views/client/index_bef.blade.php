@@ -90,7 +90,7 @@
                                         <td class="text-center dette-total"> <span class="badge bg-danger">{{number_format($client->detteTotale,0," "," ") }} </span> </td>
                                         @endif
 
-                                        <td class="text-center"><span class="badge bg-warning">{{GetClientZone($client)}}</span></td>
+                                        <td class="text-center"><span class="badge bg-warning">{{$client->_Zone?->id}} | {{GetClientZone($client)}}</span></td>
                                         <td class="text-center"><span class="badge bg-info">@if($client->_Zone) {{$client->_Zone->representant->nom}} {{$client->_Zone->representant->prenom}} ({{$client->_Zone->representant->telephone}}) / {{GetUserByZoneId($client->_Zone->id)}} @endif </span></td>
 
                                         <td class="ml-5 pr-5">{{ $client->telephone }}</td>

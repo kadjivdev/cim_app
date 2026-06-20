@@ -893,6 +893,7 @@ class EditionController extends Controller
         $query = Reglement::with(["compte", "client"])
             ->whereNull("vente_id")
             ->whereNotNull("client_id")
+            // ->limit(1000)
             ->orderBy('id', 'desc');
 
         ## QUAND C'EST UNE REQUETE GET

@@ -100,6 +100,7 @@
                                 <thead class="text-white text-center bg-gradient-gray-dark">
 
                                     <tr>
+                                        <th>Id</th>
                                         <th>Libelle</th>
 
                                         <th>Représentant</th>
@@ -144,6 +145,7 @@
                                     ?>
 
                                     <tr>
+                                        <td>{{ $zone->id }}</td>
                                         <td>{{ $zone->libelle }}</td>
 
                                         <td>@if($zone->representant){{ $zone->representant->civilite }} {{ $zone->representant->nom }} {{ $zone->representant->prenom }}@endif</td>
@@ -193,6 +195,7 @@
 
                                 <tfoot class="text-white text-center bg-gradient-gray-dark">
                                     <tr>
+                                        <th>Id</th>
                                         <th>Libelle</th>
                                         <th>Représentant</th>
                                         <!--  -->
@@ -249,10 +252,10 @@
             "lengthChange": false,
             "autoWidth": false,
 
-            "buttons": ["pdf", "print"],
+            "buttons": ["pdf", "print","xlsx"],
 
             "order": [
-                [1, 'asc']
+                [0, 'asc']
             ],
 
             "pageLength": 15,

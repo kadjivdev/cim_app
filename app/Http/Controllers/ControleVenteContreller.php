@@ -106,7 +106,7 @@ class ControleVenteContreller extends Controller
         $reglement->observation_validation = $request->observation;
         $reglement->user_validateur_id = Auth::user()->id;
         $reglement->update();
-
+        
         $desMail = User::find($reglement->user_id);
         $copieMail = User::find(env('COPIE_GESTIONNAIRE_VENTE'));
         $message = "<p> Nous vous notifions que votre Réglement N° " . $reglement->code . "  a été rejeter par <b>" . Auth::user()->name . "</b>.
