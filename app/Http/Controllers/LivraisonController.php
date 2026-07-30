@@ -46,7 +46,7 @@ class LivraisonController extends Controller
                         ->where('statut', 'Valider')->where('imprimer', '1')->orWhere('statut', 'Livrer')
                         ->whereBetween('dateprogrammer', [$request->debut, $request->fin])
                         ->orderByDesc('code')
-                        // // On renvoie seulement les livraison ayant de stock
+                        // // On renvoie seulement les programmations ayant de stock
                         ->whereRaw('qteprogrammer > (SELECT COALESCE(SUM(qteVendu),0) FROM vendus WHERE vendus.programmation_id = programmations.id)')
                         ->get();
                 } else {
