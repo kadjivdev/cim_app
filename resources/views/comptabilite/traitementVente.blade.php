@@ -235,10 +235,8 @@
                     <th>TTC :</th>
                     <td><span class="badge bg-success" id="TTC">0</span></td>                      
                   </tr>
-                 
                 </tbody>
               </table>
-            
           </div>
         </div>
       </div>
@@ -365,15 +363,8 @@
           $('#NHT').text(prixNHT.toFixed(2));
           $('#TVA').text(prixTVA.toFixed(2));
           $('#AIB').text(prixAIBok.toFixed(2));
-          $('#TTC').text(prixTTC.toFixed(2));
-          
-        //  operation();         
+          $('#TTC').text(prixTTC.toFixed(2));       
         }
-
-
-        
-
-        
         
         function operation() {
           console.log($('#PrixTtc').val());
@@ -452,9 +443,6 @@
           $('#TTC').text(prixTTC.toFixed(2));
             
         }
-
-        
-
     </script>
     
 @endsection

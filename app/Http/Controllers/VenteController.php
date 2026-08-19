@@ -813,7 +813,6 @@ class VenteController extends Controller
 
     public function postVenteAComptabiliser(Request $request)
     {
-        // dd("gogo");
         $AComptabilisers = collect();
         Vente::where('date_envoie_commercial', '<>', NULL)->whereIn('ventes.statut', ['Vendue', 'Contrôller', 'Soldé'])
             ->chunk(100, function ($chunk) use (&$AComptabilisers) {
