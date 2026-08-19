@@ -14,11 +14,14 @@ use App\Models\TypeClient;
 use App\Models\TypeDetailRecu;
 use App\Models\Vente;
 use App\Models\Zone;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class clientsController extends Controller
 {
@@ -436,7 +439,11 @@ class clientsController extends Controller
 
     public function store(Request $request)
     {
+        Log::info("Debut de creation d'un compte clien :", ["data" => $request->all()]);
+
         try {
+            DB::beginTransaction();
+
             $validator = Validator::make($request->all(), [
                 'logo' => ['nullable', 'image', 'mimes:jpg,bmp,png'],
                 'bordereau_receit' => ['required', 'file'],
@@ -453,11 +460,6 @@ class clientsController extends Controller
                 'departement_id' => ['required', 'integer'],
                 'type_client_id' => ['required', 'integer'],
             ]);
-
-            if ($validator->fails()) {
-
-                return redirect()->route('newclient.create')->withErrors($validator->errors())->withInput();
-            }
 
             if ($request->agent_id != null) {
                 $validator1 = Validator::make($request->all(), [
@@ -477,10 +479,11 @@ class clientsController extends Controller
                 $image->move(public_path('images'), $logo);
             }
 
+            $bordereau_receit = null;
             // TRAITEMENT DU BORDEAREAU DE RECU
             if ($request->file("bordereau_receit")) {
                 $rc = $request->file("bordereau_receit");
-                $rc_name = $rc->getClientOriginalName();
+                $rc_name = time();// $rc->getClientOriginalName();
 
                 $rc->move("files", $rc_name);
 
@@ -519,16 +522,24 @@ class clientsController extends Controller
                 $portefeuille->save();
             }
 
-            Session()->flash('message', 'Client ajoutée avec succès!');
-            return redirect()->route('newclient.index');
-        } catch (\Throwable $e) {
+            DB::commit();
+            return redirect()
+                ->route("newclient.index")
+                ->with("message", "Client ajouté avec succès!");
+        } catch (ValidationException $e) {
+            Log::debug("Erreure de validation :", ["errors" => $e->errors()]);
 
-            if (env('APP_DEBUG') == TRUE) {
-                return $e;
-            } else {
-                Session()->flash('error', 'Opps! Enregistrement échoué. Veuillez contacter l\'administrateur système!');
-                return redirect()->route('newclient.create');
-            }
+            DB::rollBack();
+            return redirect()
+                ->back()
+                ->withErrors($e->errors());
+        } catch (Exception $e) {
+            Log::debug("Erreure d'enregistrement :", ["error" => $e->getMessage()]);
+
+            DB::rollBack();
+            return redirect()
+                ->back()
+                ->with("error", $e->getMessage());
         }
     }
 

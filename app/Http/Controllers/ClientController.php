@@ -10,8 +10,10 @@ use App\Models\TypeClient;
 use App\tools\ControlesTools;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class ClientController extends Controller
 {
@@ -61,8 +63,10 @@ class ClientController extends Controller
 
     public function store(Request $request, TypeClient $typeclient)
     {
+        Log::info("Debut de creation d'un compte clien :", ["data" => $request->all()]);
         try {
 
+            DB::beginTransaction();
             $statuts = $request->statuts;
 
             if ($typeclient->libelle == env('TYPE_CLIENT_P')) {
@@ -283,13 +287,25 @@ class ClientController extends Controller
                     }
                 }
             }
+
+            DB::commit();
+            return redirect()
+                ->back()
+                ->with("message", "Client ajouté avec succès!");
+        } catch (ValidationException $e) {
+            Log::debug("Erreure de validation :", ["errors" => $e->errors()]);
+
+            DB::rollBack();
+            return redirect()
+                ->back()
+                ->withErrors($e->errors());
         } catch (Exception $e) {
-            if (env('APP_DEBUG') == TRUE) {
-                return $e;
-            } else {
-                Session()->flash('error', 'Opps! Enregistrement échoué. Veuillez contacter l\'administrateur système!');
-                return redirect()->route('clients.create');
-            }
+            Log::debug("Erreure d'enregistrement :", ["error" => $e->getMessage()]);
+
+            DB::rollBack();
+            return redirect()
+                ->back()
+                ->with("error", $e->getMessage());
         }
     }
 
