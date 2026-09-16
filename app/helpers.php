@@ -76,6 +76,15 @@ function IS_RODOLPHO_ACCOUNT($user)
     return false;
 }
 
+function IS_EMMANUEL_ACCOUNT($user)
+{
+    if ($user->id == 49) {
+        return true;
+    }
+
+    return false;
+}
+
 function IS_BONI_ACCOUNT($user)
 {
     if ($user->id == 38) {
