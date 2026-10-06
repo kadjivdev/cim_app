@@ -88,7 +88,6 @@ Route::get("/debug", function () {
 });
 
 Route::get("/find", function () {
-    return Programmation::findOrFail(2161)->vendus;
     $res = BonCommande::with("detailboncommandes")->firstWhere("code", "BCI-0728");
     return response()->json(
         [
@@ -114,6 +113,8 @@ Route::get("/bl-verification/{bl}", function ($bl) {
 Route::get('/', function () {
     return redirect()->route('login');
 });
+
+Route::get('newclient/{id}/solde',[clientsController::class, 'getClient'])->name('newclient.solde');
 
 Route::middleware(['auth', 'pwd'])->group(function () {
     Route::get('/welcome', function () {
@@ -1051,7 +1052,6 @@ Route::middleware(['auth', 'pwd'])->group(function () {
 
 
     // Compte router
-
     Route::prefix('fichiers')->group(function () {
 
         Route::controller(CompteController::class)->group(function () {
@@ -1074,9 +1074,7 @@ Route::middleware(['auth', 'pwd'])->group(function () {
         });
     });
 
-
     // Representants router
-
     Route::prefix('fichiers')->group(function () {
 
         Route::controller(RepresentantController::class)->group(function () {
@@ -1138,7 +1136,6 @@ Route::middleware(['auth', 'pwd'])->group(function () {
 
 
     // Representants router
-
     Route::prefix('configurations')->group(function () {
 
         Route::controller(DepartementController::class)->group(function () {
@@ -1165,7 +1162,6 @@ Route::middleware(['auth', 'pwd'])->group(function () {
 
 
     // Zones router
-
     Route::prefix('fichiers')->group(function () {
 
         Route::controller(ZoneController::class)->group(function () {
@@ -1340,7 +1336,6 @@ Route::middleware(['auth', 'pwd'])->group(function () {
         Route::get('newclient/index/', 'index')->name('newclient.index');
         Route::get('/clients/index/inactif', 'inactif')->name('newclient.inactif');
         Route::get('/clients/index/bef', 'befs')->name('newclient.befs');
-        Route::get('newclient/{id}/solde', 'getClient')->name('newclient.solde');
 
         Route::get('newclient/indexOld/', 'oldClients')->name('newclient.oldClients');
         Route::get('newclient/indexOldNotExistInTheNewSystem/', 'oldClientsNotInTheNewSystem')->name('newclient.oldClientsNotInTheNewSystem');
