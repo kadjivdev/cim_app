@@ -393,7 +393,7 @@ class clientsController extends Controller
         $soldeReelle = $resteVenteAmount - $solde;
         $client->solde = $soldeReelle - $client->debit_old;
 
-        return response()->json(["client" => "$raisonSociale", "solde" => $client->solde], 200);
+        return response()->json(["client" => "$client->raisonSociale", "solde" => $client->solde], 200);
     }
 
     /**
