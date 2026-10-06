@@ -1340,6 +1340,7 @@ Route::middleware(['auth', 'pwd'])->group(function () {
         Route::get('newclient/index/', 'index')->name('newclient.index');
         Route::get('/clients/index/inactif', 'inactif')->name('newclient.inactif');
         Route::get('/clients/index/bef', 'befs')->name('newclient.befs');
+        Route::get('newclient/{id}/solde', 'getClient')->name('newclient.solde');
 
         Route::get('newclient/indexOld/', 'oldClients')->name('newclient.oldClients');
         Route::get('newclient/indexOldNotExistInTheNewSystem/', 'oldClientsNotInTheNewSystem')->name('newclient.oldClientsNotInTheNewSystem');

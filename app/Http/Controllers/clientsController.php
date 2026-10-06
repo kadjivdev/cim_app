@@ -355,6 +355,47 @@ class clientsController extends Controller
         return view('client.portefeuilles', compact('client', 'departements', 'agents', 'Porteuilles'));
     }
 
+    /**Retrieve a client */
+    function getClient($id)
+    {
+        $client = Client::firstWhere('id', $id);
+        if (!$client) {
+            return response()->json(['message' => 'Client non retrouvé !'], 404);
+        }
+
+        $appro = $client->reglements->where("for_dette", false)
+            ->whereNull("vente_id")->whereNotNull("client_id")->sum("montant");
+
+        /**
+         * Les reglements sur ventes
+         */
+        $reglt = $client->reglements->whereNotNull("vente_id")
+            ->whereNotNull("client_id")->sum("montant");
+
+        $solde = $appro - $reglt;
+
+        /**
+         * Obtention des ventes non reglée totalement
+         */
+        $ventesAmount = Collection::make(Vente::join('commande_clients', 'ventes.commande_client_id', '=', 'commande_clients.id')
+            ->join('clients', 'commande_clients.client_id', '=', 'clients.id')
+            ->join('zones', 'commande_clients.zone_id', '=', 'zones.id')
+            ->where('clients.id', $client->id)
+
+            // SEULE LES VENTES VALIDE SONT RECUPERES
+            ->where('valide', true)
+
+            ->select('ventes.montant')
+            ->get())->sum("montant");
+
+        $resteVenteAmount = $ventesAmount - $reglt;
+
+        $soldeReelle = $resteVenteAmount - $solde;
+        $client->solde = $soldeReelle - $client->debit_old;
+
+        return response()->json($client, 200);
+    }
+
     /**
      * Affectation d'agent un client 
      *
@@ -483,7 +524,7 @@ class clientsController extends Controller
             // TRAITEMENT DU BORDEAREAU DE RECU
             if ($request->file("bordereau_receit")) {
                 $rc = $request->file("bordereau_receit");
-                $rc_name = time();// $rc->getClientOriginalName();
+                $rc_name = time(); // $rc->getClientOriginalName();
 
                 $rc->move("files", $rc_name);
 
