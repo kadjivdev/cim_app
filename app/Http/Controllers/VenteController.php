@@ -25,6 +25,7 @@ use App\Models\UpdateVente;
 use App\Models\Vendu;
 use App\Models\VenteDeleteDemand;
 use App\tools\ControlesTools;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -48,15 +49,20 @@ class VenteController extends Controller
 
         $commandeclients = CommandeClient::whereIn('statut', ['Préparation', 'Vendue', 'Validée', 'Livraison partielle', 'Livrée']);
 
-        if ($request->debut && $request->fin) {
-            $commandeclients = $commandeclients->WhereBetween('dateBon', [$request->debut, $request->fin])
-                ->pluck('id');
-        } else {
-            $commandeclients = $commandeclients->pluck('id');
-        }
-
-        $query = Vente::whereIn('commande_client_id', $commandeclients)
+        $commandeclients = $commandeclients->pluck('id');
+        $q = Vente::whereIn('commande_client_id', $commandeclients)
             ->orderByDesc('code');
+
+        if ($request->filled('debut') && $request->filled('fin')) {
+            $query = $q->whereBetween('created_at', [
+                Carbon::parse($request->debut)->startOfDay(),
+                Carbon::parse($request->fin)->endOfDay()
+            ]);
+        } else {
+            // on affiche les acomptes du mois en cours par défaut si aucune date n'est fournie
+            $query = $q
+                ->whereBetween('created_at', [Carbon::parse(now())->startOfMonth(), Carbon::parse(now())->endOfMonth()]);
+        }
 
         $user = Auth::user();
         if (array_intersect($roles, [1, 2, 5, 8, 9, 10, 11])) {
@@ -64,7 +70,7 @@ class VenteController extends Controller
                 IS_FOFANA_ACCOUNT($user)
                 || IS_RUCHDANE_ACCOUNT($user)
             ) {
-                //les ventes passées par hypolite & Fofana & Ruchdane
+                // les ventes passées par hypolite & Fofana & Ruchdane
                 $query->where('statut', '<>', 'En attente de modification')
                     ->whereIn("users", [11, 7, 43]);
             } elseif (IS_MOULIZINE_ACCOUNT($user)) {
