@@ -283,12 +283,12 @@
                                     <table class="table table-bordered table-sm">
                                         <tr>
                                             <br />
-                                            <td class="" colspan="2"><b>Total Quantité Vendu</b></td>
+                                            <td class="" colspan="3"><b>Total Quantité Vendu</b></td>
                                             <td colspan="6" class="text-right"><b id='qte'>{{ number_format($TotalQuantite ?? 0,0,","," ") }} Tonnes</b></td>
                                         </tr>
                                         <tr>
                                             <br />
-                                            <td class="" colspan="2"><b>Total Montant Vendu</b></td>
+                                            <td class="" colspan="3"><b>Total Montant Vendu</b></td>
                                             <td colspan="6" class="text-right"><b id='montant'>{{ number_format($TotalMontant ?? 0,0,","," ")  }} FCFA</b></td>
                                         </tr>
                                     </table>
@@ -417,11 +417,11 @@
             ],
             // "pageLength": 15,
             "columnDefs": [{
-                    "targets": 8,
+                    "targets": 9,
                     "orderable": false
                 },
                 {
-                    "targets": 9,
+                    "targets": 10,
                     "orderable": false
                 }
 
