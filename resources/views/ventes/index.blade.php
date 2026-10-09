@@ -87,6 +87,7 @@
                                         @endif
                                         <th>BorLiv</th>
                                         <th>Facture</th>
+                                        <th>Inserée le</th>
                                         <th>Date</th>
                                         <th>Client</th>
                                         <th>PU</th>
@@ -140,6 +141,7 @@
                                             </strong>
                                             @endif
                                         </td>
+                                        <td class="text-center">{{ date('d/m/Y', strtotime($vente->created_at)) }}</td>
                                         <td class="text-center">{{ date('d/m/Y', strtotime($vente->date)) }}</td>
                                         <td class="pl-2">
                                             {{ $vente->commandeclient->client->raisonSociale }}
