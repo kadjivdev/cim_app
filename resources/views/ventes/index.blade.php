@@ -258,6 +258,7 @@
                                         @endif
                                         <th>BorLiv</th>
                                         <th>Facture</th>
+                                        <th>Inserée le</th>
                                         <th>Date</th>
                                         <th>Client</th>
                                         <th>PU</th>
@@ -424,7 +425,6 @@
                     "targets": 10,
                     "orderable": false
                 }
-
             ],
             language: {
                 "emptyTable": "Aucune donnée disponible dans le tableau",
@@ -627,8 +627,6 @@
                     }
                 }
             },
-
-
 
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
