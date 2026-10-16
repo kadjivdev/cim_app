@@ -81,7 +81,7 @@ class VenduController extends Controller
                         'produit_id' => ['required'],
                         'programmation_id' => ['required'],
                         'qteVendu' => ['required'],
-                        'pu' => ['required'],
+                        'pu' => ['required', 'numeric', 'max:74000'],
                     ]);
 
                     if ($vente->transport) {
@@ -89,7 +89,7 @@ class VenduController extends Controller
                             'produit_id' => ['required'],
                             'programmation_id' => ['required'],
                             'qteVendu' => ['required'],
-                            'pu' => ['required'],
+                            'pu' => ['required', 'numeric', 'max:74000'],
                             'transport' => ['required'],
                         ]);
                     }
@@ -98,7 +98,7 @@ class VenduController extends Controller
                         'produit_id' => ['required'],
                         'programmation_id' => ['required'],
                         'qteVendu' => ['required'],
-                        'pu' => ['required'],
+                        'pu' => ['required', 'numeric', 'max:74000'],
                         'remise' => ['required'],
                     ]);
 
@@ -107,7 +107,7 @@ class VenduController extends Controller
                             'produit_id' => ['required'],
                             'programmation_id' => ['required'],
                             'qteVendu' => ['required'],
-                            'pu' => ['required'],
+                            'pu' => ['required', 'numeric', 'max:74000'],
                             'transport' => ['required'],
                         ]);
                     }
@@ -179,7 +179,7 @@ class VenduController extends Controller
                         'produit_id' => ['required'],
                         'programmation_id' => ['required', new VenduDoublonProduitStokValide($request->programmation_id, $vente->id)],
                         'qteVendu' => ['required', new CheckStock($request->programmation_id), new CheckQuantite($vente)],
-                        'pu' => ['required'],
+                        'pu' => ['required', 'numeric', 'max:74000'],
                         'qteTotal' => ['required', new CheckQuanteCde($vente)]
                     ]);
 
@@ -188,7 +188,7 @@ class VenduController extends Controller
                             'produit_id' => ['required'],
                             'programmation_id' => ['required', new VenduDoublonProduitStokValide($request->programmation_id, $vente->id)],
                             'qteVendu' => ['required', new CheckStock($request->programmation_id), new CheckQuantite($vente)],
-                            'pu' => ['required'],
+                            'pu' => ['required', 'numeric', 'max:74000'],
                             'qteTotal' => ['required', new CheckQuanteCde($vente)],
                             'transport' => ['required']
                         ]);
@@ -199,7 +199,7 @@ class VenduController extends Controller
                         'produit_id' => ['required'],
                         'programmation_id' => ['required', new VenduDoublonProduitStokValide($request->programmation_id, $vente->id)],
                         'qteVendu' => ['required', new CheckStock($request->programmation_id), new CheckQuantite($vente)],
-                        'pu' => ['required'],
+                        'pu' => ['required', 'numeric', 'max:74000'],
                         'remise' => ['required'],
                         'qteTotal' => ['required', new CheckQuanteCde($vente)],
                     ]);
@@ -208,7 +208,7 @@ class VenduController extends Controller
                             'produit_id' => ['required'],
                             'programmation_id' => ['required', new VenduDoublonProduitStokValide($request->programmation_id, $vente->id)],
                             'qteVendu' => ['required', new CheckStock($request->programmation_id), new CheckQuantite($vente)],
-                            'pu' => ['required'],
+                            'pu' => ['required', 'numeric', 'max:74000'],
                             'qteTotal' => ['required', new CheckQuanteCde($vente)],
                             'transport' => ['required']
                         ]);
