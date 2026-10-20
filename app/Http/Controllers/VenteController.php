@@ -50,7 +50,8 @@ class VenteController extends Controller
         $commandeclients = CommandeClient::whereIn('statut', ['Préparation', 'Vendue', 'Validée', 'Livraison partielle', 'Livrée']);
 
         $commandeclients = $commandeclients->pluck('id');
-        $q = Vente::whereIn('commande_client_id', $commandeclients)
+        $q = Vente::with("typeVente")
+            ->whereIn('commande_client_id', $commandeclients)
             ->orderByDesc('code');
 
         if ($request->filled('debut') && $request->filled('fin')) {

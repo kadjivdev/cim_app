@@ -95,6 +95,7 @@
                                         <th>Transport</th>
                                         <th>Remise</th>
                                         <th>Montant</th>
+                                        <th>Type</th>
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                         <th>Zone</th>
                                         @endif
@@ -151,6 +152,7 @@
                                         <td class="text-right pr-3 transport">{{ number_format($vente->transport,0,","," ") }}</td>
                                         <td class="text-right pr-3 remise">{{ number_format($vente->remise,0,","," ") }}</td>
                                         <td class="text-right pr-3 montant">{{ number_format($vente->montant,0,","," ") }}</td>
+                                        <td class="text-right pr-3">{{ $vente->typeVente?->libelle || '--' }}</td>
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                         <td class="pl-2"> {{ $vente->commandeclient->zone->libelle }} </td>
                                         @endif
@@ -266,6 +268,7 @@
                                         <th>Transport</th>
                                         <th>Remise</th>
                                         <th>Montant</th>
+                                        <th>Type</th>
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                         <th>Zone</th>
                                         @endif
@@ -285,7 +288,7 @@
                                         <tr>
                                             <br />
                                             <td class="" colspan="3"><b>Total Quantité Vendu</b></td>
-                                            <td colspan="6" class="text-right"><b id='qte'>{{ number_format($TotalQuantite ?? 0,0,","," ") }} Tonnes</b></td>
+                                            <td colspan="7" class="text-right"><b id='qte'>{{ number_format($TotalQuantite ?? 0,0,","," ") }} Tonnes</b></td>
                                         </tr>
                                         <tr>
                                             <br />
