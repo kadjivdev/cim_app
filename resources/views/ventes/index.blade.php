@@ -152,7 +152,7 @@
                                         <td class="text-right pr-3 transport">{{ number_format($vente->transport,0,","," ") }}</td>
                                         <td class="text-right pr-3 remise">{{ number_format($vente->remise,0,","," ") }}</td>
                                         <td class="text-right pr-3 montant">{{ number_format($vente->montant,0,","," ") }}</td>
-                                        <td class="text-right pr-3">{{ $vente->typeVente?->libelle || '--' }}</td>
+                                        <td class="text-right pr-3">{{ $vente->typeVente?->libelle ?? '--' }}</td>
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                         <td class="pl-2"> {{ $vente->commandeclient->zone->libelle }} </td>
                                         @endif
