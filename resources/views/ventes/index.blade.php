@@ -89,13 +89,13 @@
                                         <th>Facture</th>
                                         <th>Inserée le</th>
                                         <th>Date</th>
+                                        <th>Type</th>
                                         <th>Client</th>
                                         <th>PU</th>
                                         <th>Qté</th>
                                         <th>Transport</th>
                                         <th>Remise</th>
                                         <th>Montant</th>
-                                        <th>Type</th>
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                         <th>Zone</th>
                                         @endif
@@ -144,6 +144,7 @@
                                         </td>
                                         <td class="text-center">{{ date('d/m/Y', strtotime($vente->created_at)) }}</td>
                                         <td class="text-center">{{ date('d/m/Y', strtotime($vente->date)) }}</td>
+                                        <td class="text-right pr-3">{{ $vente->typeVente?->libelle }}</td>
                                         <td class="pl-2">
                                             {{ $vente->commandeclient->client->raisonSociale }}
                                         </td>
@@ -152,7 +153,6 @@
                                         <td class="text-right pr-3 transport">{{ number_format($vente->transport,0,","," ") }}</td>
                                         <td class="text-right pr-3 remise">{{ number_format($vente->remise,0,","," ") }}</td>
                                         <td class="text-right pr-3 montant">{{ number_format($vente->montant,0,","," ") }}</td>
-                                        <td class="text-right pr-3">{{ $vente->typeVente?->libelle }}</td>
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                         <td class="pl-2"> {{ $vente->commandeclient->zone->libelle }} </td>
                                         @endif
@@ -262,13 +262,13 @@
                                         <th>Facture</th>
                                         <th>Inserée le</th>
                                         <th>Date</th>
+                                        <th>Type</th>
                                         <th>Client</th>
                                         <th>PU</th>
                                         <th>Qté</th>
                                         <th>Transport</th>
                                         <th>Remise</th>
                                         <th>Montant</th>
-                                        <th>Type</th>
                                         @if(Auth::user()->roles()->where('libelle', 'VENDEUR')->exists() == true)
                                         <th>Zone</th>
                                         @endif
