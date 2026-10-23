@@ -19,7 +19,6 @@ class TypeCommande extends Model
         return $this->hasMany(BonCommande::class, 'type_commande_id', 'id');
     }
 
-
     public function commandeclients()
     {
         return $this->hasMany(CommandeClient::class, 'type_commande_id', 'id');

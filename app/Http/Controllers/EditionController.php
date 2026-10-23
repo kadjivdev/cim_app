@@ -17,7 +17,6 @@ use App\Models\Representant;
 use App\Models\User;
 use App\Models\Zone;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class EditionController extends Controller

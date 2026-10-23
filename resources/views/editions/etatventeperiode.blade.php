@@ -100,7 +100,6 @@
                                         </thead>
                                         <tbody>
 
-
                                             @php($ventes = session('resultat')['ventes'])
                                             @php($montant = $ventes->sum('montant'))
                                             @php($regle = $ventes->flatMap->reglements->sum('montant'))
@@ -116,7 +115,7 @@
                                                 <td>{{date_format(date_create($item->date),'d/m/Y')}}</td>
                                                 <td>
                                                     @if($item->commandeclient)
-                                                    {{$item->commandeclient->client->raisonSociale}} ({{$item->commandeclient->client->telephone}})
+                                                    {{$item->commandeclient->client->raisonSociale}} ({{$item->commandeclient->client->telephone}}) | {{$item->commandeclient?->code}}
                                                     @if(substr($item->code,0,2) == 'VI')
                                                     {{$item->commandeclient->code}}
                                                     @endif

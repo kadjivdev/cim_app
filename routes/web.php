@@ -77,12 +77,7 @@ use App\Models\Vente;
 
 // REVERSEMENT DES APPROVISIONNEMENTS D'UN COMPTE SUR UN AUTRE
 Route::get("/debug", function () {
-    $detail_recu = DetailRecu::firstWhere("code", "DR-0682");
-    if ($detail_recu) {
-        $detail_recu->delete();
-
-        return "Detail recu deleted";
-    }
+    // $vente = 
 
     return "Detail recu not found";
 });
