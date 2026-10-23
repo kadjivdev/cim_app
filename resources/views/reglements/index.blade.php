@@ -26,7 +26,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"></h3>
+                            <h3 class="card-title">Client: {{$vente->commandeclient?->client?->id}}</h3>
                             @if (($vente->montant-$vente->remise) > collect($vente->reglements)->sum('montant'))
                             @if(!IsClientHasADebt($vente->commandeclient?->client->id))
                             <a class="btn btn-success btn-sm" href="{{route('reglements.create', ['vente'=>$vente->id])}}">
