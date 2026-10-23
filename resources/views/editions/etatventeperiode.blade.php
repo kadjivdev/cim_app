@@ -86,6 +86,7 @@
                                                 <th>Acteur</th>
                                                 <th>date</th>
                                                 <th> Client</th>
+                                                <th> Client Payeur</th>
                                                 <th>Chauf../Destin</th>
                                                 <th>Type</th>
                                                 <th>Pu ciment</th>
@@ -120,6 +121,9 @@
                                                     {{$item->commandeclient->code}}
                                                     @endif
                                                     @endif
+                                                </td>
+                                                <td>
+                                                    {{$vente->payeur?->raisonSociale}} {{$vente->payeur?->telephone}}
                                                 </td>
                                                 <td class="text-center font-weight-bold">
                                                     @if(count($item->vendus)>0)
@@ -166,6 +170,7 @@
                                                 <th>Acteur</th>
                                                 <th class="text-center">date</th>
                                                 <th class="text-center"> Client</th>
+                                                <th class="text-center"> Client payeur</th>
                                                 <th>Chauf../Destin</th>
                                                 <th class="text-center">Type</th>
                                                 <th class="text-center">Pu ciment</th>
@@ -184,13 +189,13 @@
                                 <table class="table table-bordered table-striped table-sm mt-2" style="font-size: 12px">
                                     <thead class="text-white text-center bg-gradient-gray-dark">
                                         <tr>
-                                            <th colspan="13"></th>
+                                            <th colspan="14"></th>
                                             <th class="no-print"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr class="bg-info">
-                                            <td colspan="26" class="font-weight-bold">Total</td>
+                                            <td colspan="27" class="font-weight-bold">Total</td>
                                             <td class="text-center font-weight-bold">-</td>
                                             <td class="text-right font-weight-bold">Qte : {{number_format($totalQte,0,',',' ')}}</td>
                                             <td class="text-right font-weight-bold">Amount : {{number_format($montant,0,',',' ')}}</td>
@@ -204,7 +209,7 @@
                                 </table>
 
                                 @else
-                                <div class="col-12 text-center border border-info p-2">
+                                <div class="col-113 text-center border border-info p-2">
                                     Aucun information trouvée pour votre requête.
                                 </div>
                                 @endif
