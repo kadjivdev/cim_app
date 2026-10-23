@@ -52,6 +52,7 @@ use App\Http\Controllers\RecouvrementController;
 use App\Http\Controllers\VenduController;
 use App\Models\BonCommande;
 use App\Models\Client;
+use App\Models\CommandeClient;
 use App\Models\DetailRecu;
 use App\Models\LogUser;
 use App\Models\Programmation;
@@ -77,8 +78,8 @@ use App\Models\Vente;
 
 // REVERSEMENT DES APPROVISIONNEMENTS D'UN COMPTE SUR UN AUTRE
 Route::get("/debug", function () {
-    // $vente = 
-
+    $commandeClient = CommandeClient::with("client")->findOrFail(1288);
+    return $commandeClient;
     return "Detail recu not found";
 });
 
@@ -109,7 +110,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('newclient/{id}/solde',[clientsController::class, 'getClient'])->name('newclient.solde');
+Route::get('newclient/{id}/solde', [clientsController::class, 'getClient'])->name('newclient.solde');
 
 Route::middleware(['auth', 'pwd'])->group(function () {
     Route::get('/welcome', function () {
