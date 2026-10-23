@@ -123,7 +123,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    {{$vente->payeur?->raisonSociale}} {{$vente->payeur?->telephone}}
+                                                    {{$item->payeur?->raisonSociale}} {{$item->payeur?->telephone}}
                                                 </td>
                                                 <td class="text-center font-weight-bold">
                                                     @if(count($item->vendus)>0)
