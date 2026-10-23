@@ -478,7 +478,7 @@ class EditionController extends Controller
         $ventes = collect();
 
         if ($request->user == 'tout') {
-            Vente::with(["vendus", "commandeclient.client"])->where('statut', 'Vendue')
+            Vente::with(["vendus", "commandeclient.client","payeur"])->where('statut', 'Vendue')
                 ->whereBetween('date', [$request->debut, $request->fin])
                 ->orderByDesc('ventes.code')
                 ->chunk(100, function ($chunk) use (&$ventes) {
@@ -486,7 +486,7 @@ class EditionController extends Controller
                 });
             $user = null;
         } else {
-            Vente::with(["vendus", "commandeclient.client"])->where('statut', 'Vendue')
+            Vente::with(["vendus", "commandeclient.client","payeur"])->where('statut', 'Vendue')
                 ->whereBetween('date', [$request->debut, $request->fin])
                 ->where('ventes.users', $request->user)
                 ->orderByDesc('ventes.code')
