@@ -44,11 +44,11 @@ class Programmation extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-
     public function chauffeur()
     {
         return $this->belongsTo(Chauffeur::class, 'chauffeur_id', 'id');
     }
+
     public function getHistoriquesAttribute($value){
         return $value ? json_decode($value,true) : [];
     }
