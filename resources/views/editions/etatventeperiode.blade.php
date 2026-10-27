@@ -97,6 +97,7 @@
                                                 <th>Réglé</th>
                                                 <th>Reste</th>
                                                 <th class="no-print">Echéance</th>
+                                                <th class="">Validée</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -161,6 +162,7 @@
                                                     <a class="dropdown-item" href="{{route('reglements.index',['vente'=>$item->id])}}"><i class="fa-solid fa-file-invoice-dollar"></i> Règlement {{$item->id}} </a>
                                                     @endif
                                                 </td>
+                                                <td class="text-right font-weight-bold">{{$item->valide?"Validée":"Non validée"}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -181,6 +183,7 @@
                                                 <th class="text-center">Réglé</th>
                                                 <th class="text-center">Reste</th>
                                                 <th class="no-print">Echéance</th>
+                                                <th class="">Validée</th>
                                             </tr>
                                         </tfoot>
                                     </table>
