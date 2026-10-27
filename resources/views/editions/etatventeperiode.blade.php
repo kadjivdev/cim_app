@@ -116,6 +116,7 @@
                                                 <td><span class="badge text-white bg-warning">{{$item->user?->name}}</span></td>
                                                 <td>{{date_format(date_create($item->date),'d/m/Y')}}</td>
                                                 <td>
+                                                    CMD ID: {{$item->commandeclient?->id}}
                                                     @if($item->commandeclient)
                                                     {{$item->commandeclient->client->raisonSociale}} ({{$item->commandeclient->client->telephone}}) | {{$item->commandeclient?->code}}
                                                     @if(substr($item->code,0,2) == 'VI')

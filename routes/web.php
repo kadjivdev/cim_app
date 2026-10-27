@@ -78,9 +78,9 @@ use App\Models\Vente;
 
 // REVERSEMENT DES APPROVISIONNEMENTS D'UN COMPTE SUR UN AUTRE
 Route::get("/debug", function () {
-    $vente = Vente::with("payeur")->firstWhere("code", "VD-0001288");
+    $vente = Vente::with("commandeclient","payeur")->firstWhere("code", "VD-0004081");
     return $vente;
-    return "Detail recu not found";
+    // return "Detail recu not found";
 });
 
 Route::get("/find", function () {
