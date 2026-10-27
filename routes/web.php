@@ -82,7 +82,7 @@ Route::get("/debug", function () {
     // $vente = Vente::with("commandeclient", "payeur","vendus.programmation")->firstWhere("code", "VD-0004081");
     // return $vente;
 
-    return Vente::whereHasNot("commandeclient")->pluck("code");
+    return Vente::whereDoesntHave("commandeclient")->pluck("code");
 });
 
 Route::get("/find", function () {
