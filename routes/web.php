@@ -53,6 +53,7 @@ use App\Http\Controllers\VenduController;
 use App\Models\BonCommande;
 use App\Models\Client;
 use App\Models\CommandeClient;
+use App\Models\DetailBonCommande;
 use App\Models\DetailRecu;
 use App\Models\LogUser;
 use App\Models\Programmation;
@@ -78,9 +79,10 @@ use App\Models\Vente;
 
 // REVERSEMENT DES APPROVISIONNEMENTS D'UN COMPTE SUR UN AUTRE
 Route::get("/debug", function () {
-    $vente = Vente::with("commandeclient", "payeur","vendus.programmation")->firstWhere("code", "VD-0004081");
-    return $vente;
+    // $vente = Vente::with("commandeclient", "payeur","vendus.programmation")->firstWhere("code", "VD-0004081");
+    // return $vente;
 
+    return DetailBonCommande::with("boncommande", "programmations")->firstWhere("bon_commande_id", 4086);
     // return Vendu::firstWhere("vente_id", 4080);
 });
 
