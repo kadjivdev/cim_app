@@ -81,8 +81,16 @@ use App\Models\Vente;
 Route::get("/debug", function () {
     // $vente = Vente::with("commandeclient", "payeur","vendus.programmation")->firstWhere("code", "VD-0004081");
     // return $vente;
+    // return Vente::whereDoesntHave("commandeclient")->get(["code","created_at"]);
 
-    return Vente::whereDoesntHave("commandeclient")->get(["code","created_at"]);
+    return  Programmation::whereIn("code", ["PR-21310", "PR-23778"])
+        ->get(["qteprogrammer","qtelivrer"])
+        // ->map(function ($programmation) {
+        //     $programmation->update([
+        //         "qtelivrer" => $programmation->qteprogrammer
+        //     ]);
+        // })
+        ;
 });
 
 Route::get("/find", function () {
