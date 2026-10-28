@@ -84,13 +84,12 @@ Route::get("/debug", function () {
     // return Vente::whereDoesntHave("commandeclient")->get(["code","created_at"]);
 
     return  Programmation::whereIn("code", ["PR-21310", "PR-23778"])
-        ->get(["qteprogrammer","qtelivrer"])
-        // ->map(function ($programmation) {
-        //     $programmation->update([
-        //         "qtelivrer" => $programmation->qteprogrammer
-        //     ]);
-        // })
-        ;
+        ->get()
+        ->map(function ($programmation) {
+            $programmation->update([
+                "qtelivrer" => $programmation->qteprogrammer
+            ]);
+        });
 });
 
 Route::get("/find", function () {
