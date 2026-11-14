@@ -66,13 +66,13 @@ use App\Models\Programmation;
 // REVERSEMENT DES APPROVISIONNEMENTS D'UN COMPTE SUR UN AUTRE
 Route::get("/debug", function () {
 
-    return  Programmation::whereIn("code", ["PR-22234"])
-        ->get()
-        ->map(function ($programmation) {
-            $programmation->update([
-                "qtelivrer" => $programmation->qteprogrammer
-            ]);
-        });
+    // return  Programmation::whereIn("code", ["PR-22234"])
+    //     ->get()
+    //     ->map(function ($programmation) {
+    //         $programmation->update([
+    //             "qtelivrer" => $programmation->qteprogrammer
+    //         ]);
+    //     });
 });
 
 Route::get("/find", function () {
