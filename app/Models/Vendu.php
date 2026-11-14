@@ -22,5 +22,4 @@ class Vendu extends Model
     {
         return $this->belongsTo(Programmation::class, 'programmation_id', 'id');
     }
-
 }

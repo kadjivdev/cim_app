@@ -51,21 +51,7 @@ use App\Http\Controllers\MarqueController;
 use App\Http\Controllers\RecouvrementController;
 use App\Http\Controllers\VenduController;
 use App\Models\BonCommande;
-use App\Models\Client;
-use App\Models\CommandeClient;
-use App\Models\DetailBonCommande;
-use App\Models\DetailRecu;
-use App\Models\LogUser;
 use App\Models\Programmation;
-use App\Models\Vendu;
-use App\Models\Vente;
-
-// use App\Models\Reglement;
-
-// use App\Models\Client;
-// use App\Models\Mouvement;
-// use App\Models\Reglement;
-// use Illuminate\Database\Eloquent\Collection;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,11 +65,8 @@ use App\Models\Vente;
 
 // REVERSEMENT DES APPROVISIONNEMENTS D'UN COMPTE SUR UN AUTRE
 Route::get("/debug", function () {
-    // $vente = Vente::with("commandeclient", "payeur","vendus.programmation")->firstWhere("code", "VD-0004081");
-    // return $vente;
-    // return Vente::whereDoesntHave("commandeclient")->get(["code","created_at"]);
 
-    return  Programmation::whereIn("code", ["PR-21310", "PR-23778"])
+    return  Programmation::whereIn("code", ["PR-22234"])
         ->get()
         ->map(function ($programmation) {
             $programmation->update([

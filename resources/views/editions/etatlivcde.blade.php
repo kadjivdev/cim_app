@@ -177,6 +177,7 @@
                                 @endif
                                 @endif
                             </div>
+                            
                             @if(!(Auth::user()->roles()->where('libelle', ['CONTROLEUR'])->exists() || Auth::user()->roles()->where('libelle', ['VALIDATEUR'])->exists() || Auth::user()->roles()->where('libelle', ['SUPERVISEUR'])->exists()))
                             <div class="card-footer text-center no-print">
                                 @if(session('resultat'))

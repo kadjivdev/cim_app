@@ -247,6 +247,8 @@
                                                     <td class="text-right">
                                                         @if($programmation->statut != 'Annuler')
                                                         {{ number_format($programmation->qteprogrammer, 2, ',', ' ') }}
+                                                        @else
+                                                        ---
                                                         @endif
                                                     </td>
                                                     <td class="text-right">

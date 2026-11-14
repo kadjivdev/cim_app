@@ -411,8 +411,26 @@ class EditionController extends Controller
             $_Montprog = collect($totalValider)->sum('qteprogrammer') * $bc->detailboncommandes[0]->pu; # number_format(collect($totalValider)->sum('qteprogrammer')*$bc->detailboncommandes[0]->pu, 2, ",", " ");
             $_MontLiv = collect($totalValider)->sum('qtelivrer') * $bc->detailboncommandes[0]->pu; # number_format(collect($totalValider)->sum('qtelivrer')*$bc->detailboncommandes[0]->pu, 2, ",", " ");
 
-            $prog = Programmation::join('detail_bon_commandes', 'programmations.detail_bon_commande_id', '=', 'detail_bon_commandes.id')->where('bon_commande_id', $bc->id)->pluck('programmations.id');
-            $qteVendu = Vendu::whereIn('programmation_id', $prog)->sum('qteVendu');
+            // $prog = Programmation::join('detail_bon_commandes', 'programmations.detail_bon_commande_id', '=', 'detail_bon_commandes.id')
+            //     ->where('bon_commande_id', $bc->id)
+            //     ->whereHas("programmation", function ($query) {
+            //         $query->where("statut", "!=", "Annuler"); //on ignore les programmations dont le statut est Annuler
+            //     })
+            //     ->pluck('programmations.id');
+
+            $prog = Programmation::join(
+                'detail_bon_commandes',
+                'programmations.detail_bon_commande_id',
+                '=',
+                'detail_bon_commandes.id'
+            )
+                ->where('detail_bon_commandes.bon_commande_id', $bc->id)
+                ->where('programmations.statut', '!=', 'Annuler')
+                ->pluck('programmations.id');
+
+            $qteVendu = Vendu::whereIn('programmation_id', $prog)
+                ->sum('qteVendu');
+
             $montVendu = Vendu::whereIn('programmation_id', $prog)
                 ->select('qteVendu', 'pu')
                 ->get()
@@ -478,7 +496,7 @@ class EditionController extends Controller
         $ventes = collect();
 
         if ($request->user == 'tout') {
-            Vente::with(["vendus", "commandeclient.client","payeur"])->where('statut', 'Vendue')
+            Vente::with(["vendus", "commandeclient.client", "payeur"])->where('statut', 'Vendue')
                 ->whereBetween('date', [$request->debut, $request->fin])
                 ->orderByDesc('ventes.code')
                 ->chunk(100, function ($chunk) use (&$ventes) {
@@ -486,7 +504,7 @@ class EditionController extends Controller
                 });
             $user = null;
         } else {
-            Vente::with(["vendus", "commandeclient.client","payeur"])->where('statut', 'Vendue')
+            Vente::with(["vendus", "commandeclient.client", "payeur"])->where('statut', 'Vendue')
                 ->whereBetween('date', [$request->debut, $request->fin])
                 ->where('ventes.users', $request->user)
                 ->orderByDesc('ventes.code')

@@ -58,7 +58,6 @@ class ProgrammationController extends Controller
         $chauffeurs = Chauffeur::all();
         $avaliseurs = Avaliseur::all();
 
-        // dd($detailboncommande);
         $programmations = $detailboncommande
             ->programmations()
             ->with(['chauffeur', 'detailboncommande', 'avaliseur', 'camion'])
