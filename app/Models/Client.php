@@ -94,7 +94,7 @@ class Client extends Model
     // LES CLIENTS AJOUTE PAR FORCE A BEF
     public function  Added_To_Bef()
     {
-        return in_array($this->id,[371,298]);
+        return in_array($this->id,[371,298,2634]);
     }
 
     public function  Is_Bef()
